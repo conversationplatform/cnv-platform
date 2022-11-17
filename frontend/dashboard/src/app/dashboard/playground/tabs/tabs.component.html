@@ -1,0 +1,8 @@
+<ng-container *ngIf="currentFlows">
+    <mat-tab-group mat-align-tabs="start" (selectedTabChange)="setFlow($event)">
+        <ng-container *ngFor="let flow of currentFlows; index as i;">
+            <mat-tab [label]="flow" ></mat-tab>
+        </ng-container>
+    </mat-tab-group>
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+</ng-container>

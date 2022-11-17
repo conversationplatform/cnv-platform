@@ -1,0 +1,17 @@
+@import 'variables/colors';
+
+.rcw-interaction {
+  align-items: center;
+  display: flex;
+  background-color: $grey-2;
+  height: 250px;
+  padding: 5px;
+  border-radius: 0 0 10px 10px;
+}
+
+@media screen and (max-width: 800px)  {
+  .rcw-interaction {
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+}

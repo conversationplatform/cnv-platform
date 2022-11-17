@@ -1,0 +1,310 @@
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
+import {
+  Widget,
+  addUserMessage,
+  renderCustomComponent,
+  renderInteractionComponent,
+  renderOverlayComponent,
+  showOverlayComponent,
+  renderFooterComponent,
+  toggleWidget,
+} from "./core";
+
+let ui = {
+  Widget,
+  addUserMessage,
+  renderCustomComponent,
+  renderInteractionComponent,
+  renderOverlayComponent,
+  showOverlayComponent,
+  renderFooterComponent,
+  toggleWidget,
+};
+
+import defalutBackground from "./img/bg.png";
+
+import { scrollToBottom } from "./utils/scrollToBottom";
+
+import { ConnectionHandler } from "./utils/connectionHandler";
+import { Tasker } from "./utils/tasker";
+
+import { handleOverlayNavbar } from "./utils/overlayHandler";
+import ErrorBoundary from "./widgets/components/ErrorBoundary";
+
+import "./core/src/components/Widget/style.scss";
+
+import "./chat.scss";
+import Empty from "./components/Empty";
+import Logger from "./components/Logger";
+import Restart from "./components/Restart";
+import Cookie from "./components/Cookie";
+
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+
+export default class ConversationApp extends HTMLElement {
+  host;
+  flowId;
+  useCredentials;
+  connection;
+  tasker;
+  cookieSIDName;
+  widgets = [];
+
+  static get observedAttributes() {
+    return ["open"];
+  }
+
+  constructor() {
+    super();
+
+    this.setAttribute("id", "dialog");
+
+    this.flowId = this.getAttribute("flow-id");
+
+    this.host = this.getAttribute("host");
+
+    if (
+      this.host &&
+      this.host.length > 0 &&
+      this.flowId &&
+      this.flowId.length > 0
+    ) {
+      this.start();
+    }
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name == "open") {
+      toggleWidget();
+    }
+  }
+
+  handleCMSImages(connection) {
+    document.querySelectorAll('img[src^="cnv-image/"]').forEach((img) => {
+      connection.send(
+        JSON.stringify({
+          type: "cnv-image",
+          name: img.src,
+        })
+      );
+    });
+  }
+
+  scheduleTask(data) {
+    if (data.type === "cnv-image") {
+      // needs to be executed immediately
+      document
+        .querySelectorAll(`img[src^="cnv-image/${data.props.name}"]`)
+        .forEach((img) => {
+          img.src = data.props.imgSrc;
+        });
+      return;
+    } else if (data.type === "themeOptions") {
+      if (data.default) {
+        data.props[
+          "--conversation-app-background-image"
+        ] = `url(${defalutBackground})`;
+      }
+      this.handleTheme(data.props);
+      return;
+    }
+    this.tasker.scheduleTask(data);
+  }
+
+  getWidget(name) {
+    const widget = this.widgets[name];
+    if (!widget) {
+      const props = {
+        error: `Widget ${name} not found`,
+        message: "Ensure this widget is imported into your application.",
+      };
+      return (data) => Logger(props);
+    }
+    return widget;
+  }
+
+  async start(host = this.host, flowId = this.flowId) {
+    this.connection = new ConnectionHandler(
+      host,
+      flowId,
+      (data) => {
+        this.scheduleTask(data);
+      },
+      true
+    );
+    this.connection
+      .getTheme()
+      .then((theme) => {
+        this.handleTheme(theme);
+      })
+      .catch((error) => console.error(error));
+
+    const interactionType = {
+      text: ({ type, name, props }) => {
+        renderCustomComponent(this.getWidget(name), props, true);
+        this.handleCMSImages(this.connection);
+        scrollToBottom();
+      },
+      interaction: ({ type, name, props }) => {
+        showOverlayComponent(false);
+        renderInteractionComponent(this.getWidget(name), props);
+        scrollToBottom();
+      },
+      usermessage: ({ type, name, props }) => {
+        addUserMessage(props.text);
+        scrollToBottom();
+      },
+      overlay: ({ type, name, props }) => {
+        showOverlayComponent(true);
+        renderOverlayComponent(this.getWidget(name), props);
+        handleOverlayNavbar(name);
+      },
+      component: ({ type, name, props }) => {
+        renderFooterComponent(this.getWidget("footer"), props);
+      },
+      disableTrackService: ({ type, name, props }) => {
+        connection.disableTracking();
+      },
+      themeOptions: ({ type, name, props }) => {
+        this.handleTheme(props);
+      },
+    };
+
+    this.tasker = new Tasker(this.connection, interactionType, (data) =>
+      this.tasker.scheduleTask({
+        type: "text",
+        name: "logger",
+        props: {
+          error: data,
+          message: "Please contact support.",
+          delay: 0,
+        },
+      })
+    );
+
+    this.widgets = {
+      logger: (props) => {
+        return <Logger {...props} connection={this.connection} />;
+      },
+      empty: (props) => {
+        return <Empty {...props} connection={this.connection} />;
+      },
+      text: (props) => {
+        return <h1>{props.text}</h1>;
+      },
+      restart: (props) => {
+        return <Restart {...props} connection={this.connection} />;
+      },
+    };
+
+    let plugins = await this.connection.getWidgetProviders();
+
+    if (plugins.length > 0) {
+      for (let plugin of plugins) {
+        if (plugin && plugin.widgetsProvider) {
+          this.widgets = Object.assign(
+            this.widgets,
+            plugin.widgetsProvider(this.connection, ui)
+          );
+        } else {
+          console.error(
+            `plugin ${plugin} is not available or doesn't export widgetProvider`
+          );
+        }
+      }
+    }
+
+    const acceptedCookies = cookies.get(process.env.COOKIE_ACCEPTS_NAME);
+
+    if (acceptedCookies !== "true") {
+      showOverlayComponent(true);
+      renderOverlayComponent((props) => {
+        return (
+          <Cookie
+            {...props}
+            alreadyRejected={acceptedCookies === "false"}
+            onAccept={async () => {
+              cookies.set(process.env.COOKIE_ACCEPTS_NAME, true);
+
+              showOverlayComponent(false);
+              await this.connection.fetchSessionAndConnect(true);
+            }}
+            onReject={() => {
+              cookies.set(process.env.COOKIE_ACCEPTS_NAME, false);
+              this.connection.fetchSessionAndConnect(false);
+            }}
+          />
+        );
+      }, {});
+    } else {
+      await this.connection.fetchSessionAndConnect(true);
+    }
+
+    function App(props) {
+      const handleNewUserMessage = function (newMessage) {
+        props.connection.send(newMessage);
+      };
+
+      const interceptClickEvent = (e) => {
+        let href;
+        const target = e.target || e.srcElement;
+        if (target.tagName === "A") {
+          e.preventDefault();
+          href = target.getAttribute("href");
+          target.target = "_blank";
+
+          if (href.indexOf("http") > -1) {
+            window.open(href, target.target);
+            return;
+          } else {
+            e.preventDefault();
+            props.connection.send(
+              JSON.stringify({
+                type: "glossary",
+                name: href,
+              })
+            );
+          }
+        }
+      };
+
+      useEffect(() => {
+        toggleWidget();
+      }, []);
+
+      return (
+        <div className="App" onClick={interceptClickEvent}>
+          <ErrorBoundary>
+            <Widget
+              handleNewUserMessage={handleNewUserMessage}
+              title=""
+              subtitle=""
+              showInteraction={true}
+              showSender={false}
+              showTimeStamp={false}
+              showFooter={true}
+            />
+          </ErrorBoundary>
+        </div>
+      );
+    }
+
+    ReactDOM.render(
+      <App connection={this.connection} />,
+      document.querySelector("conversation-app#dialog")
+    );
+  }
+
+  handleTheme(themeOptions) {
+    Object.keys(themeOptions).forEach((key) =>
+      document
+        .querySelector("conversation-app")
+        .style.setProperty(key, themeOptions[key])
+    );
+  }
+}
+
+customElements.define("conversation-app", ConversationApp);

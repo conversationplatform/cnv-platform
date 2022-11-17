@@ -1,0 +1,21 @@
+<div class="items-wrapper">
+    <ng-container *ngFor="let item of activeItems">
+        <div class="item-wrapper">
+            <label class="time">{{item.timestamp.toLocaleString()}}</label>
+            <div class="line"></div>
+            <div class="icon" [style.background]="getColor(item.type ? item.type : '')"></div>
+            <div class="info-wrapper">
+                <label class="title">{{item.title}}</label>
+                <app-object-tree [dataObject]="item.props || item.values"></app-object-tree>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<div class="buttons-wrapper flex-grid">
+    <ng-container *ngFor="let type of types">
+        <div class="button" [class.active] = "hasTypeActive(type)" (click)="onClickButton(type)">
+            <div class="color" [style.background]="getColor(type)"></div>
+            <div class="text">{{type}}</div>
+        </div>
+    </ng-container>
+</div>

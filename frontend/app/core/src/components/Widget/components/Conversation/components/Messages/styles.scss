@@ -1,0 +1,31 @@
+@import 'variables/colors';
+@import 'common';
+
+@import "./components/Loader/styles.scss";
+@import "./components/Message/styles.scss";
+@import "./components/Snippet/styles.scss";
+
+.rcw-messages-container {
+  background-color: $white;
+  height: 50vh;
+  max-height: 410px;
+  overflow-y: scroll;
+  padding-top: 10px;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+
+
+.rcw-full-screen {
+
+  .rcw-messages-container {
+    @include messages-container-fs;
+  }
+}
+
+@media screen and (max-width: 800px)  {
+  .rcw-messages-container {
+    @include messages-container-fs;
+  }
+}

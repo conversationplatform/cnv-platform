@@ -1,0 +1,12 @@
+<app-toolbar (toggle)="toggleNavBar()">
+</app-toolbar>
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" [opened]="opened">
+    <app-sidenav></app-sidenav>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="mat-drawer-content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

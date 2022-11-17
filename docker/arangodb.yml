@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  arangodb_db_container:
+    platform: linux/amd64
+    image: arangodb:3.7.12
+    environment:
+      ARANGO_ROOT_PASSWORD: secret
+    ports:
+      - 8529:8529
+    volumes:
+      - .volumes/arangodb3/data:/var/lib/arangodb3
+      - .volumes/arangodb3/apps_container:/var/lib/arangodb3-apps

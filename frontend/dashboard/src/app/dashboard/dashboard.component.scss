@@ -1,0 +1,32 @@
+@import "variables";
+
+:host {
+  mat-drawer-container {
+    background-color: white;
+
+    mat-drawer {
+      min-width: 220px;
+    }
+
+    .mat-drawer-side {
+      background-color: white;
+      padding: $app-global-margin calc($app-global-margin / 2) $app-global-margin $app-global-margin;
+      border: none;
+    }
+
+    mat-drawer-content {
+      height: calc(100vh - 50px - 12px);
+      padding: 0px calc($app-global-margin / 2) calc($app-global-margin / 2) calc($app-global-margin / 2);
+      overflow: hidden;
+
+      .mat-drawer-content-wrapper {
+        height: 100%;
+        width: 100%;
+        background-color: $app-primary-color-light;
+        border-radius: $app-global-border-radius;
+        border: 1px solid rgba(0, 0, 0, .08);
+        overflow: auto;
+      }
+    }
+  }
+}

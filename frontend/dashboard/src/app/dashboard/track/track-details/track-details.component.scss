@@ -1,0 +1,30 @@
+@import "grid";
+@import "variables";
+
+:host {
+    display: flex;
+    flex-direction: column;
+    padding: $app-global-margin;
+
+    .header {
+        margin-bottom: calc($app-global-margin / 2);
+    }
+
+    mat-expansion-panel {
+        border-radius: $app-global-border-radius;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: none;
+        padding: 0px $app-global-margin;
+
+        mat-expansion-panel-header {
+            mat-panel-title {
+                margin: 0px;
+                font-size: 1.2rem;
+                font-weight: 700;
+                font-family: Roboto, sans-serif;
+                color: $app-primary-color-main;
+            }
+        }
+    }
+
+}

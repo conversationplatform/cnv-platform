@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-tab-labels {
+    justify-content: center;
+}
+
+.mat-menu-content:not(:empty) {
+    padding: 12px 12px 6px 12px !important;
+}
+
+.mat-menu-panel{
+    max-width: unset !important;
+    max-height: unset !important;
+    overflow: unset !important;
+
+    .clear-filter-button {
+        background-color: #a81313;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 5px;
+        position: absolute;
+        z-index: 100;
+        top: -4px;
+        display: flex;
+        right: -4px;
+        cursor: pointer;
+    }
+}
+
+.mat-chip.mat-standard-chip .mat-chip-remove {
+    display: none;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+    display: none;
+}
+
+.mat-chip-list-wrapper .mat-standard-chip {
+    padding: 6px 12px !important;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+}

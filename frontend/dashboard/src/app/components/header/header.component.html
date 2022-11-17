@@ -1,0 +1,10 @@
+
+<div class="header">
+    <a class="back-url" *ngIf="goback" (click)="goBack()" >
+        <mat-icon mat-list-icon>arrow_back</mat-icon>
+    </a>
+    <h1 *ngIf="title" class="title">{{title}}</h1>
+</div>
+<div class="subheader">
+    <h2 *ngIf="subtitle" class="subtitle">{{subtitle}}</h2>
+</div>

@@ -1,0 +1,33 @@
+@import "grid";
+@import "variables";
+
+:host {
+    .items-wrapper {
+        .item-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px 0px 10px 0px;
+
+            .label {
+                margin: 0px;
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: $app-text-color-dark;
+                font-family: Roboto, sans-serif;
+                line-height: 1.75;
+                text-align: left;
+            }
+
+            .value {
+                margin: 0px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: $app-text-color-medium;
+                font-family: Roboto, sans-serif;
+                line-height: 1.57;
+                text-align: left;
+            }
+        }
+    }
+}

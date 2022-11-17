@@ -1,0 +1,26 @@
+<mat-accordion>
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Active Flows
+                
+            </mat-panel-title>
+            <mat-panel-description>
+                {{ nActiveFlows }}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-list>
+            <div class="actions">
+                <button mat-button [disabled]="isLoading" (click)="loadActiveFlows()">
+                    <mat-icon aria-hidden="false" aria-label="refresh">refresh</mat-icon>
+                </button>
+            </div>
+            <mat-list-item *ngFor="let entry of activeFlows"> {{ entry.flowId}}: {{ entry.numClients }} </mat-list-item>
+            <div class="loading-wrapper" *ngIf="isLoading">
+                <app-loading></app-loading>
+            </div>
+        </mat-list>
+    </mat-expansion-panel>
+
+</mat-accordion>
+

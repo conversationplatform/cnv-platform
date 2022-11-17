@@ -1,0 +1,65 @@
+<app-header class="header" [title]="'Settings'"></app-header>
+
+
+<mat-accordion class="example-headers-align" multi="true">
+  <mat-expansion-panel expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Tracking options
+      </mat-panel-title>
+
+    </mat-expansion-panel-header>
+
+
+    <mat-form-field *ngIf="customProperties">
+      <mat-label>Cookie name</mat-label>
+      <input matInput placeholder="cnv-platform" [(ngModel)]="customProperties.SESSION_COOKIE_NAME" type="text">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="customProperties">
+      <mat-label>Cookie Lifetime in months</mat-label>
+      <input matInput placeholder="6" [(ngModel)]="customProperties.TRACK_LIFETIME_MONTHS" type="number">
+    </mat-form-field>
+
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Cross origin
+      </mat-panel-title>
+
+    </mat-expansion-panel-header>
+
+    <mat-form-field *ngFor="let entry of cors; let i = index" >
+      <input matInput placeholder="origin" [value]="entry" (change)="updateCorsEntry($event, i)" type="input">
+      <button mat-icon-button matSuffix mat-icon-button aria-label="Clear" aria-label="Remove entry" (click)="removeCorsEntry(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button mat-icon-button aria-label="add cors entry" (click)="addCorsEntry()">
+      <mat-icon>add</mat-icon>
+    </button>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Nodered options
+      </mat-panel-title>
+
+    </mat-expansion-panel-header>
+
+
+    <mat-slide-toggle *ngIf="customProperties" [(ngModel)]="customProperties.NODERED_ENABLE_PROJECTS">Enable projects</mat-slide-toggle>
+    <mat-slide-toggle *ngIf="customProperties" [(ngModel)]="customProperties.NODERED_ENABLE_PALLETE">Enable palette</mat-slide-toggle>
+
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div class="button-row">
+  <button class="save" mat-raised-button (click)="save()">Save</button>
+</div>

@@ -1,0 +1,56 @@
+<div class="items-wrapper" *ngIf="userSession != null">
+    <div class="item-wrapper" *ngIf="sid != null">
+        <span class="label">Session ID</span>
+        <a class="value" [routerLink]="['/dashboard/session', userSession.sid ]">
+            {{ userSession.sid }}
+
+        </a>
+    </div>
+    <div class="item-wrapper">
+        <span class="label">Create Date</span>
+        <span class="value">
+            {{ userSession.createDate | date }}
+        </span>
+    </div>
+    <div class="item-wrapper">
+        <span class="label">User Agent</span>
+        <span class="value">
+            {{ userSession.userAgent }}
+        </span>
+    </div>
+    <div class="item-wrapper" *ngIf="userSession.browser != null">
+        <span class="label">Browser</span>
+        <span class="value">
+            {{ userSession.browser.name }} : {{ userSession.browser.version }}
+        </span>
+    </div>
+
+    <div class="item-wrapper" *ngIf="userSession.operatingSystem != null">
+        <span class="label">Operating System</span>
+        <span class="value">
+            {{ userSession.operatingSystem.name }} : {{ userSession.operatingSystem.version }}
+        </span>
+    </div>
+
+    <div class="item-wrapper" *ngIf="userSession.cpu != null">
+        <span class="label">System architecture</span>
+        <span class="value">
+            {{ userSession.cpu.architecture }}
+        </span>
+    </div>
+
+    <div class="item-wrapper">
+        <span class="label">City</span>
+        <span class="value">
+            {{ userSession.city }}
+        </span>
+    </div>
+
+    <div class="item-wrapper">
+        <span class="label">Country</span>
+        <span class="value">
+            {{ userSession.country }}
+        </span>
+    </div>
+
+</div>

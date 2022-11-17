@@ -1,0 +1,14 @@
+@import "grid";
+@import "variables";
+
+:host {
+    padding: $app-global-margin;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        margin-bottom: calc($app-global-margin / 2);
+    }
+
+    @include grid(".flex-grid", 300px, 12px);
+}

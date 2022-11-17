@@ -1,0 +1,105 @@
+@import "variables";
+
+:host {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+    //border-bottom: 2px solid $app-primary-color-dark;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+        display: none;
+      }
+
+    .tab-wrapper {
+        background-color: $app-primary-color-dark;
+        margin-bottom: -8px;
+
+        &.active {
+            background-color: white;
+        }
+
+        .tab {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            padding: calc($app-global-margin / 4) calc($app-global-margin);
+            cursor: pointer;
+            background-color: white;
+            margin-bottom: 4px;
+            max-width: 100px;
+            overflow: hidden;
+
+            &::after {
+                content: "";
+                position: absolute;
+                width: 1px;
+                height: 40%;
+                right: 0px;
+                background-color: rgba(128, 128, 128, 0.3);
+                z-index: 10;
+            }
+
+            &:before {
+                content: '';
+                width: 100%;
+                height: 99%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: linear-gradient(90deg, transparent 80%, white 90%);
+                z-index: 10;
+            }
+
+            &.activeLeft {
+                border-bottom-right-radius: $app-global-border-radius;
+            }
+
+            &.active {
+                background-color: $app-primary-color-dark;
+                border-top-left-radius: $app-global-border-radius;
+                border-top-right-radius: $app-global-border-radius;
+                margin-top: 4px;
+
+                &::before {
+                    background: linear-gradient(90deg, transparent 80%, $app-primary-color-dark 90%);
+                }
+
+                .name {
+                    color: white;
+                    margin-bottom: 4px;
+                }
+            }
+
+            &.activeRight {
+                border-bottom-left-radius: $app-global-border-radius;
+            }
+
+            &.first.active {
+                margin-left: 4px;
+            }
+
+            &.last {
+                &::after {
+                    width: 0px;
+                }
+            }
+
+            .name {
+                position: relative;
+                margin: 0px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                font-family: Roboto, sans-serif;
+                line-height: 1.75;
+                text-align: left;
+                color: $app-text-color-main;
+                text-decoration: none;
+            }
+        }
+    }
+}

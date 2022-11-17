@@ -1,0 +1,44 @@
+@import "variables";
+
+:host {
+    .header {
+        display: flex;
+        flex-direction: row;
+
+        .title {
+            margin-left: 5px;
+        }
+
+        .back-url {
+            margin-top: 1px;
+            color: $app-primary-color-main;
+        }
+        .back-url,
+        .title {
+            display: flex;
+        }
+
+    }
+    .subheader {
+        .subtitle {
+            margin-left: 30px;
+        }
+    }
+    .title {
+        margin: 0px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        font-family: Roboto, sans-serif;
+        line-height: 1.2;
+        color: $app-primary-color-main;
+    }
+
+    .subtitle {
+        margin: 0px;
+        font-size: 1rem;
+        font-weight: 600;
+        font-family: Roboto, sans-serif;
+        line-height: 1.235;
+        color: rgb(97, 97, 97);
+    }
+}

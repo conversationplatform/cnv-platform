@@ -1,0 +1,40 @@
+<app-header class="header" [title]="'Session details'" [subtitle]="details" [goback]="true">
+</app-header>
+
+
+<mat-accordion multi="true">
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Details
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-session-description *ngIf="userSession != null" [userSession]="userSession"></app-session-description>
+
+        <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Activity
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Tracks
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <app-track-list *ngIf="userSession != null" [filters]="filters"></app-track-list>
+
+        <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    </mat-expansion-panel>
+
+</mat-accordion>

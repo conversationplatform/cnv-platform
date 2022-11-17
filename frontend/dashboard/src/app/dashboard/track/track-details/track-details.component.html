@@ -1,0 +1,58 @@
+<app-header class="header" [title]="'Track details'" [subtitle]="details" [goback]="true">
+</app-header>
+
+
+<mat-accordion multi="true">
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Details
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+
+        <app-track-description *ngIf="track != null" [track]="track"></app-track-description>
+
+        <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Session
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-session-description *ngIf="track != null" [sid]="track.sid"></app-session-description>
+        <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Store
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-object-tree *ngIf="track != null" [dataObject]="track.store"></app-object-tree>
+        <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Interactions
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <button mat-button (click)="downloadAsCSV()">
+            <mat-icon>file_download</mat-icon>
+            Save as CSV
+        </button>
+        <app-interaction-list *ngIf="track != null" [filters]="filters" [hideTid]="true"></app-interaction-list>
+        <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    </mat-expansion-panel>
+
+
+
+</mat-accordion>

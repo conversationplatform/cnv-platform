@@ -1,0 +1,47 @@
+@import 'variables/colors';
+
+.rcw-sender {
+  align-items: center;
+  display: flex;
+  background-color: $grey-2;
+  height: 45px;
+  padding: 5px;
+  border-radius: 0 0 10px 10px;
+
+  &.expand {
+    height: 55px;
+  }
+}
+
+.rcw-new-message {
+  width: 100%;
+  border: 0;
+  background-color: $grey-2;
+  height: 30px;
+  padding-left: 15px;
+  resize: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &.expand {
+    height: 40px;
+  }
+}
+
+.rcw-send {
+  background: $grey-2;
+  border: 0;
+
+  .rcw-send-icon {
+    height: 25px;
+  }
+}
+
+@media screen and (max-width: 800px)  {
+  .rcw-sender {
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+}

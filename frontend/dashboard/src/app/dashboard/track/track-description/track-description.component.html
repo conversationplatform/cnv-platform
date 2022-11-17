@@ -1,0 +1,22 @@
+<div class="items-wrapper" *ngIf="track != null">
+    <div class="item-wrapper" *ngIf="tid != null">
+        <span class="label">Track ID</span>
+        <a class="value" [routerLink]="['/dashboard/track', track.sid ]">
+            {{ track.tid }}
+
+        </a>
+    </div>
+    <div class="item-wrapper">
+        <span class="label">Date</span>
+        <span class="value">
+            {{ track.date | date }}
+        </span>
+    </div>
+    <div class="item-wrapper">
+        <span class="label">Flow ID</span>
+        <span class="value">
+            {{ track.flowId }}
+        </span>
+    </div>
+
+</div>

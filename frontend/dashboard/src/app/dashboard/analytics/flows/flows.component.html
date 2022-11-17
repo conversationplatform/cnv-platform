@@ -1,0 +1,22 @@
+<mat-button-toggle-group>
+
+  <mat-button-toggle *ngFor="let range of timeRange" [value]="range.value" aria-label="range.name">
+    {{ range.name }}
+  </mat-button-toggle>
+</mat-button-toggle-group>
+
+
+
+<mat-accordion>
+  <mat-expansion-panel expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Activity
+      </mat-panel-title>
+
+    </mat-expansion-panel-header>
+
+    <div id="flows-chart" style="width: 100%; min-height: 400px"></div>
+  </mat-expansion-panel>
+
+</mat-accordion>

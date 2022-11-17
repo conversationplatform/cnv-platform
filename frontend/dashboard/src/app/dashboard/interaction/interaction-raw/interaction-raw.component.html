@@ -1,0 +1,6 @@
+<ng-container *ngIf="interaction != null">
+    
+    <h2 mat-dialog-title>Interaction details {{ interaction._key }}</h2>
+    <app-object-tree  [dataObject]="interaction"></app-object-tree>
+
+</ng-container>

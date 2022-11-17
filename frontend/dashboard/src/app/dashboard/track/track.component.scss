@@ -1,0 +1,22 @@
+@import "grid";
+@import "variables";
+
+:host {
+    display: flex;
+    flex-direction: column;
+    padding: $app-global-margin;
+
+    .header {
+        margin-bottom: calc($app-global-margin / 2);
+    }
+    
+
+    mat-card {
+        border-radius: $app-global-border-radius;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: none;
+        padding: 0px $app-global-margin;
+    }
+
+    
+}

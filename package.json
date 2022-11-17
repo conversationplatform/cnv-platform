@@ -1,0 +1,40 @@
+{
+  "name": "cnv-platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install:app": "yarn --cwd frontend/app",
+    "build:app": "yarn --cwd frontend/app build:prod",
+    "start:app": "yarn --cwd frontend/app start",
+
+    "install:dashboard": "yarn --cwd frontend/dashboard",
+    "build:dashboard": "yarn --cwd frontend/dashboard build",
+    "start:dashboard": "yarn --cwd frontend/dashboard start",
+
+    "install:middleware": "yarn --cwd middleware",
+    "build:middleware": "yarn --cwd middleware build",
+    "install:plugins:middleware": "yarn --cwd middleware install:plugins",
+    "start:middleware": "yarn --cwd middleware start:dev",
+    "start:prod": "yarn --cwd middleware start:prod",
+
+    "install:plugins:essentials": "yarn --cwd plugins/cnv-essentials",
+    "build:plugins:essentials": "yarn --cwd plugins/cnv-essentials build",
+
+    "install": "yarn install:app && yarn install:dashboard && yarn install:middleware",
+    "build": "yarn build:app && yarn build:dashboard && yarn build:middleware && yarn build:plugins:essentials && yarn install:plugins:middleware",
+    "start:arango": "docker-compose -f docker/arangodb.yml up -d",
+    "stop:arango": "docker-compose -f docker/arangodb.yml down"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisualVest-GmbH/cnv-platform.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VisualVest-GmbH/cnv-platform/issues"
+  },
+  "homepage": "https://github.com/VisualVest-GmbH/cnv-platform#readme"
+}

@@ -1,0 +1,12 @@
+<div class="info">
+    <p class="value">{{activeConnections}}</p>
+    <p class="label">Active Connections</p>
+</div>
+<div class="actions">
+    <button mat-button [disabled]="isLoading" (click)="loadActiveConections()">
+        <mat-icon aria-hidden="false" aria-label="refresh">refresh</mat-icon>
+    </button>
+</div>
+<div class="loading-wrapper" *ngIf="isLoading">
+    <app-loading></app-loading>
+</div>

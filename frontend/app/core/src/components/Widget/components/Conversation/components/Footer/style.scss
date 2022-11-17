@@ -1,0 +1,15 @@
+@import 'variables/colors';
+
+.rcw-footer {
+  align-items: center;
+  display: flex;
+  background-color: $grey-2;
+  border-radius: 0 0 10px 10px;
+}
+
+@media screen and (max-width: 800px)  {
+  .rcw-footer {
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+}

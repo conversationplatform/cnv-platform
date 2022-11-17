@@ -1,0 +1,123 @@
+@import "variables";
+
+:host {
+    display: flex;
+    width: 100%;
+
+    .items-wrapper {
+        flex: 4;
+
+        &> :last-child {
+            .line {
+                height: 24px !important;
+            }
+        }
+
+        .item-wrapper {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: $app-global-margin;
+    
+            &:last-child {
+                margin-bottom: 0px;
+            }
+    
+            .time {
+                width: 120px;
+                margin: 0px;
+                font-size: 0.75rem;
+                color: $app-text-color-light;
+                font-weight: 400;
+                font-family: Roboto, sans-serif;
+                line-height: 1.66;
+                text-align: left;
+                margin-top: 10px;
+            }
+
+            .line {
+                position: absolute;
+                background-color: rgba($app-text-color-light, 0.5);
+                height: calc(100% + $app-global-margin);
+                width: 2px;
+                left: 163px;
+                top: -$app-global-margin;
+                z-index: -1;
+            }
+    
+            .icon {
+                width: 40px;
+                height: 40px;
+                background: $app-primary-color-dark;
+                border-radius: 50%;
+                margin-left: $app-global-margin;
+                margin-right: $app-global-margin;
+            }
+    
+            .info-wrapper {
+                margin-top: 8px;
+                display: flex;
+                flex-direction: column;
+    
+                .title {
+                    margin: 0px;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    color: $app-text-color-dark;
+                    font-family: Roboto, sans-serif;
+                    line-height: 1.75;
+                    text-align: left;
+                    text-transform: capitalize;
+                }
+            }
+        }
+    } 
+
+    .buttons-wrapper {
+        flex: 1;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+
+        .button {
+            display: flex;
+            align-items: center;
+            border-radius: $app-global-border-radius;
+            background-color: $app-primary-color-light;
+            padding: 4px 8px;
+            cursor: pointer;
+            height: fit-content;
+            transition: all 0.1s;
+            margin-bottom: calc($app-global-margin / 4);
+
+            .color {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                margin-right: 4px;
+            }
+
+            .text {
+                margin: 0px;
+                font-size: 0.775rem;
+                font-weight: 500;
+                color: $app-text-color-dark;
+                font-family: Roboto, sans-serif;
+                line-height: 1.75;
+                text-align: left;
+                text-transform: capitalize;
+            }
+
+            &:hover {
+                transform: translateX(calc(-1 * ($app-global-margin / 2)));
+            }
+
+            &.active {
+                background-color: $app-primary-color-dark;
+                .text {
+                    color: white;
+                }
+            }
+        }
+    } 
+}

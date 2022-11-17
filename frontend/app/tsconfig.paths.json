@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@assets": ["./assets"],
+      "@actions": ["./core/src/store/actions"],
+      "@types": ["./src/store/types"],
+      "@scss/*": ["scss/*"],
+      "@constants/*": ["constants/*"],
+      "@utils/*": ["utils/*"],
+      "@messagesComponents": ["./core/src/components/Widget/components/Conversation/components/Messages/components"],
+      "@quickButtonsComponents": ["./core/src/components/Widget/components/Conversation/components/QuickButtons/components"]
+    }
+  }
+}

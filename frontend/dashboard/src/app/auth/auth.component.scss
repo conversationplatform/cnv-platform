@@ -1,0 +1,86 @@
+@import "../../stylings/variables.scss";
+
+:host {
+    width: 100%;
+    height: 100%;
+
+    mat-card {
+        top: 4em;
+
+        max-width: 400px;
+        width: 100%;
+        margin: 0 auto;
+
+        mat-form-field {
+            display: block;
+        }
+
+    }
+}
+
+.app-auth-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $app-primary-color-light;
+    height: 100%;
+    width: 100%;
+
+    .app-auth-form-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-width: 300px;
+        background-color: rgb(255, 255, 255);
+        color: rgb(97, 97, 97);
+        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        box-shadow: none;
+        background-image: none;
+        border-radius: $app-global-border-radius;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,.12);
+        padding: $app-global-margin;
+
+        .header1 {
+            margin-bottom: 2px;
+        }
+
+        .header2 {
+            margin-bottom: $app-global-margin;
+        }
+
+        .mat-form-field {
+            margin-bottom: 6px;
+            border-radius: $app-global-border-radius;
+        }
+
+        .app-button {
+            color: rgb(255, 255, 255);
+            background-color: $app-primary-color-main;
+            width: 100%;
+            box-shadow: none;
+            font-weight: 500;
+            border-radius: $app-global-border-radius;
+            outline: 0px;
+            border: 0px;
+            margin: 0px;
+            cursor: pointer;
+            user-select: none;
+            vertical-align: middle;
+            appearance: none;
+            text-decoration: none;
+            text-transform: capitalize;
+            font-family: Roboto, sans-serif;
+            font-size: 0.9375rem;
+            line-height: 1.75;
+            min-width: 64px;
+            padding: 8px 22px;
+            transition: all 0.3s;
+
+            &:hover{
+                background-color: $app-primary-color-dark;
+                transform: translateY(-6px);
+            }
+        }
+    }
+}

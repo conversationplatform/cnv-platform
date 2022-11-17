@@ -1,0 +1,33 @@
+@import "animation";
+@import "common";
+
+@import "./components/Conversation/style.scss";
+@import "./components/FullScreenPreview/styles.scss";
+@import "./components/Launcher/style.scss";
+
+.rcw-widget-container {
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px 20px 0;
+    max-width: 370px;
+    position: fixed;
+    right: 0;
+    width: 90vw;
+    z-index: 9999;
+}
+
+.rcw-full-screen {
+    @include widget-container-fs;
+}
+
+@media screen and (max-width: 800px) {
+    .rcw-widget-container {
+        height: 100%;
+        @include widget-container-fs;
+    }
+}
+
+.rcw-previewer .rcw-message-img {
+    cursor: pointer;
+}

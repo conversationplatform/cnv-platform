@@ -1,0 +1,44 @@
+@import "variables";
+
+:host {
+  background-color: white;
+  .mat-nav-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mat-subheader {
+    height: fit-content;
+    padding: 0;
+    margin: calc($app-global-margin / 2) 0px calc($app-global-margin / 2) 0px;
+    color: $app-primary-color-dark;
+    font-family: Roboto, sans-serif;
+    line-height: 1.66;
+    display: block;
+    font-size: 0.975rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .navbar-item {
+    color: $app-primary-color-main;
+    margin: 0px;
+    font-size: 0.775rem;
+    font-weight: 500;
+    line-height: 1.334em;
+    font-family: Roboto, sans-serif;
+    &:hover {
+      border-radius: $app-global-border-radius;
+      background: $app-primary-color-light;
+    }
+    &.active {
+      border-radius: $app-global-border-radius;
+      background: $app-primary-color-dark;
+      color: white;
+    }
+  }
+
+  .link {
+    display: flex;
+  }
+}

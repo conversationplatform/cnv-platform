@@ -1,0 +1,56 @@
+@import 'variables/colors';
+@import 'common';
+
+.rcw-message {
+  margin: 10px;
+  display: flex;
+  word-wrap: break-word;
+}
+
+.rcw-timestamp {
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.rcw-client {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+
+  .rcw-message-text {
+    @include message-bubble($turqois-2);
+  }
+
+  .rcw-timestamp {
+    align-self: flex-end;
+  }
+}
+
+.rcw-response {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .rcw-message-text {
+    @include message-bubble($grey-2);
+  }
+}
+
+/* For markdown elements created with default styles */
+.rcw-message-text {
+  p {
+    margin: 0;
+  }
+
+  img {
+    width: 100%;
+    object-fit: contain;
+  }
+}
+
+.rcw-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  margin-right: 10px;
+}

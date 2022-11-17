@@ -1,0 +1,39 @@
+@import "grid";
+@import "variables";
+
+:host {
+    display: flex;
+    flex-direction: column;
+    padding: $app-global-margin;
+
+    .header {
+        margin-bottom: calc($app-global-margin / 2);
+    }
+
+    div.button-row {
+        margin-top: 2em;
+        display: flex;
+        button.save {
+            background: $app-primary-color-dark;
+            color: white;
+            margin-left: auto;
+
+            &:disabled {
+                background: $app-primary-color-medium;
+            }
+        }
+    }
+
+    mat-form-field {
+        display: block;
+        max-width: 450px;
+    }
+
+    mat-slide-toggle {
+        display: block;
+        max-width: 150px;
+    }
+
+    
+
+}

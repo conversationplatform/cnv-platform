@@ -1,0 +1,28 @@
+<div class="app-auth-wrapper">
+    <form class="app-auth-form-wrapper" [formGroup]="loginFormGroup" (ngSubmit)="doLogin()">
+        <app-header class="header1" [title]="'Welcome Back'"></app-header>
+        <app-header class="header2" [subtitle]="'Login in to your account'"></app-header>
+
+        <mat-form-field appearance="outline">
+            <mat-label>User</mat-label>
+            <input matInput formControlName="user" placeholder="username or email">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="loginFormGroup.controls['user'].invalid">
+                User is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" placeholder="password" type="password">
+            <mat-icon matSuffix>lock</mat-icon>
+            <mat-error *ngIf="loginFormGroup.controls['password'].invalid">
+                Password is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <button class="app-button">
+            Sign In
+        </button>
+    </form>
+</div>

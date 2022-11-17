@@ -1,0 +1,20 @@
+@import "variables";
+
+:host {
+    height: 50px;
+    display: block;
+
+    mat-toolbar {
+        //border-radius: 21px;
+        height: 50px;
+        background: white;
+        color: $app-primary-color-main;
+        position: absolute;
+        z-index: 2;
+        box-shadow: none;
+    }
+
+    .spacer {
+        flex: 1 1 auto;
+      }
+}

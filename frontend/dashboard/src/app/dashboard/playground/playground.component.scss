@@ -1,0 +1,19 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+
+    .frame {
+        width: 100%;
+        height: 100%;
+
+        iframe {
+            border: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}

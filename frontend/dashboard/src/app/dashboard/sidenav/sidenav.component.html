@@ -1,0 +1,41 @@
+<mat-nav-list>
+    <div mat-subheader>Analytics</div>
+    <a class="navbar-item" mat-list-item routerLink="/dashboard/analytics" [routerLinkActive]="['active']">
+        <mat-icon mat-list-icon>analytics</mat-icon>
+        Analytics
+    </a>
+    <div mat-subheader>Records</div>
+    <a class="navbar-item" mat-list-item routerLink="/dashboard/sessions" [routerLinkActive]="['active']">
+        <div class="none"></div>
+        <mat-icon mat-list-icon>cookie</mat-icon>
+        Sessions
+    </a>
+    <a class="navbar-item" mat-list-item routerLink="/dashboard/tracks" [routerLinkActive]="['active']">
+        <div class="none"></div>
+        <mat-icon mat-list-icon>track_changes</mat-icon>
+        Tracks
+    </a>
+    <a class="navbar-item" mat-list-item routerLink="/dashboard/interactions" [routerLinkActive]="['active']">
+        <div class="none"></div>
+        <mat-icon mat-list-icon>data_array</mat-icon>
+        Interactions
+    </a>
+    <div mat-subheader>Extensions</div>
+    <a class="navbar-item" mat-list-item routerLink="/dashboard/nodered" [routerLinkActive]="['active']">
+        <mat-icon mat-list-icon>extension</mat-icon>
+        NodeRed
+    </a>
+    <ng-container *ngIf="currentFlows.length > 0">
+        <div mat-subheader>Playgrounds</div>
+        <a class="navbar-item" mat-list-item [routerLink]="['/dashboard/playground/']"
+            [routerLinkActive]="['active']">
+            <mat-icon mat-list-icon>open_in_new</mat-icon>
+            App
+        </a>
+    </ng-container>
+    <div mat-subheader>Application</div>
+    <a class="navbar-item" mat-list-item routerLink="/dashboard/settings" [routerLinkActive]="['active']">
+        <mat-icon mat-list-icon>settings</mat-icon>
+        Settings
+    </a>
+</mat-nav-list>

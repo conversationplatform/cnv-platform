@@ -1,0 +1,12 @@
+@mixin grid($selector, $minWidth, $gap) {
+    #{$selector}{
+        display: grid;
+        gap: $gap;
+        grid-template-columns: repeat(auto-fit, minmax($minWidth, 1fr));
+    }
+}
+
+.container {
+    margin-top: 1rem;
+    display: flex;
+}
