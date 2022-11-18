@@ -46,13 +46,21 @@ WORKDIR /cnv-platform
 
 COPY . .
 
+#RUN curl -sf https://gobinaries.com/tj/node-prune | sh
+
 RUN yarn install:middleware
 RUN yarn build:middleware
-COPY --from=builder-plugins-core /cnv-platform/plugins/cnv-core/*.tgz /cnv-platform/middleware/ 
-COPY --from=builder-plugins-essentials /cnv-platform/plugins/cnv-essentials/*.tgz /cnv-platform/middleware/
-RUN yarn --cwd middleware add middleware/*.tgz
+COPY --from=builder-plugins-core /cnv-platform/cnv-core.tgz /cnv-platform/middleware/ 
+COPY --from=builder-plugins-essentials /cnv-platform/cnv-essentials.tgz /cnv-platform/middleware/
+WORKDIR /cnv-platform/middleware
+RUN yarn add file:cnv-core.tgz
+RUN yarn add file:cnv-essentials.tgz
 
-FROM node:16 as final
+RUN npm prune --production
+#RUN node-prune
+
+
+FROM node:16-alpine as final
 
 WORKDIR /cnv-platform
 
@@ -62,24 +70,10 @@ COPY --from=builder-dashboard /cnv-platform/public/dashboard public/dashboard
 COPY --from=builder-middleware /cnv-platform/middleware/node_modules/ /cnv-platform/middleware/node_modules
 COPY --from=builder-middleware /cnv-platform/middleware/dist/ /cnv-platform/middleware/dist
 COPY --from=builder-middleware /cnv-platform/middleware/package.json /cnv-platform/middleware/
-
+COPY --from=builder-plugins-core /cnv-platform/cnv-core.tgz /cnv-platform/middleware/ 
+COPY --from=builder-plugins-essentials /cnv-platform/cnv-essentials.tgz /cnv-platform/middleware/
 
 EXPOSE 3000
 EXPOSE 1880
 
 CMD ["yarn", "--cwd", "middleware", "start:prod"]
-
-
-# FROM node:14
-
-# COPY --from=builder /app/node_modules/ /app/node_modules
-# COPY --from=builder /app/dist/ /app/dist
-# COPY --from=builder /app/package.json /app/
-
-# WORKDIR /app/dist
-
-
-# EXPOSE 3000
-# EXPOSE 1880
-
-# CMD ["npm", "run", "start:prod"]

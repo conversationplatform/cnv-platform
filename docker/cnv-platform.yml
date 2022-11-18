@@ -20,7 +20,7 @@ services:
   cnv-platform:
     restart: on-failure
     #platform: linux/amd64
-    image: cnv-platform:1.0.1-alpha
+    image: cnv-platform:1.0.4-alpha
     build:
       context: ../
       dockerfile: docker/Dockerfile
