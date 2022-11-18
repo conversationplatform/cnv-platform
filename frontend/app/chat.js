@@ -162,8 +162,8 @@ export default class ConversationApp extends HTMLElement {
         renderOverlayComponent(this.getWidget(name), props);
         handleOverlayNavbar(name);
       },
-      component: ({ type, name, props }) => {
-        renderFooterComponent(this.getWidget("footer"), props);
+      footer: ({ type, name, props }) => {
+        renderFooterComponent(this.getWidget(name), props);
       },
       disableTrackService: ({ type, name, props }) => {
         connection.disableTracking();
