@@ -1,8 +1,11 @@
 version: '3.7'
 services:
-  arangodb_db_container:
-    platform: linux/amd64
-    image: arangodb:3.7.12
+  arango:
+    #platform: linux/amd64
+    #image: arangodb:3.7.12
+
+    #note: if you need to upgrade the database, run: docker-compose -f arangodb.yml run --rm arangodb_db_container --database.auto-upgrade
+    image: arangodb:3.10.1
     environment:
       ARANGO_ROOT_PASSWORD: secret
     ports:

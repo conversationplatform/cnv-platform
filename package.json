@@ -18,13 +18,19 @@
     "start:middleware": "yarn --cwd middleware start:dev",
     "start:prod": "yarn --cwd middleware start:prod",
 
+    "install:plugins:core": "yarn --cwd plugins/cnv-core",
+    "build:plugins:core": "yarn --cwd plugins/cnv-core build",
+    "pack:plugins:core": "yarn --cwd plugins/cnv-core pack",
+
     "install:plugins:essentials": "yarn --cwd plugins/cnv-essentials",
     "build:plugins:essentials": "yarn --cwd plugins/cnv-essentials build",
+    "pack:plugins:essentials": "yarn --cwd plugins/cnv-essentials pack",
 
-    "install": "yarn install:app && yarn install:dashboard && yarn install:middleware",
-    "build": "yarn build:app && yarn build:dashboard && yarn build:middleware && yarn build:plugins:essentials && yarn install:plugins:middleware",
+    "install": "yarn install:app && yarn install:dashboard && yarn install:middleware && yarn install:plugins:core && yarn install:plugins:essentials",
+    "build": "yarn build:app && yarn build:dashboard && yarn build:middleware && yarn build:plugins:core && yarn build:plugins:essentials && yarn install:plugins:middleware ",
     "start:arango": "docker-compose -f docker/arangodb.yml up -d",
-    "stop:arango": "docker-compose -f docker/arangodb.yml down"
+    "stop:arango": "docker-compose -f docker/arangodb.yml down",
+    "build:docker": "docker-compose -f docker/cnv-platform.yml build"
 
   },
   "repository": {

@@ -1,0 +1,56 @@
+
+# build with: DOCKER_BUILDKIT=0 docker-compose -f docker/cnv-platform.yml build
+version: '3.7'
+services:
+  cnv-arangodb:
+    #platform: linux/amd64
+    #image: arangodb:3.7.12
+
+    #note: if you need to upgrade the database, run: docker-compose -f arangodb.yml run --rm arangodb_db_container --database.auto-upgrade
+    image: arangodb:3.10.1
+    restart: on-failure
+    environment:
+      ARANGO_ROOT_PASSWORD: secret
+    ports:
+      - 8529:8529
+    volumes:
+      - .volumes/arangodb3/data:/var/lib/arangodb3
+      - .volumes/arangodb3/apps_container:/var/lib/arangodb3-apps
+  
+  cnv-platform:
+    restart: on-failure
+    #platform: linux/amd64
+    image: cnv-platform:1.0.1-alpha
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+
+    environment:
+      # ARANGODB
+      ARANGO_HOST: http://cnv-arangodb:8529
+      ARANGO_USER: root
+      ARANGO_PASSWORD: secret
+      ARANGO_DATABASE: conversation
+
+      # Middleware
+      ADMIN_USER: admin
+      ADMIN_PASSWORD: secret
+      JWT_EXPIRATION_SECONDS: 600s
+      TRACK_LIFETIME_MONTHS: 1
+      ENABLE_CUSTOM_PROPERTIES: true
+
+      # Node-Red sidecar
+      USE_BUNDLED_NODERED: true
+      NODERED_WS_CONNECTION: ws://localhost:8080
+      NODERED_HTTP_CONNECTION: http://localhost:1880
+      NODERED_HOME_DIR: /mount
+      NODERED_FLOW_FILE: flows/flows.json
+      NODERED_ENABLE_PROJECTS: true
+      NODERED_ENABLE_PALLETE: true
+
+    ports:
+      - 3000:3000
+      - 1880:1880
+    depends_on:
+      - "cnv-arangodb"
+    

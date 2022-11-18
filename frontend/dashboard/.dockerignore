@@ -1,0 +1,7 @@
+.angular
+.github
+.vscode
+manifests
+node_modules
+proxy.config.json
+dist

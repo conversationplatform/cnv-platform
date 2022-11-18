@@ -20,10 +20,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "install:plugins": "npm link ../plugins/cnv-essentials"
+    "install:plugins": "npm link ../plugins/cnv-core ../plugins/cnv-essentials"
   },
   "dependencies": {
-    "@cnv-platform/cnv-essentials": "file:../../cnv-essentials/cnv-platform-cnv-essentials-v1.0.0.tgz",
     "@nestjs/axios": "^0.1.0",
     "@nestjs/common": "^9.0.7",
     "@nestjs/core": "^9.0.7",
