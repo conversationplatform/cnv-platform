@@ -44,6 +44,8 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
+window.React$4= React;
+
 export default class ConversationApp extends HTMLElement {
   host;
   flowId;

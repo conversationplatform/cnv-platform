@@ -15,9 +15,9 @@ import image from "@rollup/plugin-image";
 
 
 const packageJson = require("./package.json");
-
 export default {
   input: "widgets/widgetProvider.tsx",
+  external: ['react', 'react-dom'],
   output: [
     {
       name: packageJson.name,
@@ -38,7 +38,7 @@ export default {
     commonjs({
       namedExports: {
         "react-dom": Object.keys(ReactDOM),
-        react: Object.keys(React)
+        react: Object.keys(React),
       }
     }),
     typescript({
@@ -54,21 +54,14 @@ export default {
     globals(),
     builtins(),
     terser(),
-    image()
-  ]
+    image(),
+  ],
+
 };
 
 const fs = require('fs');
 
-const nodesFolder = fs.readdirSync('nodes')
 const nodes = {};
-
-// nodesFolder.forEach(node => {
-//   const indexFile = fs.readdirSync(`nodes/${node}`).filter(entry => entry.endsWith('.js'))[0] || null;
-//   if(indexFile) {
-//     nodes[node] = `nodes/${node}/${indexFile}`;
-//   }
-// })
 
 const mapFolder = (folder) => {
   const entries = fs.readdirSync(folder);
