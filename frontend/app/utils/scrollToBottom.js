@@ -6,6 +6,7 @@ export function scrollToBottom() {
     handleFooter();
     let conversationOverlay = document.querySelector(".rcw-conversation-overlay");
     let interaction = document.querySelector(".rcw-interaction");
+    let footer = document.querySelector(".rcw-footer");
     let messagesContainer = document.querySelector(".rcw-messages-container");
     let messages = document.querySelectorAll(".rcw-message");
     let currentMessage;
@@ -42,7 +43,7 @@ export function scrollToBottom() {
             messagesContainer.style.height = `${delta}px`;
         }
         setTimeout(() => {
-            interaction.style.bottom = "50px";
+            interaction.style.bottom = `${footer.clientHeight}px`;
             interaction.style.opacity = "1";
         }, 0);
     }
