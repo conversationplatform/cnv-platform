@@ -1,0 +1,175 @@
+P<script type="text/javascript">
+  var footerNameInputClass = "node-input-footer-name";
+  var footerUrlInputClass = "node-input-footer-url";
+  const footerArticleNameInputClass = "node-input-footer-article-name";
+  const footerArticleInputClass = "node-input-footer-article";
+
+
+  RED.nodes.registerType("cnv-essentials-footer", {
+    category: "conversation essentials",
+    color: "#a6ddff",
+    defaults: {
+      links: { value: [] },
+      articles: { value: [] },
+      image: { value: "", type: "repo-image-config" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-sliders",
+    label: function () {
+      return `cnv-essentials/footer\\n ${this.name || 'footer'}`;
+    },
+
+    oneditprepare: function () {
+
+      $('#node-input-image').on('change', (event) => loadAndPreviewImage(event.target.value, 'preview'));
+      loadAndPreviewImage(this.image, 'preview');
+
+      $('#node-input-image').select2(customImageSelect);
+
+
+      $("#node-input-footer-container")
+        .css("min-height", "250px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: "Add Links",
+          removable: true,
+
+          addItem: function (row, index, { url, name }) {
+            var rowTemplate = `
+            <h4>Link ${index + 1} </h4>
+              <div class="form-row">
+                  <div style='width:90%; display: inline-grid'>
+                    <label for="${footerNameInputClass}"><i class="fa fa-tag"></i> Name: </label>
+                    <input type="text" class="${footerNameInputClass}" value="${name || ''}"/>
+                  </div>
+
+                  <div style='width:90%; display: inline-grid'>
+                    <label for="${footerUrlInputClass}"><i class="fa fa-tag"></i> Url:</label>
+                    <input type="text" class="${footerUrlInputClass}" value="${url || ''}"/>
+                  </div>
+
+                </div>
+              </div>
+              `;
+
+            $(row).html(rowTemplate);
+          },
+        });
+
+      for (var i = 0; i < this.links.length; i++) {
+        const { url, name } = this.links[i];
+
+        $("#node-input-footer-container").editableList("addItem", {
+          url,
+          name,
+        });
+      }
+
+      $("#node-input-footer-container2")
+        .css("min-height", "250px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: "Add Article",
+          removable: true,
+
+          addItem: function (row, index, { name, article }) {
+
+            var rowTemplate = `
+            <h4>Article ${index + 1} </h4>
+
+            <div class="form-row">
+              <div style='width:90%; display: block'>
+                <label for="${footerArticleNameInputClass}"><i class="fa fa-tag"></i> Name: </label>
+                <input type="text" class="${footerArticleNameInputClass}" value="${name || ``}"/>
+              </div>
+
+
+              <div style='width:90%; display: block'>
+                <label for="${footerArticleInputClass}"><i class="fa fa-tag"></i> Article: </label>
+                <select class="${footerArticleInputClass}" id="${footerArticleInputClass}-${index}"/>
+              </div>
+            </div>
+            `;
+            $(row).html(rowTemplate);
+
+            setTimeout(function () {
+              $('#' + footerArticleInputClass + '-' + index).select2({
+                data: fetchMenuArticles(),
+                width: '60%'
+              }).val(article).trigger('change');
+            }, 250);
+          },
+        });
+
+      for (var i = 0; i < this.articles.length; i++) {
+        const { name, article } = this.articles[i];
+
+        $("#node-input-footer-container2").editableList("addItem", {
+          name,
+          article
+        });
+      }
+
+    },
+
+    oneditsave: function () {
+
+      var links = $("#node-input-footer-container").editableList("items");
+
+      var node = this;
+      node.links = [];
+      links.each(function (i) {
+        var link = $(this);
+
+        const name = link.find(`.${footerNameInputClass}`).val();
+        const url = link.find(`.${footerUrlInputClass}`).val();
+
+        node.links.push({ name, url });
+      });
+
+      var articles = $("#node-input-footer-container2").editableList("items");
+
+      var node = this;
+      node.articles = [];
+      articles.each(function (i) {
+        var slide = $(this);
+
+        const name = slide.find(`.${footerArticleNameInputClass}`).val();
+        const article = slide.find(`.${footerArticleInputClass}`).val();
+        const url = slide.find(`.${footerArticleInputClass}`).find("option:selected").text();
+        node.articles.push({ name, article, url });
+      });
+
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-footer">
+
+  <div class="form-row image-select">
+    <div class="img-select">
+      <label for="node-input-image">
+          <i class="fa fa-tag"></i>
+          Image
+      </label>
+      <input type="text" id="node-input-image" placeholder="image">
+
+    </div>
+    <img id="preview" src="#">
+  </div>
+
+    <hr/>
+    <h3>Data properties</h1>
+    <div class="form-row node-input-footer-container-row">
+      <ol id="node-input-footer-container"></ol>
+    </div>
+
+    <div class="form-row node-input-footer-container2-row">
+      <ol id="node-input-footer-container2"></ol>
+  </div>
+  </script>
+
+<script type="text/html" data-help-name="cnv-essentials-footer">
+    <p>Node for configuring the footer/menu</p>
+  </script>

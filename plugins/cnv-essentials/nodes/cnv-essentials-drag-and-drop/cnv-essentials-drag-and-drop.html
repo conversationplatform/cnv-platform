@@ -1,0 +1,178 @@
+
+<script type='text/javascript'>
+
+  const containerClass = 'node-input-draganddrop-container'
+  const nameInputClass = 'node-input-draganddrop-item-name'
+  const iconInputClass = 'node-input-draganddrop-item-icon'
+  const variablesDragDropInputClass = 'node-input-draganddrop-item-variables'
+
+  RED.nodes.registerType('cnv-essentials-drag-and-drop', {
+    category: 'conversation essentials',
+    color: '#a6bbcf',
+    defaults: {
+      variables: { value: '' },
+      name: { value: '' },
+      options: { value: [] },
+      delay: { value: 1 },
+      buttonLabel: { value: 'Next', required: true },
+      store: { value: 'draganddrop', required: true },
+      inputType: { value: 'STATIC', required: true },
+      hasQuestion: { value: false },
+      question: { value: '' }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'font-awesome/fa-arrows',
+    label: function () {
+      return `cnv-essentials/drag and drop\\n ${this.name || 'drag and drop node'}`;
+    },
+    oneditprepare: function() {
+      $(`#${containerClass}`)
+        .css('min-height', '250px')
+        .css('min-width', '450px')
+        .editableList({
+          addButton: 'Add Item',
+          removable: true,
+
+          addItem: function (row, index, { name, icon, variables, i }) {
+            let rowTemplate = `
+            <h4>Item ${index + 1} </h4>
+            <div class="form-row">
+                <div style='width:80%; display: block'>
+                  <label for="${nameInputClass}"><i class="fa fa-tag"></i> Name </label>
+                  <input class="${nameInputClass}" value="${ name || "" }"/>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+              <div style='width:80%; display: block'>
+                <label for="${iconInputClass}-${index}"><i class="fa fa-tag"></i> Icon</label>
+                <select id="${iconInputClass}-${index}" class="${iconInputClass}"></select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div style='width:80%; display: block'>
+                <label for="${variablesDragDropInputClass}"><i class="fa fa-tag"></i> Variables</label>
+                <input class="${variablesDragDropInputClass}" value="${variables || ""}" style="width: calc(100% - 24px)"/>
+              </div>
+            </div>
+            `
+
+            $(row).html(rowTemplate);
+            setTimeout(function () {
+                $('#' + iconInputClass + '-' + index)
+                    .select2({
+                        ...customImageSelect,
+                        data: fetchImages(),
+                        width: '86%',
+                    })
+                    .val(icon)
+                    .trigger('change');
+            }, 250);
+          },
+        })
+
+      // ON CLICK -> HAS QUESTION
+      document.getElementById('node-input-hasQuestion').onclick = function (event) {
+          document.getElementById('has-question-wrapper').style.display = this.checked ? 'block' : 'none'
+          if (!this.checked) {
+              question = ''
+              document.getElementById('node-input-question').value = ''
+          }
+      }
+
+
+      // ON CHANGE -> QUESTION
+      document.getElementById('node-input-question').onchange = function (event) {
+          question = event.target.value
+      }
+
+      if (this.hasQuestion) {
+          document.getElementById('node-input-hasQuestion').checked = true
+          document.getElementById('node-input-question').value = this.question
+      } else {
+          document.getElementById('has-question-wrapper').style.display =  'none'
+      }
+
+      for (let i = 0; i < this.options.length; i++) {
+        const { name, icon, variables } = this.options[i]
+
+        $(`#${containerClass}`).editableList('addItem', {
+          name,
+          icon,
+          variables,
+          i,
+        })
+      }
+    },
+    oneditsave: function () {
+      const options = $(`#${containerClass}`).editableList('items')
+
+      const node = this
+      node.options = []
+      options.each(function (i) {
+        const option = $(this)
+        const name = option.find(`.${nameInputClass}`).val()
+        const icon = option.find(`.${iconInputClass}`).val()
+        const variables = option.find(`.${variablesDragDropInputClass}`).val()
+
+        node.options.push({ name, icon, variables })
+      })
+    },
+  })
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-drag-and-drop">
+  <h3>Node properties</h3>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row"
+       style="display:flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <label for="switch-show-info" style="display:flex; justify-content: center;">Has Question</label>
+      <label id="switch-show-info" class="switch switch-show-info">
+        <input type="checkbox" name="node-input-hasQuestion" id="node-input-hasQuestion" value="`${hasQuestion}`"/>
+        <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+  <div class="form-row" id="has-question-wrapper">
+    <label for="node-input-question"><i class="fa fa-tag"></i> Question </label>
+    <input type="text" id="node-input-question" placeholder="Question" />
+  </div>
+
+  <hr />
+
+  <h3>Data properties</h3>
+
+  <div class="form-row">
+    <label for="node-input-inputType"><i class="fa fa-tag"></i> Input Type</label>
+    <select id="node-input-inputType">
+      <option value="STATIC" selected>Manual insert</option>
+      <option value="MULTISELECT">From previous multiselect node</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-buttonLabel"><i class="fa fa-tag"></i> Button Label</label>
+    <input type="text" id="node-input-buttonLabel" placeholder="" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-store"><i class="fa fa-tag"></i> Store </label>
+    <input type="text" id="node-input-store" placeholder="Storage name" />
+  </div>
+
+  <hr />
+
+  <div class="form-row node-input-draganddrop-container-row">
+    <ol id="node-input-draganddrop-container"></ol>
+  </div>
+
+</script>
+
+<script type="text/html" data-help-name="cnv-essentials-drag-and-drop">
+  <p>Drag and Drop widget</p>
+</script>

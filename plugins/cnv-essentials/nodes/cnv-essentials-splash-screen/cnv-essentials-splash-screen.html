@@ -1,0 +1,135 @@
+<script src="/red/resources/@cnv-platform/cnv-essentials/shared/main.js"></script>
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-essentials/shared/main.css">
+
+<script type="text/javascript">
+
+  RED.nodes.registerType("cnv-essentials-splashscreen", {
+    category: "conversation essentials",
+    color: "#a6bbcf",
+    defaults: {
+      name: { value: "splash screen" },
+      title: { value: "Splash Screen Node title" },
+      image: { value: "", type: "repo-image-config" },
+      textButton: {value:"Let's go"},
+      delay: { value: 1 },
+      links: {
+        value: [
+          {
+            linkName: '',
+            link: ''
+          },
+          {
+            linkName: '',
+            link: ''
+          }
+        ]
+      }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-desktop",
+    label: function () {
+      return `cnv-essentials/splash screen\\n ${this.name || 'splash screen node'}`;
+    },
+    oneditprepare: function () {
+      $('#node-input-image').on('change', (event) => loadAndPreviewImage(event.target.value, 'preview'));
+      loadAndPreviewImage(this.image, 'preview');
+
+      $('#node-input-image').select2(customImageSelect);
+
+      $("#node-input-splashscreen-container")
+        .css("min-height", "150px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: false,
+          addItem: function (row, index, { linkName, link, i }) {
+
+            var rowTemplate = `
+            <div width="100%">
+              <div style='width:45%; display: inline-grid'>
+                <input class="node-input-links-linkName" value="${linkName || ""}"/>
+              </div>
+              <div style='width:45%; display: inline-grid'>
+                <input class="node-input-links-link" value="${link || ""}" />
+              </div>
+            </div>
+            `;
+
+            $(row).html(rowTemplate);
+          },
+
+          header: $("<div>").append(
+            $.parseHTML(
+              "<div style='width:45%; display: inline-grid'>Link Name</div><div style='width:45%; display: inline-grid'>Link</div>"
+            )
+          ),
+        });
+
+      for (var i = 0; i < this.links.length; i++) {
+        const { linkName, link } = this.links[i];
+        $("#node-input-splashscreen-container").editableList("addItem", {
+          linkName,
+          link,
+          i,
+        });
+      }
+    },
+    oneditsave: function () {
+      var links = $("#node-input-splashscreen-container").editableList("items");
+
+      var node = this;
+      node.links = [];
+      links.each(function (i) {
+        var link = $(this);
+        const linkName = link.find(`.node-input-links-linkName`).val();
+        const url = link.find(`.node-input-links-link`).val();
+
+        node.links.push({ linkName, link: url });
+      });
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-splashscreen">
+  <h3>Node properties</h1>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+
+  <hr />
+
+  <h3>Data properties</h3>
+
+  <div class="form-row">
+    <label for="node-input-title"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-title" placeholder="Title">
+  </div>
+  <div class="form-row">
+    <label for="node-input-textButton"><i class="fa fa-tag"></i> Button Text</label>
+    <input type="text" id="node-input-textButton" placeholder="Let's Go" >
+  </div>
+  <div class="form-row image-select">
+    <div class="img-select">
+      <label for="node-input-image">
+          <i class="fa fa-tag"></i>
+          Image
+      </label>
+      <input type="text" id="node-input-image" placeholder="image">
+
+    </div>
+    <img id="preview" src="#">
+  </div>
+  <div class="form-row">
+    <label for="node-input-delay"><i class="fa fa-tag"></i> Delay</label>
+    <input type="number" id="node-input-delay" placeholder="Delay">
+  </div>
+  <div class="form-row node-input-splashscreen-container-row">
+    <ol id="node-input-splashscreen-container"></ol>
+  </div>
+
+</script>
+
+<script type="text/html" data-help-name="cnv-essentials-splashscreen">
+  <p>Splash Screen node</p>
+</script>

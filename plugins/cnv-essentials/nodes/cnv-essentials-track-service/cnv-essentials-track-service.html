@@ -1,0 +1,55 @@
+<script type="text/javascript">
+    
+
+    RED.nodes.registerType('track-service',{
+        category: 'Track',
+        defaults: {
+            name: {value:""},
+            store: { value: "privacyOptionsStorage" },
+            storeTrackDisableMandatoryOption: { value: true},
+            storeTrackDisableOption: { value: "allowTrack" },
+            storeMatomoDisableMandatoryOption: { value: false},
+            storeMatomoDisableOption: { value: "allowMatomoTrack" }
+        },
+        inputs: 1,
+        outputs: 1,
+
+        
+        label: function() {
+            return this.name || "Track Service";
+        },
+        
+    });
+</script>
+
+<script type="text/html" data-template-name="track-service">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-store"><i class="fa fa-tag"></i> Store</label>
+        <input type="text" id="node-input-store" placeholder="Store">
+    </div>
+    <div class="form-row">
+        <label for="node-input-storeTrackDisableMandatoryOption"><i class="fa fa-tag"></i> Track Disable Mandatory Option</label>
+        <input type="checkbox" id="node-input-storeTrackDisableMandatoryOption" placeholder="Track Disable Mandatory Option">
+    </div>
+    <div class="form-row">
+        <label for="node-input-storeTrackDisableOption"><i class="fa fa-tag"></i> Track Disable Option</label>
+        <input type="text" id="node-input-storeTrackDisableOption" placeholder="Track Disable Option">
+    </div>
+    <div class="form-row">
+        <label for="node-input-storeMatomoDisableMandatoryOption"><i class="fa fa-tag"></i> Matomo Disable Mandatory Option</label>
+        <input type="checkbox" id="node-input-storeMatomoDisableMandatoryOption" placeholder="Matomo Disable Mandatory Option">
+    </div>
+    <div class="form-row">
+        <label for="node-input-storeMatomoDisableOption"><i class="fa fa-tag"></i> Matomo Disable Option</label>
+        <input type="text" id="node-input-storeMatomoDisableOption" placeholder="Matomo Disable Option">
+    </div>
+    
+</script>
+
+<script type="text/html" data-help-name="track-service">
+    <p>Once called in a flow, the user session id is reseted to prevent user history correlation.</p>
+</script>

@@ -1,0 +1,167 @@
+.custom-range-wrapper {
+  .headline {
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.24px;
+    color: #626262;
+    overflow: visible;
+  }
+
+  .range-implementation-wrapper {
+    position: relative;
+    width: 100%;
+    &:hover {
+      .tooltip {
+        opacity: 1;
+      }
+    }
+
+    .container {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider {
+      position: relative;
+      height: 8px;
+    }
+
+    .slider__track,
+    .slider__range {
+      position: absolute;
+      border-radius: 3px;
+      height: 5px;
+    }
+
+    .slider__track {
+      background-color: #ced4da;
+      height: 8px;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: 0.2s;
+      transition: opacity 0.2s;
+      border-radius: 100px;
+      margin: 0px;
+      cursor: pointer;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .slider__range {
+      height: 8px;
+      background: var(--conversation-app-primary-color);
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: 0.2s;
+      transition: opacity 0.2s;
+      border-radius: 100px;
+      margin: 0px;
+      cursor: pointer;
+      z-index: 2;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    /* Removing the default appearance */
+    .thumb,
+    .thumb::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .thumb {
+      pointer-events: none;
+      position: absolute;
+      height: 0;
+      width: 100%;
+      outline: none;
+      top: 2px;
+      left: -2px;
+    }
+
+    .thumb--zindex-3 {
+      z-index: 3;
+    }
+
+    .thumb--zindex-4 {
+      z-index: 4;
+    }
+
+    .thumb--zindex-5 {
+      z-index: 5;
+    }
+
+    /* For Chrome browsers */
+    .thumb::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      background-size: contain;
+      height: 24px;
+      width: 24px;
+      border: none;
+      border-radius: 100px;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 15px 0px;
+      pointer-events: all;
+      position: relative;
+      cursor: grab;
+      background-color: white;
+    }
+
+    /* For Firefox browsers */
+    .thumb::-moz-range-thumb {
+      background-size: contain;
+      height: 24px;
+      width: 24px;
+      border: none;
+      border-radius: 100px;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 15px 0px;
+      pointer-events: all;
+      position: relative;
+      cursor: grab;
+      background-color: white;
+    }
+
+    .tooltip {
+      opacity: 0;
+      color: white;
+      background-color: var(--conversation-app-primary-color);
+      position: absolute;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      font-stretch: 100%;
+      line-height: normal;
+      width: 50px;
+      height: 24px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      top: -38px;
+    }
+  }
+
+  .positions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 12px;
+    color: #626262;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.24px;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    text-align: right;
+  }
+}

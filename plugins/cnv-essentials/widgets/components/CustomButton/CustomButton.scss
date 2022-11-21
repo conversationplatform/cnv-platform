@@ -1,0 +1,47 @@
+.custom-button-wrapper {
+  opacity: 0;
+  animation-name: fadeInBottom;
+  animation-duration: 0.8s;
+  animation-fill-mode: forwards;
+
+  cursor: pointer;
+  width: 100%;
+  min-height: 46px;
+  text-transform: none;
+  font-size: 15px;
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: 0.26px;
+  line-height: 1.33;
+  text-align: center;
+  padding: 6px 12px;
+  border-radius: 23px;
+  box-shadow: rgb(16 41 184 / 15%) 0px 0px 15px 0px;
+  border: none;
+
+  color: var(--color);
+  background-color: var(--backgroundColor);
+
+  &:hover {
+    color: var(--colorHover);
+    background-color: var(--backgroundColorHover);
+  }
+
+  &:disabled {
+    color: var(--colorDisabled);
+    background-color: var(--backgroundColorDisabled);
+    cursor: not-allowed;
+  }
+}
+
+@keyframes fadeInBottom {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

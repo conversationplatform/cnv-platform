@@ -1,0 +1,66 @@
+@import "https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css";
+
+.interact-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .inputs-wrapper {
+        padding: 24px;
+        margin-top: -20px;
+
+        .input-wrapper {
+            margin-bottom: 12px;
+        }
+    }
+
+    .buttons-wrapper {
+        padding: 0px 24px 24px 24px;
+
+        .button-wrapper {
+            margin-bottom: 12px;
+        }
+    }
+
+    .rating { 
+        border: none;
+        float: left;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: row-reverse;
+      }
+      
+      .rating > input { display: none; } 
+      .rating > label:before { 
+        margin: 5px;
+        font-size: 3.25em;
+        font-family: FontAwesome, sans-serif;
+        display: inline-block;
+        content: "\f005";
+      }
+      
+      .rating > .half:before { 
+        content: "\f089";
+        position: absolute;
+      }
+      
+      .rating > label { 
+        color: #ddd; 
+       float: right; 
+      }
+      
+      /***** CSS Magic to Highlight Stars on Hover *****/
+      
+      .rating > input:checked ~ label, /* show gold star when clicked */
+      .rating:not(:checked) > label:hover, /* hover current star */
+      .rating:not(:checked) > label:hover ~ label { color: var(--conversation-app-rating-color);  } /* hover previous stars in list */
+      
+      .rating > input:checked + label:hover, /* hover current star when changing rating */
+      .rating > input:checked ~ label:hover,
+      .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+      .rating > input:checked ~ label:hover ~ label { color: var(--conversation-app-rating-color);  } 
+
+    
+    
+}

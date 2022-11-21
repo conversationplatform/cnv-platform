@@ -1,0 +1,62 @@
+.splash-wrapper {
+  position: relative;
+  font-family: var(--conversation-app-font-family, 'Arial');
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #dedede;
+
+  .title {
+    position: absolute;
+    top: 60px;
+    left: 30px;
+    right: 30px;
+    color: #fff;
+    font-size: 36px;
+    font-weight: 700;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.2em;
+    letter-spacing: normal;
+  }
+  .image {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .button-wrapper {
+    position: absolute;
+    width: 240px;
+    bottom: 88px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .footer-wrapper {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    bottom: 32px;
+  }
+  .links {
+    font-size: 15;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    color: var(--conversation-app-primary-text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,24 @@
+.slider-wrapper {
+  width: 100%;
+
+  .image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+
+    .image {
+      height: 50%;
+      width: 50%;
+      border-radius: 6px;
+    }
+  }
+
+  .sliders-wrapper {
+    margin: 12px 24px 0px 24px;
+  }
+
+  .button-wrapper {
+    margin: 24px;
+  }
+}

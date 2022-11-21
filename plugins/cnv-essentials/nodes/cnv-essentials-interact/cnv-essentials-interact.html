@@ -1,0 +1,200 @@
+<script type="text/javascript">
+  const valueInputClass = "node-input-buttons-value";
+  const labelInputClass = "node-input-buttons-label";
+  const labelInputsClass = "node-input-userinputs-label";
+  const keyValueInputsClass = "node-input-userinputs-keyvalue";
+  const buttonTypeInputClass = "node-input-buttons-buttonType";
+  const delayInputClass = "node-input-buttons-delay";
+
+  RED.nodes.registerType("cnv-essentials-interact", {
+    category: "conversation essentials",
+    color: "#a6bbcf",
+    defaults: {
+      name: { value: "" },
+      buttons: { value: [{ value: "value", label: "label" }] },
+      userInputs: { value: [] },
+      store: { value: "" },
+      delay: { value: 1 },
+      hasTextInput: { value: false },
+      defaultText: {value: "Next" },
+      hasQuestion: { value: false },
+      question: { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-circle",
+    label: function () {
+      return `cnv-essentials/interaction \\n ${this.name || 'interaction node'}`;
+    },
+
+    oneditprepare: function () {
+      $("#node-input-buttons-container")
+        .css("min-height", "250px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: "Add Button",
+          removable: true,
+
+          addItem: function (row, index, { value, label, buttonType, i }) {
+
+            var rowTemplate = `
+            <div class="form-row">
+              <div style='width:90%; display: block'>
+                <label for="${labelInputClass}"><i class="fa fa-tag"></i> Label </label>
+                <input class="${labelInputClass}" value="${label || "Next"}" />
+              </div>
+              <div style='width:90%; display: block; margin-top: 15px'>
+                <label for="${buttonTypeInputClass}"><i class="fa fa-tag"></i> Button Type</label>
+                <select id="${buttonTypeInputClass}" >
+                  <option value="PRIMARY" ${buttonType === 'PRIMARY' && 'selected'}> Primary button </option>
+                  <option value="SECONDARY" ${buttonType === 'SECONDARY' && 'selected'}> Secondary button </option>
+                  <option value="INTERNAL" ${buttonType === 'INTERNAL' && 'selected'}> Internal link button </option>
+                </select>
+              </div>
+            </div>
+            `;
+
+            $(row).html(rowTemplate);
+          },
+        });
+
+      for (var i = 0; i < this.buttons.length; i++) {
+        const { value, label, buttonType } = this.buttons[i];
+
+        $("#node-input-buttons-container").editableList("addItem", {
+          label,
+          buttonType,
+          i,
+        });
+      }
+
+      $("#node-input-userinputs-container")
+        .css("min-height", "250px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: "Add Inputs",
+          removable: true,
+
+          addItem: function (row, index, { label }) {
+
+            var rowTemplate = `
+            <div class="form-row">
+
+              <div style='width:90%; display: block'>
+                <label for="${labelInputsClass}"><i class="fa fa-tag"></i> Label </label>
+                <input class="${labelInputsClass}" value="${label || ""}" />
+              </div>
+              </div>
+            `;
+
+            $(row).html(rowTemplate);
+          },
+        });
+
+      // ON CLICK -> HAS QUESTION
+      document.getElementById("node-input-hasQuestion").onclick = function (event) {
+        document.getElementById("has-question-wrapper").style.display = this.checked ? "block" : "none";
+        if (!this.checked) {
+          question = "";
+          document.getElementById("node-input-question").value = "";
+        }
+      };
+
+      // ON CHANGE -> QUESTION
+      document.getElementById("node-input-question").onchange = function (event) {
+        question = event.target.value;
+      };
+
+      if (this.hasQuestion) {
+        document.getElementById("node-input-hasQuestion").checked = true;
+        document.getElementById("node-input-question").value = this.question;
+      } else {
+        document.getElementById("has-question-wrapper").style.display = "none";
+      }
+
+      for (var i = 0; i < this.userInputs.length; i++) {
+        const { label } = this.userInputs[i];
+
+        $("#node-input-userinputs-container").editableList("addItem", {
+          label,
+        });
+      }
+
+    },
+
+    oneditsave: function () {
+      var buttons = $("#node-input-buttons-container").editableList("items");
+
+      var node = this;
+      node.buttons = [];
+      buttons.each(function (i) {
+        var button = $(this);
+        const label = button.find(`.${labelInputClass}`).val();
+        const buttonType = button.find(`#${buttonTypeInputClass}`).val();
+
+        node.buttons.push({ label, buttonType });
+      });
+
+      var userInputs = $("#node-input-userinputs-container").editableList("items");
+
+      var node = this;
+      node.userInputs = [];
+      userInputs.each(function (i) {
+        var userInput = $(this);
+        const label = userInput.find(`.${labelInputsClass}`).val();
+
+        node.userInputs.push({ label });
+      });
+    },
+
+  });
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-interact">
+  <h3>Node properties</h1>
+    <div class="wrapper">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-delay"><i class="fa fa-tag"></i> Delay</label>
+    <input type="number" id="node-input-delay" placeholder="Delay" />
+  </div>
+  <div
+      class="form-row"
+      style="display:flex; align-items: center; margin-bottom: 24px; justify-content: space-between;"
+  >
+      <div style="display: flex; flex-direction: column; align-items: center;">
+          <label for="switch-show-info" style="display:flex; justify-content: center;">Has Question</label>
+          <label class="switch switch-show-info">
+              <input type="checkbox" name="node-input-hasQuestion" id="node-input-hasQuestion" value="`${hasQuestion}`"/>
+              <span class="slider round"></span>
+          </label>
+      </div>
+  </div>
+  <div class="form-row" id="has-question-wrapper">
+      <label for="node-input-question"><i class="fa fa-tag"></i> Question </label>
+      <input type="text" id="node-input-question" placeholder="Question" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-store"><i class="fa fa-tag"></i> Store</label>
+    <input type="text" id="node-input-store" placeholder="default" />
+  </div>
+</div>
+
+  <h3>Inputs</h3>
+  <div class="form-row node-input-userinputs-container-row">
+    <ol id="node-input-userinputs-container"></ol>
+  </div>
+  <h3>Buttons</h3>
+    <div class="form-row node-input-buttons-container-row">
+      <ol id="node-input-buttons-container"></ol>
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="cnv-essentials-interact">
+  <p>interact widget</p>
+
+</script>

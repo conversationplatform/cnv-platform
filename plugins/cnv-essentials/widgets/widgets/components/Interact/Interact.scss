@@ -1,0 +1,21 @@
+.interact-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .inputs-wrapper {
+        padding: 24px;
+
+        .input-wrapper {
+            margin-bottom: 12px;
+        }
+    }
+
+    .buttons-wrapper {
+        padding: 0px 24px 24px 24px;
+
+        .button-wrapper {
+            margin-bottom: 12px;
+        }
+    }
+}

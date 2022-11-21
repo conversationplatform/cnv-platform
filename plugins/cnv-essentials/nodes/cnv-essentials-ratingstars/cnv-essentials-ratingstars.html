@@ -1,0 +1,67 @@
+<script type="text/javascript">
+    const valueRatingInputClass = "node-input-buttons-value";
+    const labelRatingInputClass = "node-input-buttons-label";
+    const labelRatingInputsClass = "node-input-userinputs-label";
+    const keyValueRatingInputsClass = "node-input-userinputs-keyvalue";
+    const buttonTypeRatingInputClass = "node-input-buttons-buttonType";
+    const delayRatingInputClass = "node-input-buttons-delay";
+
+    RED.nodes.registerType("cnv-essentials-ratingstars", {
+      category: "conversation essentials",
+      color: "#a6bbcf",
+      defaults: {
+        name: { value: "" },
+        buttonLabel: { value: "Send Feedback", required: true },
+        textLabel: { value: "Feedback", required: true },
+        feedbackCheckbox: {value: false},
+        store: { value: "ratingstore" },
+        delay: { value: 1 },
+        hasTextInput: { value: false },
+        defaultText: {value: "Next" }
+      },
+      inputs: 1,
+      outputs: 1,
+      icon: "font-awesome/fa-circle",
+      label: function () {
+        return `cnv-essentials/rating stars \\n ${this.name || 'rating star node'}`;
+      },
+
+
+    });
+  </script>
+
+  <script type="text/html" data-template-name="cnv-essentials-ratingstars">
+    <h3>Node properties</h1>
+      <div class="wrapper">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+      <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+      <label for="node-input-delay"><i class="fa fa-tag"></i> Delay</label>
+      <input type="number" id="node-input-delay" placeholder="Delay" />
+    </div>
+    <div class="form-row">
+      <label for="node-input-textLabel"><i class="fa fa-tag"></i> Text Label</label>
+      <input type="text" id="node-input-textLabel" placeholder="" />
+    </div>
+    <div class="form-row">
+      <input type="checkbox" id="node-input-feedbackCheckbox" style ="position: relative; left: -145px; top: 16.5px;">
+      <label for="node-input-feedbackcheckox">Feedback Text</label>
+    </div>
+    <div class="form-row">
+      <label for="node-input-buttonLabel"><i class="fa fa-tag"></i> Button Label</label>
+      <input type="text" id="node-input-buttonLabel" placeholder="" />
+    </div>
+    <div class="form-row">
+      <label for="node-input-store"><i class="fa fa-tag"></i> Store</label>
+      <input type="text" id="node-input-store" placeholder="default" />
+    </div>
+  </div>
+
+  </script>
+
+  <script type="text/html" data-help-name="cnv-essentials-ratingstars">
+    <p>rating star widget</p>
+
+  </script>

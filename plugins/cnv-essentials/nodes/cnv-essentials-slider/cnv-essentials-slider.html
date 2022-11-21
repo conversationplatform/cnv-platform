@@ -1,0 +1,224 @@
+<script type="text/javascript">
+  const minInputClass = "node-input-multislider-min";
+  const maxInputClass = "node-input-multislider-max";
+  const headlineInputClass = "node-input-multislider-headline";
+  const simbolInputClass = "node-input-multislider-simbol";
+  const storeInputClass = "node-input-multislider-step";
+  const rangeValuesInputClass = "node-input-multislider-rangeValues";
+  const isTooltipInputClass = "node-input-multislider-isTooltip";
+  const displayLabelsClass = "node-input-multislider-displayLabels";
+  const typeClass = "node-input-multislider-type";
+
+  RED.nodes.registerType("cnv-essentials-slider", {
+    category: "conversation essentials",
+    color: "#a6bbcf",
+    defaults: {
+      name: { value: "" },
+      prompt: { value: "" },
+      sliders: { value: [] },
+      store: { value: "" },
+      button: { value: "Next" },
+      isTooltip: { value: false },
+      simbol: { value: '' },
+      image: { value: "", type: "repo-image-config" },
+      hasQuestion: { value: false },
+      question: { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-sliders",
+    label: function () {
+      return `cnv-essentials/slider\\n ${this.name || 'slider node'}`;
+    },
+
+    oneditprepare: function () {
+      $('#node-input-image').on('change', (event) => loadAndPreviewImage(event.target.value, 'preview'));
+      loadAndPreviewImage(this.image, 'preview');
+
+      $('#node-input-image').select2(customImageSelect);
+
+
+
+      $("#node-input-multislider-container")
+        .css("min-height", "250px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: "Add Slider",
+          removable: true,
+
+          addItem: function (row, index, {type, isTooltip, displayLabels, simbol, headline, min, max }) {
+            ` <div class="form-row node-input-multislider-container-row">
+                <ol id="node-input-multislider-container"></ol>
+              </div>`;
+
+            var rowTemplate = `
+            <h4>Slider ${index + 1} </h4>
+
+
+            <div style='width:90%; display: inline-grid'>
+                  <label for="${typeClass}"><i class="fa fa-picture-o"></i> Type: </label>
+                  <select id="${typeClass}-${index}" class="${typeClass}">
+                    <option value="NORMAL" > Normal </option>
+                    <option value="RANGE" > Range </option>
+              </select>
+                  <br>
+                </div>
+
+            <div class="form-row">
+              <label for="${isTooltipInputClass}"><i class="fa fa-tag"></i> Show Tooltip</label>
+              <input type="checkbox" ${isTooltip ? 'checked' : ''}  id="${isTooltipInputClass}" class="${isTooltipInputClass}"  style='width:6%; margin-top: -1px;' >
+            </div>
+              <div class="form-row">
+              <label for="${displayLabelsClass}"><i class="fa fa-tag"></i> Show Labels</label>
+              <input type="checkbox" ${displayLabels ? 'checked' : ''}  id="${displayLabelsClass}" class="${displayLabelsClass}"  style='width:6%; margin-top: -1px;' >
+            </div>
+              <div style='width:80%; display: flex; justify-content: flex-start;'>
+                <label for="${headlineInputClass}"><i class="fa fa-tag"></i> Headline</label>
+                <input class="${headlineInputClass}" value="${headline || ""}"/>
+              </div>
+
+              <div style='width:80%; display: flex; justify-content: flex-start;'>
+                <label for="${simbolInputClass}"><i class="fa fa-tag"></i> Simbol</label>
+                <input class="${simbolInputClass}" value="${simbol || ""}"/>
+              </div>
+
+              <div style='width:80%; display: flex; justify-content: flex-start;'>
+                <label for="${minInputClass}"><i class="fa fa-tag"></i> Min</label>
+                <input class="${minInputClass}" value="${min || 0}"/>
+              </div>
+
+              <div style='width:80%; display: flex; justify-content: flex-start;'>
+                <label for="${maxInputClass}"><i class="fa fa-tag"></i> Max</label>
+                <input class="${maxInputClass}" value="${max || 100}"/>
+              </div>
+            </div>
+            `;
+
+            $(row).html(rowTemplate);
+            $('#' + typeClass + '-' + index).val(type);
+          },
+        });
+
+      // ON CLICK -> HAS QUESTION
+      document.getElementById("node-input-hasQuestion").onclick = function (event) {
+          document.getElementById("has-question-wrapper").style.display = this.checked ? "block" : "none";
+          if (!this.checked) {
+              question = "";
+              document.getElementById("node-input-question").value = "";
+          }
+      };
+
+
+      // ON CHANGE -> QUESTION
+      document.getElementById("node-input-question").onchange = function (event) {
+          question = event.target.value;
+      };
+
+      if (this.hasQuestion) {
+          document.getElementById("node-input-hasQuestion").checked = true;
+          document.getElementById("node-input-question").value = this.question;
+      } else {
+          document.getElementById("has-question-wrapper").style.display = "none";
+      }
+
+      for (var i = 0; i < this.sliders.length; i++) {
+        const { headline, min, max, isTooltip, displayLabels, simbol, type } = this.sliders[i];
+
+        $("#node-input-multislider-container").editableList("addItem", {
+          headline,
+          min,
+          max,
+          i,
+          isTooltip,
+          simbol,
+          displayLabels,
+          type,
+        });
+      }
+    },
+
+    oneditsave: function () {
+      var sliders = $("#node-input-multislider-container").editableList(
+        "items"
+      );
+
+      var node = this;
+      node.sliders = [];
+      sliders.each(function (i) {
+        var slider = $(this);
+        const headline = slider.find(`.${headlineInputClass}`).val();
+        const min = slider.find(`.${minInputClass}`).val();
+        const max = slider.find(`.${maxInputClass}`).val();
+        const type = slider.find(`.${typeClass}`).val();
+        const simbol = slider.find(`.${simbolInputClass}`).val();
+        const isTooltip = (slider.find(`.${isTooltipInputClass}`)[0].checked);
+        const displayLabels = (slider.find(`.${displayLabelsClass}`)[0].checked);
+
+        node.sliders.push({ headline, min, max, isTooltip, displayLabels, simbol, type });
+      });
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-slider">
+  <h3>Node properties</h1>
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+      <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+      <label for="node-input-store">Store</label>
+      <input type="text" id="node-input-store" placeholder="Store name" />
+  </div>
+  <div
+      class="form-row"
+      style="display:flex; align-items: center; margin-bottom: 24px; justify-content: space-between;"
+  >
+      <div style="display: flex; flex-direction: column; align-items: center;">
+          <label for="switch-show-info" style="display:flex; justify-content: center;">Has Question</label>
+          <label class="switch switch-show-info">
+              <input type="checkbox" name="node-input-hasQuestion" id="node-input-hasQuestion" value="`${hasQuestion}`"/>
+              <span class="slider round"></span>
+          </label>
+      </div>
+  </div>
+  <div class="form-row" id="has-question-wrapper">
+      <label for="node-input-question"><i class="fa fa-tag"></i> Question </label>
+      <input type="text" id="node-input-question" placeholder="Question" />
+  </div>
+
+  <hr/>
+  <h3>Data properties</h1>
+
+  <div class="form-row">
+    <label for="node-multislider-prompt"><i class="fa fa-tag"></i> Prompt</label>
+    <input type="text" id="node-input-prompt" placeholder="Prompt" />
+  </div>
+
+  <div class="form-row">
+    <label for="node-multislider-button"><i class="fa fa-tag"></i> Button Text</label>
+    <input type="text" id="node-input-button" placeholder="" />
+  </div>
+
+  <div class="form-row image-select">
+    <div class="img-select">
+      <label for="node-input-image">
+          <i class="fa fa-tag"></i>
+          Image
+      </label>
+      <input type="text" id="node-input-image" placeholder="image">
+
+    </div>
+    <img id="preview" src="#">
+  </div>
+
+  <div class="form-row node-input-multislider-container-row">
+    <ol id="node-input-multislider-container"></ol>
+  </div>
+
+  <br>
+
+</script>
+
+<script type="text/html" data-help-name="cnv-essentials-slider">
+</script>

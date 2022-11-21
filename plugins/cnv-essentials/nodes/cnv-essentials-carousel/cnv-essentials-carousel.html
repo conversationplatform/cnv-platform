@@ -1,0 +1,188 @@
+<script type="text/javascript">
+  var carouselSlideHeadlineInputClass = "node-input-carousel-headline";
+  var carouselSlideBadgeInputClass = "node-input-carousel-badge";
+  var carouselSlideImageInputClass = "node-input-carousel-image";
+  var carouselSlideTitleInputClass = "node-input-carousel-title";
+  var carouselSlideTextInputClass = "node-input-carousel-text";
+  var carouselSlideNameInputClass = "node-input-carousel-name";
+  var carouselSlideIsProductInputClass = "node-input-carousel-isProduct";
+  var carouselSlideContinueUrlInputClass = "node-input-carousel-continueUrl";
+
+  RED.nodes.registerType("cnv-essentials-carousel", {
+    category: "conversation essentials",
+    color: "#a6ddff",
+    defaults: {
+      name: { value: "" },
+      buttontext: { value: "Continue" },
+      buttonType: { value: 'PRIMARY' },
+      slides: { value: [] },
+      store: { value: "" },
+      delay: { value: 1 },
+      inputType: { value: 'STATIC' }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-ellipsis-h",
+    label: function () {
+      return `cnv-essentials/carousel \\n ${this.name || 'carousel node'}`;
+    },
+
+    oneditprepare: function () {
+      $("#node-input-carousel-container")
+        .css("min-height", "250px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: "Add Slide",
+          removable: true,
+
+          addItem: function (row, index, { headline, badge, image, title, text, name, isProduct, continueUrl }) {
+
+            var rowTemplate = `
+            <h4>Slide ${index + 1} </h4>
+
+            <div class="form-row">
+              <h5> Properties valid for normal and product items: </h5>
+              <div style='width:90%; display: block; margin-top: 15px'>
+                <label for="${carouselSlideIsProductInputClass}"><i class="fa fa-tag"></i> Item Type</label>
+                <select id="${carouselSlideIsProductInputClass}" >
+                  <option value="NORMAL" ${isProduct === 'NORMAL' && 'selected'}> Normal result item </option>
+                  <option value="PRODUCT" ${isProduct === 'PRODUCT' && 'selected'}> Product item </option>
+                </select>
+              </div>
+              <div style='width:90%; display: block'>
+                <label for="${carouselSlideNameInputClass}"><i class="fa fa-tag"></i> Name</label>
+                <input class="${carouselSlideNameInputClass}" value="${name || `slideName_${index}`}"/>
+              </div>
+              <br>
+              <div style='width:90%; display: block'>
+                <label for="${carouselSlideHeadlineInputClass}"><i class="fa fa-tag"></i> Headline</label>
+                <input class="${carouselSlideHeadlineInputClass}" value="${headline || ""}"/>
+              </div>
+              <br>
+              <div style='width:90%; display: block'>
+                <label for="${carouselSlideTextInputClass}"><i class="fa fa-tag"></i> Text / Text items</label>
+                <textarea id="${carouselSlideTextInputClass}" name="${carouselSlideTextInputClass}" class="${carouselSlideTextInputClass}" style='width: 100%; height: 50px; text-align: left'>${text && text.trim() ? text : ""}</textarea>
+              </div>
+              <br>
+              <div style='width:90%; display: block'>
+                <label for="${carouselSlideImageInputClass}"><i class="fa fa-picture-o"></i> Image</label>
+                <select id="${carouselSlideImageInputClass}-${ index }" class="${carouselSlideImageInputClass}"></select>
+
+              </div>
+              <h5> Properties valid only for normal item: </h5>
+              <div style='width:90%; display: block; margin-top: 15px'>
+                <label for="${carouselSlideTitleInputClass}"><i class="fa fa-tag"></i> Title</label>
+                <input class="${carouselSlideTitleInputClass}" value="${title || ""}"/>
+              </div>
+              <br>
+              <div style='width:90%; display: block'>
+                <label for="${carouselSlideBadgeInputClass}"><i class="fa fa-picture-o"></i> Badge</label>
+                <select id="${carouselSlideBadgeInputClass}-${ index }" class="${carouselSlideBadgeInputClass}"></select>
+              </div>
+              <br>
+              <div style='width:90%; display: block'>
+                <label for="${carouselSlideContinueUrlInputClass}"><i class="fa fa-tag"></i> Find out more text</label>
+                <input class="${carouselSlideContinueUrlInputClass}" value="${continueUrl || ""}"/>
+              </div>
+              <hr>
+            </div>
+            `;
+            $(row).html(rowTemplate);
+            setTimeout(function(){
+              $('#' + carouselSlideImageInputClass + '-' + index).select2({
+                ...customImageSelect,
+                data: fetchImages(),
+                width: '86%'
+              }).val(image).trigger('change');
+            }, 250);
+            setTimeout(function(){
+              $('#' + carouselSlideBadgeInputClass + '-' + index).select2({
+                ...customImageSelect,
+                data: fetchImages(),
+                width: '86%'
+              }).val(badge).trigger('change');
+            }, 250);
+          },
+        });
+
+      for (var i = 0; i < this.slides.length; i++) {
+        const { headline, badge, image, title, text, name, isProduct, continueUrl } = this.slides[i];
+
+        $("#node-input-carousel-container").editableList("addItem", {
+          headline,
+          badge,
+          image,
+          title,
+          text,
+          name,
+          isProduct,
+          continueUrl
+        });
+      }
+    },
+
+    oneditsave: function () {
+      var slides = $("#node-input-carousel-container").editableList("items");
+
+      var node = this;
+      node.slides = [];
+      slides.each(function (i) {
+        var slide = $(this);
+
+        const headline = slide.find(`.${carouselSlideHeadlineInputClass}`).val();
+        const badge = slide.find(`.${carouselSlideBadgeInputClass}`).val();
+        const image = slide.find(`.${carouselSlideImageInputClass}`).val();
+        const title = slide.find(`.${carouselSlideTitleInputClass}`).val();
+        const text = slide.find(`.${carouselSlideTextInputClass}`).val();
+        const name = slide.find(`.${carouselSlideNameInputClass}`).val();
+        const isProduct = slide.find(`#${carouselSlideIsProductInputClass}`).val();
+        const continueUrl = slide.find(`.${carouselSlideContinueUrlInputClass}`).val();
+
+        node.slides.push({ headline, badge, image, title, text, name, isProduct, continueUrl });
+      });
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-carousel">
+  <h3>Node properties</h1>
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+      <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+      <label for="node-input-delay"><i class="fa fa-tag"></i> Delay</label>
+      <input type="number" id="node-input-delay" placeholder="Delay" />
+    </div>
+    <div class="form-row">
+      <label for="node-input-inputType"><i class="fa fa-tag"></i> Input Type</label>
+      <select id="node-input-inputType">
+        <option value="STATIC" selected> Manual insert </option>
+        <option value="SORTED"> Sorted from previous multiselect </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="node-input-buttonType"><i class="fa fa-tag"></i> Button Type</label>
+      <select id="node-input-buttonType">
+        <option value="PRIMARY" selected> Primary button type </option>
+        <option value="SECONDARY"> Secondary button type </option>
+      </select>
+    </div>
+
+  <hr/>
+  <h3>Data properties</h1>
+
+  <div class="form-row">
+    <label for="node-carousel-button"><i class="fa fa-tag"></i> Button Text</label>
+    <input type="text" id="node-input-buttontext" placeholder="Button Text" />
+  </div>
+
+  <div class="form-row node-input-carousel-container-row">
+    <ol id="node-input-carousel-container"></ol>
+  </div>
+</script>
+
+<script type="text/html" data-help-name="cnv-essentials-carousel">
+  <p>Slide with multiple cards</p>
+</script>

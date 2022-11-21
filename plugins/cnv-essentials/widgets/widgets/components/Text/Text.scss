@@ -1,0 +1,111 @@
+.texts {
+  .main {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--conversation-app-font-family, 'Arial');
+    margin-top: 10px;
+  }
+
+  .animation {
+    width: 70px;
+    height: 100px;
+    border-radius: 0%;
+    margin-left: 10px;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 100px !important;
+    border-radius: 0%;
+    position: relative;
+    top: 40px;
+    left: 16px;
+  }
+
+  .text {
+    position: relative;
+    box-shadow: 0 -2px 15px 0 rgba(0, 0, 0, 0.15);
+    color: var(--conversation-app-primary-text-color);
+    border-radius: 10px;
+    padding: 16px;
+    max-width: 250px;
+    margin-left: 12px;
+    text-align: left;
+    background-color: var(--conversation-app-primary-speech-bubble-color);
+    content: var(--first);
+    &:after,
+    &:before {
+      bottom: 100%;
+      border: solid transparent;
+      height: 0px;
+      width: 0px;
+      position: absolute;
+      pointer-events: none;
+    }
+    &:after {
+      border-color: rgba(255, 255, 255, 0);
+      border-bottom-color: var(--conversation-app-primary-speech-bubble-color, WHITE);
+      border-width: 6px;
+      left: 26px;
+      margin-left: 0px;
+      content: var(--first);
+    }
+    &:before {
+      content: var(--first);
+      border-color: rgba(113, 158, 206, 0);
+      border-bottom-color: var(--conversation-app-primary-speech-bubble-color);
+      border-width: 6px;
+      left: 26px;
+      margin-left: 0px;
+    }
+    img {
+      max-width: 100%;
+    }
+  }
+
+  .disclaimer {
+    position: relative;
+    box-shadow: 0px -2px 15px 0px rgba(0, 0, 0, 0.15);
+    background-color: #f64884;
+    border-radius: 10px;
+    padding: 16px;
+    max-width: 250px;
+    margin-left: 12px;
+    text-align: left;
+    color: #fff;
+    &:after,
+    &:before {
+      bottom: 100%;
+      border: solid transparent;
+      height: 0px;
+      width: 0px;
+      position: absolute;
+      pointer-events: none;
+    }
+    &:after {
+      content: var(--first);
+      border-color: rgba(255, 255, 255, 0);
+      border-bottom-color: #f64884;
+      border-width: 6px;
+      left: 11%;
+      margin-left: -6px;
+    }
+    &:before {
+      content: var(--first);
+      border-color: rgba(113, 158, 206, 0);
+      border-bottom-color: #f64884;
+      border-width: 6px;
+      left: 11%;
+      margin-left: -6px;
+    }
+    img {
+      max-width: 100%;
+    }
+  }
+  .disclaimerLink {
+    width: fit-content;
+  }
+  .infoIcon {
+    cursor: pointer;
+  }
+}

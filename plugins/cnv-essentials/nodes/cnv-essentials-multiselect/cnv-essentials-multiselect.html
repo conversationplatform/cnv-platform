@@ -1,0 +1,140 @@
+<script type="text/javascript">
+  RED.nodes.registerType("cnv-essentials-multiselect", {
+    category: "conversation essentials",
+    color: "#a6bbcf",
+    defaults: {
+      name: { value: "" },
+      options: { value: [] },
+      delay: { value: 1 },
+      buttonLabel: { value: "Next", required: true },
+      store: { value: "multiselect", required: true },
+      hasQuestion: { value: false },
+      question: { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-code-fork",
+    label: function () {
+      return `cnv-essentials/multi select\\n ${this.name || 'multiselect node'}`;
+    },
+
+    oneditprepare: function () {
+      $("#node-input-multiselect-container")
+        .css("min-height", "250px")
+        .css("min-width", "450px")
+        .editableList({
+          addButton: "Add Option",
+          removable: true,
+
+          addItem: function (row, index, { name }) {
+            ` <div class="form-row node-input-multiselect-container-row">
+                <ol id="node-input-multiselect-container"></ol>
+              </div>`;
+
+            var rowTemplate = `
+            <h4>Option ${index + 1} </h4>
+            <div class="form-row">
+                <div style='width:80%; display: block'>
+                  <label for="node-input-multiselect-name"><i class="fa fa-tag"></i> Name </label>
+                  <input class="node-input-multiselect-name" value="${ name || "" }"/>
+                </div>
+
+            </div>
+            `;
+
+            $(row).html(rowTemplate);
+          },
+        });
+
+      // ON CLICK -> HAS QUESTION
+      document.getElementById("node-input-hasQuestion").onclick = function (event) {
+          document.getElementById("has-question-wrapper").style.display = this.checked ? "block" : "none";
+          if (!this.checked) {
+              question = "";
+              document.getElementById("node-input-question").value = "";
+          }
+      };
+
+
+      // ON CHANGE -> QUESTION
+      document.getElementById("node-input-question").onchange = function (event) {
+          question = event.target.value;
+      };
+
+      if (this.hasQuestion) {
+          document.getElementById("node-input-hasQuestion").checked = true;
+          document.getElementById("node-input-question").value = this.question;
+      } else {
+          document.getElementById("has-question-wrapper").style.display =  "none";
+      }
+
+      for (var i = 0; i < this.options.length; i++) {
+        const { name } = this.options[i];
+
+        $("#node-input-multiselect-container").editableList("addItem", {
+          name,
+          i,
+        });
+      }
+    },
+    oneditsave: function () {
+      var options = $("#node-input-multiselect-container").editableList(
+        "items"
+      );
+
+      var node = this;
+      node.options = [];
+      options.each(function (i) {
+        var option = $(this);
+        const name = option.find(`.node-input-multiselect-name`).val();
+        node.options.push({ name });
+      });
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-multiselect">
+  <h3>Node properties</h1>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-delay"><i class="fa fa-tag"></i> Delay</label>
+    <input type="number" id="node-input-delay" placeholder="Delay" />
+  </div>
+  <div class="form-row"
+      style="display:flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+          <label for="switch-show-info" style="display:flex; justify-content: center;">Has Question</label>
+          <label class="switch switch-show-info">
+              <input type="checkbox" name="node-input-hasQuestion" id="node-input-hasQuestion" value="`${hasQuestion}`"/>
+              <span class="slider round"></span>
+          </label>
+      </div>
+  </div>
+  <div class="form-row" id="has-question-wrapper">
+      <label for="node-input-question"><i class="fa fa-tag"></i> Question </label>
+      <input type="text" id="node-input-question" placeholder="Question" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-buttonLabel"><i class="fa fa-tag"></i> Button Label</label>
+    <input type="text" id="node-input-buttonLabel" placeholder="" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-store"><i class="fa fa-tag"></i> Store </label>
+    <input type="text" id="node-input-store" placeholder="Storage name" />
+  </div>
+  <hr />
+
+  <h3>Data properties</h3>
+
+  <div class="form-row node-input-multiselect-container-row">
+    <ol id="node-input-multiselect-container"></ol>
+  </div>
+
+</script>
+
+<script type="text/html" data-help-name="cnv-essentials-multiselect">
+  <p>Select multiple choices</p>
+</script>

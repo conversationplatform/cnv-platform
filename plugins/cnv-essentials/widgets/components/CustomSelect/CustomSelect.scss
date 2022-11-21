@@ -1,0 +1,49 @@
+.custom-select-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  margin: 6px;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+
+  .name {
+    flex: 1;
+    color: var(--conversation-app-primary-color);
+    font-size: 15px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: 0.26px;
+    text-align: center;
+  }
+
+  &.selected {
+    background-color: var(--conversation-app-select-color);
+
+    .name {
+      color: var(--conversation-app-primary-text-color);
+    }
+  }
+
+  .icon {
+    flex: 0 1 auto;
+    margin-left: auto;
+    padding-left: 6;
+    color: var(--conversation-app-primary-text-color);
+    margin-right: 4;
+  }
+
+  .iconHidden {
+    flex: 0 1 auto;
+    margin-left: auto;
+    padding-left: 6;
+    color: var(--conversation-app-primary-text-color);
+    margin-right: 4;
+    visibility: hidden;
+  }
+}

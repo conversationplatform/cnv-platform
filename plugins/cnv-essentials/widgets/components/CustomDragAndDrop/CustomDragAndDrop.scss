@@ -1,0 +1,81 @@
+.App {
+    .CustomDragAndDropWrapper {
+        margin: 0px;
+        padding: 0px;
+        touch-action: none;
+
+        .Card {
+            display: flex;
+            flex-direction: row;
+            width: calc(100% - 48px);
+            border-radius: 10px;
+            min-height: 46px;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
+            background-color: #fff;
+            padding: 0px 24px;
+            touch-action: manipulation;
+
+            .Index {
+                font-weight: 700;
+                width: 23px;
+                font-size: 23px;
+            }
+            .Icon {
+                margin-right: 12px;
+            }
+
+            .Name {
+                flex: 1;
+                color: var(--conversation-app-primary-color);
+                font-size: 15px;
+                font-weight: 600;
+                font-stretch: normal;
+                font-style: normal;
+                letter-spacing: 0.26px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+.SortableList {
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - 48px);
+    border-radius: 10px;
+    min-height: 46px;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+    padding: 0px 24px;
+    .Index {
+        font-weight: 700;
+        width: 23px;
+        font-size: 23px;
+    }
+    .Icon {
+        margin-right: 12px;
+        height: 100%;
+    }
+    .Name {
+        flex: 1;
+        color: #02add8 !important;
+        font-size: 15px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: 0.26px;
+        text-align: center;
+    }
+}

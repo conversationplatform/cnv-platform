@@ -1,0 +1,112 @@
+
+<script type="text/javascript">
+
+  RED.nodes.registerType("cnv-essentials-sendtext", {
+    category: "conversation essentials",
+    color: "#a6ddff",
+    defaults: {
+      name: { value: "" },
+      text: { required: true },
+      video: {value:''},
+      animation: {
+        value: "",
+        type:"lottie-animation-config",
+        required: false
+      },
+      delay: { value: 1 },
+      isDisclaimer: { value: false },
+      disclaimerLink: { value: "" },
+      useOptionsFromMessage: { value: false},
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "envelope.svg",
+    label: function () {
+      return `cnv-essentials/send text\\n ${this.name || 'text node'}`;
+    },
+    oneditprepare: function() {
+        $('#node-input-animation').on('change', (event) => loadAndrenderLottiePreview(event.target.value, 'lottie-preview'));
+        setTimeout(()=> {
+            loadAndrenderLottiePreview(this.animation, 'lottie-preview');
+        }, 150);
+        $('#node-input-animation').select2(customAnimationSelect);
+        var simplemde = new SimpleMDE({ element: document.getElementById("node-input-text"), forceSync: true });
+
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="cnv-essentials-sendtext">
+  <h3>Node properties</h1>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Title</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+
+  <hr />
+
+  <h3>Data properties</h3>
+
+  <br/>
+
+  <br/>
+  <div class="form-row animation-select">
+    <div class="animation-select">
+        <label for="node-input-animation">
+            <i class="fa fa-tag"></i>
+            Lottie Animation
+        </label>
+        <input type="text" id="node-input-animation" placeholder="animation">
+
+    </div>
+    <div id="lottie-preview"></div>
+  </div>
+  <div class="form-row">
+    <label for="node-input-delay"><i class="fa fa-tag"></i> Delay</label>
+    <input type="number" id="node-input-delay" placeholder="Delay">
+  </div>
+  <br/>
+  <div class="form-row">
+    <label for="node-input-video"><i class="fa fa-tag"></i> video</label>
+    <input type="text" id="node-input-video" placeholder="video" />
+  </div>
+
+  <br/>
+
+  <div>
+    <input
+      type="checkbox"
+      name="node-input-isDisclaimer"
+      id="node-input-isDisclaimer" value=`${isDisclaimer}`>Disclaimer?<br>
+  </div>
+  <br/>
+
+  <div>
+    <label for="node-input-disclaimerLink"><i class="fa fa-tag"></i> Disclaimer URL</label>
+    <textarea id="node-input-disclaimerLink" name="node-input-disclaimerLink" class="node-input-disclaimerLink" style='width: 100%; height: 50px'></textarea>
+  </div>
+  <br/>
+
+  <div class="form-row">
+    <label for="node-input-text"><i class="fa fa-tag"></i> Text</label>
+    <textarea type="text" id="node-input-text" placeholder="Text"></textarea>
+  </div>
+  <div class="form-row">
+    <label for="node-input-useOptionsFromMessage" style="display: inline">
+      <i class="fa fa-tag"></i> Use options from message payload
+    </label>
+    <input type="checkbox" id="node-input-useOptionsFromMessage" style="display: inline; width: auto;"/>
+    <br>
+    <p><strong>Note:</strong></p>
+    <p>To use this, a msg.options needs to be present. Can be created using a function node.</p>
+    <p>msg.options = { text: 'text'}</p>
+    <hr>
+  </div>
+
+  <br/>
+
+</script>
+
+<script type="text/html" data-help-name="cnv-essentials-sendtext">
+  <p>Node for sending text</p>
+</script>
