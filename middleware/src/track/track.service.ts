@@ -268,49 +268,6 @@ export class TrackService {
         return this.arangoService.queryMany<AggregatedTrackByFlowId>(query);
     }
 
-    // migrations
-
-    async deleteInvalidInteractions(): Promise<ClientTrack[]> {
-        const query = aql`
-            FOR ct in ${this.arangoService.collection}
-            FILTER (ct.interaction && !IS_ARRAY(ct.interaction)) || (ct.interaction && LENGTH(ct.interaction) == 0)
-            REMOVE { _key: ct._key } in ${this.arangoService.collection}
-            RETURN { flowId: ct.flowId, tid: ct.tid}
-        `;
-
-        return this.arangoService.queryMany<ClientTrack>(query);
-
-    }
-
-    async getMigratableInteractionTracks(): Promise<number> {
-        const query = aql`
-            FOR ct in ${this.arangoService.collection}
-            FILTER ct.interaction
-            COLLECT WITH count into count
-            RETURN count
-        `;
-
-        return this.arangoService.query<number>(query);
-
-    }
-    async migrateTrackInteraction(limit: number): Promise<number> {
-        const query = aql`
-            FOR ct in ${this.arangoService.collection}
-            FILTER ct.interaction
-            LIMIT 0, ${limit}
-            REPLACE ct WITH UNSET(ct, 'interaction') IN ${this.arangoService.collection}
-                FOR interaction in ct.interaction
-                let data = MERGE(interaction, {flowId: ct.flowId, tid: ct.tid})
-                INSERT data in ${this.interactionService.getCollection()}
-                LET inserted = NEW
-                COLLECT WITH count into count
-            RETURN count
-            
-        `;
-        return this.arangoService.query<number>(query);
-    }
-
-
     // cron helpers
 
     async deleteExpiredTracks(endDate: Date): Promise<ClientTrack[]> {

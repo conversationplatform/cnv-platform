@@ -16,7 +16,6 @@ import { MetricsModule } from './metrics/metrics.module';
 
 import { PropertiesModule } from './properties/properties.module';
 import { InteractionModule } from './interaction/interaction.module';
-import { MigrationModule } from './migration/migration.module';
 import { HousekeeperModule } from './housekeeper/housekeeper.module';
 import { PublicModule } from './public/public.module';
 
@@ -35,17 +34,16 @@ import { PublicModule } from './public/public.module';
     }),
     ConfigModule,
     PropertiesModule,
-    MigrationModule.forRoot(),
     HousekeeperModule,
     AuthModule,
     SessionModule,
     ClientModule,
     InteractionModule,
     TrackModule,
-    NoderedModule,
     MetricsModule,
     ScheduleModule.forRoot(),
     PublicModule,
+    NoderedModule,
 
   ],
   controllers: [AppController],

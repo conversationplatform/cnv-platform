@@ -6,6 +6,7 @@ import { NoderedController } from './nodered.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from 'src/config/config/config.service';
 
+const DELAY_BUNDLED_NODERED_BOOTSTRAP = 2000;
 
 @Module({
   imports: [
@@ -25,7 +26,9 @@ export class NoderedModule {
 
   public init(app: INestApplication) {   
     if (this.configService.get('USE_BUNDLED_NODERED') == 'true') {
-      this.noderedService.init(app);
+      setTimeout(() => {
+        this.noderedService.init(app);
+      }, DELAY_BUNDLED_NODERED_BOOTSTRAP);
     }
   }
 }
