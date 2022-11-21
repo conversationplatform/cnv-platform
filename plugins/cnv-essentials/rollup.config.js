@@ -13,11 +13,10 @@ import babel from "rollup-plugin-babel";
 import terser from '@rollup/plugin-terser';
 import image from "@rollup/plugin-image";
 
-
 const packageJson = require("./package.json");
 export default {
   input: "widgets/widgetProvider.tsx",
-  external: ['react', 'react-dom'],
+  external: ['react' ],
   output: [
     {
       name: packageJson.name,
@@ -38,7 +37,7 @@ export default {
     commonjs({
       namedExports: {
         "react-dom": Object.keys(ReactDOM),
-        react: Object.keys(React),
+        react: Object.keys(React)
       }
     }),
     typescript({
