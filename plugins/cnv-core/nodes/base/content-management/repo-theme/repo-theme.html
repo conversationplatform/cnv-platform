@@ -1,0 +1,181 @@
+<script src="/red/resources/@cnv-platform/cnv-core/shared/main.js"></script>
+<script src="/red/resources/@cnv-platform/cnv-core/shared/main.js"></script>
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/shared/main.css">
+
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('repo-theme-config', {
+        category: 'config',
+        defaults: {
+            name: {
+                value:""
+            },
+            'conversation-app-primary-color': {
+                value: '#006baf',
+            },
+            'conversation-app-primary-speech-bubble-color': {
+                value: '#006baf',
+            },
+            'conversation-app-secondary-speech-bubble-color': {
+                value: '#006baf',
+            },
+            'conversation-app-primary-text-color': {
+                value: '#fff'
+            },
+            'conversation-app-scroll-color': {
+                value: '#c8c8c8'
+            },
+            'conversation-app-rating-color': {
+                value: '#ea592a'
+            },
+            'conversation-app-select-color': {
+                value: '#ea592a'
+            },
+            'conversation-app-gradient-color-1': {
+                value: '#006baf'
+            },
+            'conversation-app-gradient-color-2': {
+                value: '#006baf'
+            },
+            'conversation-app-button-color': {
+                value: '#ea592a'
+            },
+            'conversation-app-font-family': {
+                value: 'Source Sans Pro'
+            },
+            'conversation-app-background-color': {
+                value: '#fafafa'
+            },
+
+            image: {
+                value:"",
+                required: true,
+                type: 'repo-image-config'
+            }
+        },
+
+
+        label: function() {
+            return this.name || "Theme";
+        },
+        oneditprepare: function() {
+
+
+            $('#node-config-image').select2(customImageSelect);
+
+        }
+
+    });
+</script>
+
+<script type="text/html" data-template-name="repo-theme-config">
+    <div class="form-row">
+        <label for="node-config-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-primary-color">
+            <i class="fa fa-tag"></i>
+            Primary Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-primary-color" placeholder="Primary Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-primary-speech-bubble-color">
+            <i class="fa fa-tag"></i>
+            Primary Speech Bubble Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-primary-speech-bubble-color" placeholder="Primary Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-secondary-speech-bubble-color">
+            <i class="fa fa-tag"></i>
+            Secondary Speech Bubble Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-secondary-speech-bubble-color" placeholder="Primary Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-primary-text-color">
+            <i class="fa fa-tag"></i>
+            Primary Text Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-primary-text-color" placeholder="Primary Text Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-scroll-color">
+            <i class="fa fa-tag"></i>
+            Scroll Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-scroll-color" placeholder="Scroll Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-rating-color">
+            <i class="fa fa-tag"></i>
+            Rating Star Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-rating-color" placeholder="Rating Star Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-select-color">
+            <i class="fa fa-tag"></i>
+            Select Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-select-color" placeholder="Select Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-gradient-color-1">
+            <i class="fa fa-tag"></i>
+            Gradient Color 1
+        </label>
+        <input type="color" id="node-config-input-conversation-app-gradient-color-1" placeholder="Gradient Color 1">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-gradient-color-2">
+            <i class="fa fa-tag"></i>
+            Gradient Color 2
+        </label>
+        <input type="color" id="node-config-input-conversation-app-gradient-color-2" placeholder="Gradient Color 2">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-button-color">
+            <i class="fa fa-tag"></i>
+            Button Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-button-color" placeholder="Button Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-background-color">
+            <i class="fa fa-tag"></i>
+            Background Color
+        </label>
+        <input type="color" id="node-config-input-conversation-app-background-color" placeholder="Background Color">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-conversation-app-font-family">
+            <i class="fa fa-tag"></i>
+            Font Family
+        </label>
+        <input type="text" id="node-config-input-conversation-app-font-family" placeholder="Font Family">
+    </div>
+
+    <div class="form-row ">
+        <div class="img-select">
+            <label for="node-config-input-image">
+                <i class="fa fa-picture-o"></i>
+                Background Image
+            </label>
+            <input type="text" id="node-config-input-image" placeholder="image">
+
+        </div>
+
+    </div>
+</script>
+
+<script type="text/html" data-help-name="repo-theme-config">
+    <p>Easy config to manage images in a flow</p>
+    <p>Upload an image and it will be converted to base64. </p>
+</script>

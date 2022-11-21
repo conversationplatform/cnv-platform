@@ -1,0 +1,54 @@
+<script type="text/javascript">
+    RED.nodes.registerType("cnv-start", {
+        category: "conversation",
+        color: "#a6bbcf",
+        defaults: {
+            name: { value: "Start" },
+            path: {
+                value: "/default",
+                required: true,
+                validate: RED.validators.regex(/^\/(\w+)$/),
+            },
+            theme: {
+                value: "",
+                type: "repo-theme-config",
+            },
+            pp: {
+                value: "",
+                required: true,
+            },
+        },
+        inputs: 0,
+        outputs: 1,
+        icon: "font-awesome/fa-play-circle",
+        label: function () {
+            return this.name;
+        },
+        oneditprepare: function () {
+            var simplemde = new SimpleMDE({ element: document.getElementById("node-input-pp"), forceSync: true });
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="cnv-start">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-path"><i class="fa fa-tag"></i> Path</label>
+        <input type="text" id="node-input-path" placeholder="Path" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-theme"><i class="fa fa-tag"></i> Theme</label>
+        <input type="repo-theme-config" id="node-input-theme" placeholder="theme" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-path"><i class="fa fa-tag"></i> Privacy Policy</label>
+        <textarea type="text" id="node-input-pp" placeholder="Text"></textarea>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="cnv-start">
+    <p>Starts the chat for the engine</p>
+</script>

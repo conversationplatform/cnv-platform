@@ -1,0 +1,77 @@
+<script src="/red/resources/@cnv-platform/cnv-core/shared/main.js"></script>
+
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('repo-image-config', {
+        category: 'config',
+        defaults: {
+            name: {
+                value:""
+            },
+            description: {
+                value: "",
+            },
+            imgSrc: {
+                value:''
+            }
+        },
+
+
+        label: function() {
+            return this.name || "Repo Image";
+        },
+        oneditprepare: function() {
+            imagePreview(this.imgSrc, 'img-preview');
+
+            $('#node-config-input-img').on('change', async (event) => {
+                var file = $('#node-config-input-img')[0].files[0];
+                if(file) {
+                    this.imgSrc = await getBase64(file);
+                }
+                imagePreview(this.imgSrc, 'img-preview');
+
+            });
+
+        }
+
+    });
+</script>
+
+<script type="text/html" data-template-name="repo-image-config">
+    <div class="form-row">
+        <label for="node-config-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-description">
+            <i class="fa fa-tag"></i>
+            Description
+        </label>
+        <input type="text" id="node-config-input-description" placeholder="Description">
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-img">
+            <i class="fa fa-file-image-o"></i>
+            image
+        </label>
+        <input type="file" id="node-config-input-img" placeholder="File">
+
+    </div>
+
+    <div class="form-row">
+        <h2>Preview:</h2>
+        <img id="img-preview" style="display: none; max-width: 600px;" src="#">
+        <hr>
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="repo-image-config">
+    <p>Easy config to manage images in a flow</p>
+    <p>Upload an image and it will be converted to base64. </p>
+</script>

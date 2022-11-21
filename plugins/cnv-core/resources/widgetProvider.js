@@ -1,0 +1,1 @@
+!function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports):"function"==typeof define&&define.amd?define(["exports"],o):o((e="undefined"!=typeof globalThis?globalThis:e||self)["@cnv-platform/cnv-core"]={})}(this,(function(e){"use strict";e.widgetsProvider=function(e,o){return{}},Object.defineProperty(e,"__esModule",{value:!0})}));

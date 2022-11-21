@@ -1,0 +1,130 @@
+
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/simplemde/simplemde.min.css">
+<script src="/red/resources/@cnv-platform/cnv-core/simplemde/simplemde.min.js"></script>
+<script src="/red/resources/@cnv-platform/cnv-core/shared/main.js"></script>
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/shared/main.css">
+
+<style type="text/css">
+    .w-150 {
+        width: 150px !important;
+    }
+    .w-50 {
+        width: 50px !important;
+    }
+</style>
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('repo-article-config', {
+        category: 'config',
+        defaults: {
+            name: {
+                value:"",
+                required: true
+            },
+            title: {
+                value:"",
+                required: true
+            },
+            text: {
+                value: "",
+                required: true
+            },
+            image: {
+                value:"",
+                required: true,
+                type: 'repo-image-config'
+            },
+            showAsGlossary: {
+                value: true,
+                required: false
+            },
+            showAsMenu: {
+                value: true,
+                required: false
+            },
+            showAsOverlay: {
+                value: true,
+                required: false
+            }
+        },
+
+
+        label: function() {
+            return this.name || "Article";
+        },
+
+        oneditprepare: function() {
+            $('#node-config-input-image').on('change', (event) => loadAndPreviewImage(event.target.value, 'preview'));
+            loadAndPreviewImage(this.image, 'preview');
+
+            $('#node-config-input-image').select2(customImageSelect);
+
+            var simplemde = new SimpleMDE({element: document.getElementById("node-config-input-text"), forceSync: true });
+        }
+
+    });
+</script>
+
+<script type="text/html" data-template-name="repo-article-config">
+    <div class="form-row">
+        <label for="node-config-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-config-input-name" placeholder="name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-title">
+            <i class="fa fa-tag"></i>
+            Title
+        </label>
+        <input type="text" id="node-config-input-title" placeholder="title">
+    </div>
+    <div class="form-row">
+        <label class="w-150" for="node-config-input-showAsGlossary">
+            <i class="fa fa-tag"></i>
+            Show As Glossary
+        </label>
+        <input class="w-50" type="checkbox" id="node-config-input-showAsGlossary">
+    </div>
+    <div class="form-row">
+        <label class="w-150" for="node-config-input-showAsMenu">
+            <i class="fa fa-tag"></i>
+            Show As Menu
+        </label>
+        <input class="w-50" type="checkbox" id="node-config-input-showAsMenu">
+    </div>
+    <div class="form-row">
+        <label class="w-150" for="node-config-input-showAsOverlay">
+            <i class="fa fa-tag"></i>
+            Show As Overlay
+        </label>
+        <input class="w-50" type="checkbox" id="node-config-input-showAsOverlay">
+    </div>
+    <div class="form-row image-select">
+        <div class="img-select">
+            <label for="node-config-input-image">
+                <i class="fa fa-picture-o"></i>
+                Image
+            </label>
+            <input type="text" id="node-config-input-image" placeholder="image">
+
+        </div>
+        <img id="preview" src="#">
+    </div>
+
+
+    <div class="form-row">
+        <label for="node-config-input-text">
+            <i class="fa fa-tag"></i>
+            Text
+        </label>
+        <textarea type="text" id="node-config-input-text" placeholder="Text"></textarea>
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="repo-article-config">
+    <p>Easy config to manage Article text</p>
+</script>

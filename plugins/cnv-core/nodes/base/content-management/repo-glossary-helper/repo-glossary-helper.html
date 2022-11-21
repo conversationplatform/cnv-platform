@@ -1,0 +1,51 @@
+
+<script type="text/javascript">
+    
+    RED.nodes.registerType('repo-glossary-helper-config',{
+        category: 'Content Helpers',
+        color: 'rgb(180 255 166)',
+        paletteLabel: 'Glossary',
+        icon: "font-awesome/fa-magic",
+        defaults: {
+            name: {value:"" },
+            glossary: {
+                value: "",
+                type: "repo-glossary-config",
+                required: false
+            }
+        },
+        
+        label: function() {
+            return this.name || "Glossary";
+        }
+
+    });
+</script>
+
+
+<script type="text/html" data-template-name="repo-glossary-helper-config">
+    
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-input-name" placeholder="name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-glossary">
+            <i class="fa fa-list"></i>
+            Glossary
+        </label>
+        <input type="repo-glossary-config" id="node-input-glossary" placeholder="glossary">
+    </div>
+
+    
+    
+</script>
+
+<script type="text/html" data-help-name="repo-glossary-helper-config">
+    <p>Easy Glossary Management In Flow Management via Config</p>
+    <p><strong>Note:</strong> add this node into your flow to easly manage Glossary contents. It doesn't connect into any other node.</p>
+</script>

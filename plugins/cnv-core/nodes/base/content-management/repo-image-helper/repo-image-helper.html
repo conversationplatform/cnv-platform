@@ -1,0 +1,64 @@
+<script src="/red/resources/@cnv-platform/cnv-core/shared/main.js"></script>
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/shared/main.css">
+
+
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/select2/4.1.0/select2.min.css">
+<script src="/red/resources/@cnv-platform/cnv-core/select2/4.1.0/select2.min.js"></script>
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('repo-image-helper-config',{
+        category: 'Content Helpers',
+        color: 'rgb(180 255 166)',
+        paletteLabel: 'Images',
+        icon: "font-awesome/fa-magic",
+        defaults: {
+            name: {value:"" },
+            img: {
+                value: "",
+                type: "repo-image-config"
+            }
+        },
+
+        label: function() {
+            return this.name || "Images";
+        },
+        oneditprepare: function() {
+            $('#node-input-img').on('change', (event) => loadAndPreviewImage(event.target.value, 'preview'));
+            loadAndPreviewImage(this.img, 'preview');
+            $('#node-input-img').select2(customImageSelect);
+        }
+
+    });
+</script>
+
+
+<script type="text/html" data-template-name="repo-image-helper-config">
+
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-input-name" placeholder="name">
+    </div>
+
+    <div class="form-row image-select">
+        <div class="img-select">
+            <label for="node-input-img">
+                <i class="fa fa-picture-o"></i>
+                Image
+            </label>
+            <input type="text" id="node-input-img" placeholder="image">
+
+        </div>
+        <img id="preview" src="#">
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="repo-image-helper-config">
+    <p>Easy Images Management In Flow Management via Config</p>
+    <p><strong>Note:</strong> add this node into your flow to easly manage Images. It doesn't connect into any other node.</p>
+
+</script>

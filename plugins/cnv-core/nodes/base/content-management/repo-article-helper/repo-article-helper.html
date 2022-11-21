@@ -1,0 +1,51 @@
+
+<script type="text/javascript">
+    
+    RED.nodes.registerType('repo-articles-helper-config',{
+        category: 'Content Helpers',
+        color: 'rgb(180 255 166)',
+        paletteLabel: 'Articles',
+        icon: "font-awesome/fa-magic",
+        defaults: {
+            name: {value:"" },
+            article: {
+                value: "",
+                type: "repo-article-config",
+                required: false
+            }
+        },
+        
+        label: function() {
+            return this.name || "Articles";
+        }
+
+    });
+</script>
+
+
+<script type="text/html" data-template-name="repo-articles-helper-config">
+    
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-input-name" placeholder="name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-article">
+            <i class="fa fa-list"></i>
+            Article
+        </label>
+        <input type="repo-article-config" id="node-input-article" placeholder="article">
+    </div>
+
+    
+    
+</script>
+
+<script type="text/html" data-help-name="repo-articles-helper-config">
+    <p>Easy Articles Management In Flow Management via Config</p>
+    <p><strong>Note:</strong> add this node into your flow to easly manage Articles Entries. It doesn't connect into any other node.</p>
+</script>

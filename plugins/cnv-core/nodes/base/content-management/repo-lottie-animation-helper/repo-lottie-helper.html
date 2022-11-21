@@ -1,0 +1,65 @@
+<script src="/red/resources/@cnv-platform/cnv-core/shared/main.js"></script>
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/shared/main.css">
+<script src="/red/resources/@cnv-platform/cnv-core/bodymovin/5.7.4/lottie.min.js"></script>
+
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('lottie-helper-config',{
+        category: 'Content Helpers',
+        color: 'rgb(180 255 166)',
+        paletteLabel: 'Repo Animations',
+        icon: "font-awesome/fa-magic",
+        defaults: {
+            name: {value:"" },
+            animation: {
+                value: "",
+                type: "lottie-animation-config"
+            }
+        },
+
+        label: function() {
+            return this.name || "Animations";
+        },
+        oneditprepare: function() {
+            $('#node-input-animation').on('change', (event) => loadAndrenderLottiePreview(event.target.value, 'lottie-preview'));
+            setTimeout(()=> {
+                loadAndrenderLottiePreview(this.animation, 'lottie-preview');
+            }, 150);
+            $('#node-input-animation').select2(customAnimationSelect);
+
+        }
+
+    });
+</script>
+
+
+<script type="text/html" data-template-name="lottie-helper-config">
+
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-input-name" placeholder="name">
+    </div>
+
+    <div class="form-row animation-select">
+        <div class="animation-select">
+            <label for="node-input-animation">
+                <i class="fa fa-tag"></i>
+                Lottie Animation
+            </label>
+            <input type="text" id="node-input-animation" placeholder="animation">
+
+        </div>
+        <div id="lottie-preview"></div>
+    </div>
+
+
+</script>
+
+<script type="text/html" data-help-name="lottie-helper-config">
+    <p>Easy Animation Management In Flow Management via Config</p>
+    <p><strong>Note:</strong> add this node into your flow to easly manage Animation contents. It doesn't connect into any other node.</p>
+</script>

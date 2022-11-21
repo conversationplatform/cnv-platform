@@ -1,0 +1,264 @@
+.form-row.image-select .img-select {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+}
+.form-row.image-select #preview {
+    width: 20%;
+    display: inline-block;
+}
+
+.form-row.animation-select .animation-select {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+}
+
+.form-row.animation-select #lottie-preview {
+    height: 100px;
+    width: 20%;
+    display: inline-block;
+}
+
+.red-ui-tray-content{
+    min-width: 600px;
+}
+
+.red-ui-tray-content h3 {
+    clear: both;
+    margin: 1.6em 0 0.9em;
+    color: #000000d9;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.red-ui-tray-content .wrapper {
+    border: 1px solid #d9d9d9;
+    padding: 24px 24px 14px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.10);
+    -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.10);
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.10);
+}
+
+.red-ui-editor .form-row .animation-select {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border: 1px solid #d9d9d9;
+    padding: 12px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+}
+
+.red-ui-editor .form-row .animation-select > div:first-child {
+    width: 100% !important;
+}
+
+.red-ui-editor .form-row .animation-select .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    padding: 4px 0px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+}
+
+.red-ui-editor .form-row .animation-select .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: unset;
+    right: 6px;
+}
+
+.red-ui-editor .form-row .animation-select .select2-container--default .select2-selection--single .select2-selection__clear {
+    cursor: pointer;
+    font-weight: bold;
+    height: 33px;
+    margin-right: 12px;
+    padding-right: 0px;
+    margin-left: 8px;
+    line-height: 0px;
+    font-size: 14px;
+    color: #888888;
+}
+
+a.editor-button,
+button.editor-button,
+a.red-ui-button,
+button.red-ui-button {
+    height: 33px;
+}
+
+.red-ui-editor .form-row .animation-preview {
+    width: 140px;
+}
+
+.red-ui-editor .form-row input {
+    display: inline-block;
+    width: 100%;
+    min-width: 0;
+    padding: 4px 11px;
+    color: #000000d9;
+    font-size: 14px;
+    line-height: 1.5715;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+}
+
+.red-ui-editor .form-row label {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-transform: none;
+    white-space: normal;
+    color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+}
+
+.red-ui-editor .form-row label input {
+    width: unset;
+    margin-left: 24px;
+}
+
+.red-ui-editor .form-row label .fa {
+    margin-right: 8px;
+}
+
+.red-ui-editor .form-row .editor-toolbar {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border: 1px solid #c1c1c1;
+    border-bottom: none;
+}
+
+.red-ui-editor .form-row .CodeMirror {
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border: 1px solid #d9d9d9;
+}
+
+.red-ui-editor .form-row .red-ui-editableList .red-ui-editableList-container {
+    border: none;
+    min-height: unset !important;
+    height: unset !important;
+    overflow: unset !important;
+    padding: 0px;
+}
+
+.red-ui-editor .form-row .red-ui-editableList .red-ui-editableList-container li{
+    padding: 24px 0px 12px 0px;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.10);
+    -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.10);
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.10);
+}
+
+.red-ui-editableList-container li.red-ui-editableList-item-removable .red-ui-editableList-item-content{
+    margin-right: 24px;
+    margin-left: 24px;
+}
+
+.red-ui-editableList-container li.red-ui-editableList-item-removable .red-ui-editableList-item-content h4{
+    margin-block-start: 0px;
+}
+
+.red-ui-editableList-container li .red-ui-editableList-item-remove{
+    position: absolute;
+    top: 18px;
+    right: 6px;
+    height: fit-content;
+    border: none;
+    background: none;
+    font-size: 14px;
+}
+
+.red-ui-tray-body{
+    width: 100%;
+    min-width: none !important;
+}
+
+.red-ui-editableList button.red-ui-button{
+    padding: 0px 12px;
+}
+
+.red-ui-editor select, .red-ui-editor-dialog select{
+    width: 100%;
+    border-radius: 2px;
+    border-color: #d9d9d9;
+}
+
+.select2-container{
+    width: 100% !important;
+}
+
+.select2-container--default .select2-selection--single{
+    border-radius: 2px;
+    border-color: #d9d9d9;
+    height: 32px;
+}
+
+/* img */
+.select-image-row {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    height: 70px;
+    position: relative;
+    padding: 5px;
+}
+
+.select-image-row span {
+    display: inline-block;
+    margin-top: 25px;
+}
+
+.select-image-row .img-preview {
+    height: 70px;
+    display: inline-block;
+    right: 0;
+    position: absolute;
+}
+
+.select-image-row .img-preview img {
+    height: 100%;
+}
+
+/* animation */
+
+.select-animation-row {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    height: 70px;
+    position: relative;
+    padding: 5px;
+}
+
+.select-animation-row span {
+    display: inline-block;
+    margin-top: 25px;
+}
+
+.select-animation-row .lottie-preview {
+    height: 70px;
+    width: 70px;
+    display: inline-block;
+    right: 0;
+    position: absolute;
+}
+
+/* select 2*/
+
+.select2-search input {
+    line-height: 24px;
+}
+
+.select2-search input:focus {
+    outline: none;
+}
+
+li.select2-results__option.select2-results__message {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
