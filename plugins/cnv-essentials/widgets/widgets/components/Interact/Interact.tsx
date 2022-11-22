@@ -59,9 +59,9 @@ function Interact({
         )}
       </div>
       <div className='buttons-wrapper'>
-        {buttons.map(({ value, label, buttonType }: ButtonsProps) => {
+        {buttons.map(({ label, buttonType }: ButtonsProps, idx: number) => {
           return (
-            <div key={value} className='button-wrapper'>
+            <div key={idx} className='button-wrapper'>
               <CustomButton
                 text={label}
                 buttonType={buttonType}
