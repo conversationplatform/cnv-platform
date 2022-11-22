@@ -5,8 +5,8 @@ on:
   push:
     tags:
     - '*'
-    branches:
-    - main
+    # branches:
+    # - main
 
 jobs:
   build-and-publish:
@@ -31,18 +31,17 @@ jobs:
         yarn update:package:middleware $GITHUB_REF_NAME
         yarn update:package:plugins:core $GITHUB_REF_NAME
         yarn update:package:plugins:essentials $GITHUB_REF_NAME
-      if: startsWith(github.event.ref, 'refs/tags/')
-    
-    - name: debug
+      #if: startsWith(github.event.ref, 'refs/tags/')
+
+    # update git repo
+    - name: git push changes
       run: |-
-        echo "ref is: " ${{ github.event.ref }}
-    # Setup git credentials
-    
-    # increment package version and publish
-    # - name: set yarn version
+        git push -u origin HEAD:${GITHUB_REF##*/}
+
+    # - name: debug
     #   run: |-
-    #     echo "using version $GITHUB_REF_NAME"
-    #     yarn version --new-version $GITHUB_REF_NAME
+    #     echo "ref is: " ${{ github.event.ref }}
+    # Setup git credentials
 
     # Build
     # - name: set yarn version
