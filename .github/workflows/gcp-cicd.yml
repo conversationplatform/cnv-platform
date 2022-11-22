@@ -36,7 +36,7 @@ jobs:
     # update git repo
     - name: git push changes
       run: |-
-        git push -u origin HEAD:${GITHUB_REF##*/}
+        git push -u origin HEAD:main
 
     # - name: debug
     #   run: |-
