@@ -25,6 +25,7 @@ jobs:
 
     - name: update package version
       run: |-
+        yarn update:package $GITHUB_REF_NAME
         yarn update:package:app $GITHUB_REF_NAME
         yarn update:package:dashboard $GITHUB_REF_NAME
         yarn update:package:middleware $GITHUB_REF_NAME
