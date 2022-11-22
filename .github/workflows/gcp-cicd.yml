@@ -18,6 +18,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: update package version
+      run: |-
+        yarn update:package:app $GITHUB_REF_NAME
+        yarn update:package:dashboard $GITHUB_REF_NAME
+        yarn update:package:middleware $GITHUB_REF_NAME
+        yarn update:package:plugins:core $GITHUB_REF_NAME
+        yarn update:package:plugins:essentials $GITHUB_REF_NAME
+      if: startsWith(github.event.ref, 'refs/tags/')
+    
     - name: debug
       run: |-
         echo "ref is: " ${{ github.event.ref }}
