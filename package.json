@@ -26,6 +26,7 @@
     "build:plugins:essentials": "yarn --cwd plugins/cnv-essentials build",
     "update:package:plugins:essentials": "npm --prefix plugins/cnv-essentials version",
     "pack:plugins:essentials": "yarn --cwd plugins/cnv-essentials pack -f cnv-essentials.tgz",
+    "update:package": "npm version",
     "install": "yarn install:app && yarn install:dashboard && yarn install:middleware && yarn install:plugins:core && yarn install:plugins:essentials",
     "build": "yarn build:app && yarn build:dashboard && yarn build:middleware && yarn build:plugins:core && yarn build:plugins:essentials && yarn install:plugins:middleware ",
     "start:arango": "docker-compose -f docker/arangodb.yml up -d",
