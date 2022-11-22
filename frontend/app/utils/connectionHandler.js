@@ -54,21 +54,21 @@ class ConnectionHandler {
     const { data } = await axios.get(
       `${this.host}/api/v1/nodered/widgetProviders`
     );
-    if (data.length == 0) {
+    if (data.widgets.length == 0) {
       return [];
     }
     return Promise.all(
-      data.map((widget) => this.loadWidgetProvider(widget))
+      data.widgets.map((widget) => this.loadWidgetProvider(data.version, widget))
     );
   }
 
-  async loadWidgetProvider(widget) {
+  async loadWidgetProvider(version, widget) {
     return new Promise((resolve) => {
         console.log("loading widget", widget);
         const script = document.createElement("script");
         script.type = "module";
         script.async = false;
-        script.src = `${this.host}/api/v1/nodered/widgetProvider?widget=${widget}`;
+        script.src = `${this.host}/api/v1/nodered/widgetProvider/${version}?widget=${widget}`;
         document.head.append(script);
         script.addEventListener('load', () => {
             resolve(window[widget])
