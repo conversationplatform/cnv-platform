@@ -17,6 +17,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    
+    - name: Git user config
+      run: |-
+        git config --global user.email "tinybuilder@productdock.com"
+        git config --global user.name "TinyBuilder"
 
     - name: update package version
       run: |-
@@ -31,10 +36,7 @@ jobs:
       run: |-
         echo "ref is: " ${{ github.event.ref }}
     # Setup git credentials
-    - name: Git user config
-      run: |-
-        git config --global user.email "buildy_mc_build_bot@cloud.de"
-        git config --global user.name "Buildy Mc Build Bot"
+    
     # increment package version and publish
     # - name: set yarn version
     #   run: |-
