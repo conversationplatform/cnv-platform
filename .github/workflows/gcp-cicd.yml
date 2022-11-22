@@ -5,6 +5,8 @@ on:
   push:
     tags:
     - '*'
+    branches:
+    - master
 
 jobs:
   build-and-publish:
@@ -22,10 +24,10 @@ jobs:
         git config --global user.email "buildy_mc_build_bot@cloud.de"
         git config --global user.name "Buildy Mc Build Bot"
     # increment package version and publish
-    - name: set yarn version
-      run: |-
-        echo "using version $GITHUB_REF_NAME"
-        yarn version --new-version $GITHUB_REF_NAME
+    # - name: set yarn version
+    #   run: |-
+    #     echo "using version $GITHUB_REF_NAME"
+    #     yarn version --new-version $GITHUB_REF_NAME
 
     # Build
     - name: set yarn version

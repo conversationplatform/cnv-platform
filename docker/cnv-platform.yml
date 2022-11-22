@@ -37,16 +37,16 @@ services:
       ADMIN_PASSWORD: secret
       JWT_EXPIRATION_SECONDS: 600s
       TRACK_LIFETIME_MONTHS: 1
-      ENABLE_CUSTOM_PROPERTIES: true
+      ENABLE_CUSTOM_PROPERTIES: "true"
 
       # Node-Red sidecar
-      USE_BUNDLED_NODERED: true
+      USE_BUNDLED_NODERED: "true"
       NODERED_WS_CONNECTION: ws://localhost:8080
       NODERED_HTTP_CONNECTION: http://localhost:1880
       NODERED_HOME_DIR: /mount
       NODERED_FLOW_FILE: flows/flows.json
-      NODERED_ENABLE_PROJECTS: true
-      NODERED_ENABLE_PALLETE: true
+      NODERED_ENABLE_PROJECTS: "true"
+      NODERED_ENABLE_PALLETE: "true"
 
     ports:
       - 3000:3000
