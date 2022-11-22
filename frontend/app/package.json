@@ -1,6 +1,6 @@
 {
   "name": "@cnv-platform/client",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=local parcel index.html --host localhost",
