@@ -18,6 +18,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: debug
+      run: |-
+        echo "ref is: " ${{ github.event.ref }}
     # Setup git credentials
     - name: Git user config
       run: |-
@@ -30,6 +33,6 @@ jobs:
     #     yarn version --new-version $GITHUB_REF_NAME
 
     # Build
-    - name: set yarn version
-      run: |-
-        yarn build:docker
+    # - name: set yarn version
+    #   run: |-
+    #     yarn build:docker

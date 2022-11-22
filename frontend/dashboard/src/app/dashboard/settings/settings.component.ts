@@ -21,8 +21,7 @@ export class SettingsComponent implements OnInit {
   async ngOnInit() {
     this.customProperties = await this.propertiesService.getCustomProperties();
     this.cors = this.customProperties.cors.split(',');
-    console.log(this.customProperties, this.cors);
-    
+
   }
 
   updateCorsEntry(event: any, i: number) {

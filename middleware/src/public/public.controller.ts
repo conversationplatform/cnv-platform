@@ -11,11 +11,13 @@ export class PublicController {
 
     @Get('_/*')
     getDefault(@Req() request: Request, @Res() response) {
+        response.set('Cache-control', 'public, max-age=300')
         this.publicService.getDefaultApp(request, response);
     }
 
     @Get('app/*')
     getApp(@Req() request: Request, @Res() response) {
+        response.set('Cache-control', 'public, max-age=300')
         this.publicService.getApp(request, response);
     }
 }

@@ -11,6 +11,7 @@ const os = require('os');
 const path = require('path');
 
 import * as fs from 'fs';
+import { IWidgetProviders } from 'src/interface/widgetProviders.interface';
 
 const noderedWorker = path.resolve(__dirname, 'node-red.worker.js');
 
@@ -34,6 +35,7 @@ export class NoderedService {
   private app;
   private accessToken;
   private accessTokenInterval;
+  private packageVersion;
 
   private readonly logger = new Logger(NoderedService.name);
 
@@ -49,6 +51,9 @@ export class NoderedService {
       this.nodeRedWorker?.terminate(); // nodered will be automaticaly rebooted
     });
     this.accessToken = null;
+
+    this.packageVersion = process.env.npm_package_version || '1.0.0';
+
   }
 
   async init(app: INestApplication | any) {
@@ -235,7 +240,7 @@ export class NoderedService {
     });
   }
 
-  async getWidgetProviders(): Promise<string[]> {
+  async getWidgetProviders(): Promise<IWidgetProviders> {
     const installedNodesPath = path.resolve(this.configService.get('NODERED_HOME_DIR'), '.config.nodes.json')
     const installedNodes = JSON.parse(fs.readFileSync(installedNodesPath).toString())
     let widgetProviders = [];
@@ -252,7 +257,10 @@ export class NoderedService {
       } catch (e) {
       }
     }
-    return widgetProviders;
+    return {
+      version: this.packageVersion,
+      widgets: widgetProviders
+    }
 
   }
 
@@ -270,7 +278,6 @@ export class NoderedService {
           resolve(res.data);
         },
         error: (err) => {
-          this.logger.error(err);
           reject(err)
         }
       })

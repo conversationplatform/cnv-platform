@@ -53,9 +53,31 @@
 
     </mat-expansion-panel-header>
 
+    <mat-form-field *ngIf="customProperties">
+      <mat-label>Flow file name</mat-label>
+      <input matInput placeholder="flows.json" [(ngModel)]="customProperties.NODERED_FLOW_FILE" type="string">
+    </mat-form-field>
+
 
     <mat-slide-toggle *ngIf="customProperties" [(ngModel)]="customProperties.NODERED_ENABLE_PROJECTS">Enable projects</mat-slide-toggle>
     <mat-slide-toggle *ngIf="customProperties" [(ngModel)]="customProperties.NODERED_ENABLE_PALLETE">Enable palette</mat-slide-toggle>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Plugins
+      </mat-panel-title>
+
+    </mat-expansion-panel-header>
+
+
+    <mat-form-field *ngIf="customProperties">
+      <mat-label>Plugin cache</mat-label>
+      <input matInput placeholder="120" [(ngModel)]="customProperties.DEFAULT_PLUGINS_CACHE" type="number" min="0">
+      <span matSuffix> Seconds</span>
+    </mat-form-field>
 
   </mat-expansion-panel>
 </mat-accordion>
