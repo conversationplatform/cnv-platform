@@ -79,8 +79,8 @@ jobs:
       run: |-
         git push -u origin HEAD:main
   
-  build-and-publish:
-    name: Setup, Build, Publish
+  deploy:
+    name: Deploy into development
     runs-on: cnv-platform
     environment: production
 
