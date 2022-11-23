@@ -55,7 +55,7 @@ jobs:
           --tag "$REGISTRY/$PROJECT_ID/$NAMESPACE-container/$IMAGE:$GITHUB_REF_NAME" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
-          -f docker/Dockerfile
+          -f docker/Dockerfile .
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@v0.2.0
@@ -63,7 +63,7 @@ jobs:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
         project_id: ${{ secrets.GKE_PROJECT }}
         
-        
+
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |-
