@@ -37,6 +37,16 @@ jobs:
       run: |-
         git config --global user.email "tinybuilder@productdock.com"
         git config --global user.name "TinyBuilder"
+        
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+        
+    - run: |-
+        gcloud auth configure-docker \
+          europe-west3-docker.pkg.dev
 
     - name: update package version
       run: |-
@@ -56,12 +66,6 @@ jobs:
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
           -f docker/Dockerfile-debug .
-
-    # Setup gcloud CLI
-    - uses: google-github-actions/setup-gcloud@v0.2.0
-      with:
-        service_account_key: ${{ secrets.GKE_SA_KEY }}
-        project_id: ${{ secrets.GKE_PROJECT }}
         
 
     # Push the Docker image to Google Container Registry
