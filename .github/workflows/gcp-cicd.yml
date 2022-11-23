@@ -8,6 +8,21 @@ on:
     # branches:
     # - main
 
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  DEPLOYMENT_NAME: cnv-platform
+  IMAGE: cnv-platform
+  REGISTRY: europe-west3-docker.pkg.dev
+  NAMESPACE: cnv-platform
+
+  ARANGO_ROOT_PASSWORD: ${{ secrets.ARANGO_ROOT_PASSWORD }}
+  ARANGO_HOST: ${{ secrets.ARANGO_HOST }}
+  ARANGO_USER: ${{ secrets.ARANGO_USER }}
+  ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
+  ARANGO_DATABASE: ${{ secrets.ARANGO_DATABASE }}
+  ADMIN_USER: ${{ secrets.ADMIN_USER }}
+  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
 jobs:
   build-and-publish:
     name: Setup, Build, Publish
@@ -33,17 +48,29 @@ jobs:
         yarn update:package:plugins:essentials $GITHUB_REF_NAME
       #if: startsWith(github.event.ref, 'refs/tags/')
 
+    #Build
+    - name: Build cnv-platform docker
+      run: |-
+        docker build \
+          --tag "$REGISTRY/$PROJECT_ID/$NAMESPACE-container/$IMAGE:$GITHUB_REF_NAME" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" \
+          -f docker/Dockerfile
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+        
+        
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |-
+        docker push "$REGISTRY/$PROJECT_ID/$NAMESPACE-container/$IMAGE:$GITHUB_REF_NAME"
+
+
     # update git repo
     - name: git push changes
       run: |-
         git push -u origin HEAD:main
-
-    # - name: debug
-    #   run: |-
-    #     echo "ref is: " ${{ github.event.ref }}
-    # Setup git credentials
-
-    # Build
-    # - name: set yarn version
-    #   run: |-
-    #     yarn build:docker
