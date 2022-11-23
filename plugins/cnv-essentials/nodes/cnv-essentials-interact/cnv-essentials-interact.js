@@ -21,7 +21,7 @@ module.exports = function (RED) {
           disclaimerLink: ""
         };
 
-        msg.websocket.sendText("text", data, node.id);
+        msg.websocket.sendText("cnv-essentials-sendtext", data, node.id);
         msg.websocket.sendQuestion("cnv-essentials-interact", question, node.id);
       }
 

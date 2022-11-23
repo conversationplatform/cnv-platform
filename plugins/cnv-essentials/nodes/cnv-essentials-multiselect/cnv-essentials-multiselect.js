@@ -20,7 +20,7 @@ module.exports = function (RED) {
           disclaimerLink: ""
         };
 
-        msg.websocket.sendText("text", data, this.id);
+        msg.websocket.sendText("cnv-essentials-sendtext", data, this.id);
         msg.websocket.sendQuestion("cnv-essentials-multiselect", question, this.id);
       }
 
