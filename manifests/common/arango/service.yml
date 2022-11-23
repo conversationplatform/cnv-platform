@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: arango
+spec:
+    type: ClusterIP
+    ports:
+      - protocol: TCP
+        port: 8529
+        targetPort: 8529
+    selector:
+      app: arango

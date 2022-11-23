@@ -37,7 +37,7 @@ jobs:
       run: |-
         git config --global user.email "tinybuilder@productdock.com"
         git config --global user.name "TinyBuilder"
-        
+
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@v0.2.0
       with:
@@ -78,3 +78,30 @@ jobs:
     - name: git push changes
       run: |-
         git push -u origin HEAD:main
+  
+  build-and-publish:
+    name: Setup, Build, Publish
+    runs-on: cnv-platform
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Deploy arangodb
+    - name: ArangoDB Build manifests and deploy
+      run: |-
+        cd manifests/common/arango
+        cat secret.yml.tpl | envsubst > secret.yml
+        kubectl -n $NAMESPACE apply -k
+        kubectl -n $NAMESPACE rollout status deployment/arango
+
+    # Deploy cnv-platform
+    - name: cnv-platform Build manifests and deploy
+      run: |-
+        #kubectl -n $NAMESPACE scale deployment $DEPLOYMENT_NAME --replicas=0 && sleep 30s
+        cd manifests/development/
+        cat secret.yml.tpl | envsubst > secret.yml
+        kustomize edit set image IMAGE:TAG=$REGISTRY/$PROJECT_ID/$NAMESPACE-container/$IMAGE:$GITHUB_REF_NAME
+        kubectl -n $NAMESPACE apply -k
+        kubectl -n $NAMESPACE rollout status deployment/$DEPLOYMENT_NAME
