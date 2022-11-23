@@ -65,7 +65,7 @@ jobs:
           --tag "$REGISTRY/$PROJECT_ID/$NAMESPACE-container/$IMAGE:$GITHUB_REF_NAME" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
-          -f docker/Dockerfile-debug .
+          -f docker/Dockerfile .
         
 
     # Push the Docker image to Google Container Registry
@@ -83,6 +83,7 @@ jobs:
     name: Deploy into development
     runs-on: cnv-platform
     environment: production
+    needs: build-and-publish
 
     steps:
     - name: Checkout
