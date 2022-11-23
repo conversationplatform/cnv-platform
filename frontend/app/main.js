@@ -1,6 +1,6 @@
 
 let params = {
-    host: process.env.WEBSOCKET || `//localhost:3000`,
+    host: process.env.WEBSOCKET,
 };
 
 if (window.location.hash) {

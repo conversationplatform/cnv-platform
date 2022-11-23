@@ -18,7 +18,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: root-redirect
-              value: /admin/
+              value: /_/
             - name: cors
               value: http://localhost,http://localhost:1234,http://conversation-platform.productdock.com/,https://conversation-platform.productdock.com/,https://conversation-platform.productdock.com/admin/,https://conversation-platform.productdock.com/admin/dashboard/
             
