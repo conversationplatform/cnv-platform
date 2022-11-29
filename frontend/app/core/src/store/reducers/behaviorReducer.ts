@@ -5,7 +5,9 @@ import {
   BehaviorActions,
   TOGGLE_CHAT,
   TOGGLE_INPUT_DISABLED,
-  TOGGLE_MESSAGE_LOADER
+  TOGGLE_MESSAGE_LOADER,
+  OPEN_CHAT,
+  CLOSE_CHAT
 } from '../actions/types';
 
 const initialState = {
@@ -16,6 +18,10 @@ const initialState = {
 
 const behaviorReducer = {
   [TOGGLE_CHAT]: (state: BehaviorState) => ({ ...state, showChat: !state.showChat}),
+
+  [OPEN_CHAT]: (state: BehaviorState) => ({ ...state, showChat: true}),
+
+  [CLOSE_CHAT]: (state: BehaviorState) => ({ ...state, showChat: false}),
 
   [TOGGLE_INPUT_DISABLED]: (state: BehaviorState) => ({ ...state, disabledInput: !state.disabledInput }),
 

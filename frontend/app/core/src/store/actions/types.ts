@@ -3,6 +3,8 @@ import { ElementType } from 'react';
 import { LinkParams, FullscreenPreviewState } from '../types';
 
 export const TOGGLE_CHAT = 'BEHAVIOR/TOGGLE_CHAT';
+export const OPEN_CHAT = 'BEHAVIOR/OPEN_CHAT';
+export const CLOSE_CHAT = 'BEHAVIOR/CLOSE_CHAT';
 export const TOGGLE_INPUT_DISABLED = 'BEHAVIOR/TOGGLE_INPUT_DISABLED';
 export const TOGGLE_MESSAGE_LOADER = 'BEHAVIOR/TOGGLE_MSG_LOADER';
 export const SET_BADGE_COUNT = 'BEHAVIOR/SET_BADGE_COUNT';
@@ -24,6 +26,14 @@ export const SHOW_OVERLAY_COMPONENT = "OVERLAY/SHOW";
 
 export interface ToggleChat {
   type: typeof TOGGLE_CHAT;
+}
+
+export interface OpenChat {
+  type: typeof OPEN_CHAT;
+}
+
+export interface CloseChat {
+  type: typeof CLOSE_CHAT;
 }
 
 export interface ToggleInputDisabled {

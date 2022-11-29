@@ -9,6 +9,18 @@ export function toggleChat(): actionsTypes.ToggleChat {
   };
 }
 
+export function openChat(): actionsTypes.OpenChat {
+  return {
+    type: actionsTypes.OPEN_CHAT
+  };
+}
+
+export function closeChat(): actionsTypes.CloseChat {
+  return {
+    type: actionsTypes.CLOSE_CHAT
+  };
+}
+
 export function toggleInputDisabled(): actionsTypes.ToggleInputDisabled {
   return {
     type: actionsTypes.TOGGLE_INPUT_DISABLED
