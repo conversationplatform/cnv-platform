@@ -8,7 +8,7 @@ import {
   renderOverlayComponent,
   showOverlayComponent,
   renderFooterComponent,
-  toggleWidget,
+  toggleWidget
 } from "./core";
 
 let ui = {
@@ -19,7 +19,7 @@ let ui = {
   renderOverlayComponent,
   showOverlayComponent,
   renderFooterComponent,
-  toggleWidget,
+  toggleWidget
 };
 
 import defalutBackground from "./img/bg.png";
@@ -41,6 +41,7 @@ import Restart from "./components/Restart";
 import Cookie from "./components/Cookie";
 
 import Cookies from "universal-cookie";
+import { openWidget } from "./core/src/store/dispatcher";
 
 const cookies = new Cookies();
 
@@ -50,15 +51,12 @@ window.React$4 = React;
 export default class ConversationApp extends HTMLElement {
   host;
   flowId;
-  useCredentials;
+  widthThreshold;
+  isOpen = true;
   connection;
   tasker;
   cookieSIDName;
   widgets = [];
-
-  static get observedAttributes() {
-    return ["open"];
-  }
 
   constructor() {
     super();
@@ -69,6 +67,10 @@ export default class ConversationApp extends HTMLElement {
 
     this.host = this.getAttribute("host");
 
+    this.widthThreshold = +this.getAttribute("width-threshold");
+
+    this.isOpen = this.getAttribute("isOpen") ? this.getAttribute("isOpen") == 'true' : true;
+
     if (
       this.host &&
       this.host.length > 0 &&
@@ -76,12 +78,6 @@ export default class ConversationApp extends HTMLElement {
       this.flowId.length > 0
     ) {
       this.start();
-    }
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name == "open") {
-      toggleWidget();
     }
   }
 
@@ -129,7 +125,11 @@ export default class ConversationApp extends HTMLElement {
     return widget;
   }
 
-  async start(host = this.host, flowId = this.flowId) {
+  async start(host = this.host, flowId = this.flowId, isOpen = this.isOpen, widthThreshold = this.widthThreshold ) {
+    if(this.widthThreshold && window.innerWidth < this.widthThreshold) {
+      this.isOpen = false;
+    } 
+
     this.connection = new ConnectionHandler(
       host,
       flowId,
@@ -275,7 +275,9 @@ export default class ConversationApp extends HTMLElement {
       };
 
       useEffect(() => {
-        toggleWidget();
+        if(props.isOpen) {
+          openWidget();
+        }
       }, []);
 
       return (
@@ -296,7 +298,7 @@ export default class ConversationApp extends HTMLElement {
     }
 
     ReactDOM.render(
-      <App connection={this.connection} />,
+      <App connection={this.connection} isOpen={this.isOpen} />,
       document.querySelector("conversation-app#dialog")
     );
   }

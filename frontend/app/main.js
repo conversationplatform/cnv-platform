@@ -13,6 +13,5 @@ if (window.location.hash) {
     you can either pass parameters into start function, or inline in the html tag like: <conversation-app host="ws://localhost:8080" flowId="/default"></conversation-app>
 */
 
-
 document.querySelector('conversation-app#dialog').start(params.host, params.flowId);
 
