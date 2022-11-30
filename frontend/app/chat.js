@@ -53,6 +53,10 @@ export default class ConversationApp extends HTMLElement {
   flowId;
   widthThreshold;
   isOpen = true;
+  top;
+  bottom;
+  left;
+  right;
   connection;
   tasker;
   cookieSIDName;
@@ -68,6 +72,12 @@ export default class ConversationApp extends HTMLElement {
     this.host = this.getAttribute("host");
 
     this.widthThreshold = +this.getAttribute("width-threshold");
+
+    
+    this.top = this.getAttribute("top");
+    this.bottom = this.getAttribute("bottom");
+    this.left = this.getAttribute("left");
+    this.right = this.getAttribute("right");
 
     this.isOpen = this.getAttribute("isOpen") ? this.getAttribute("isOpen") == 'true' : true;
 
@@ -128,7 +138,8 @@ export default class ConversationApp extends HTMLElement {
   async start(host = this.host, flowId = this.flowId, isOpen = this.isOpen, widthThreshold = this.widthThreshold ) {
     if(this.widthThreshold && window.innerWidth < this.widthThreshold) {
       this.isOpen = false;
-    } 
+    }
+    this.setRenderPosition();
 
     this.connection = new ConnectionHandler(
       host,
@@ -305,10 +316,29 @@ export default class ConversationApp extends HTMLElement {
 
   handleTheme(themeOptions) {
     Object.keys(themeOptions).forEach((key) =>
-      document
-        .querySelector("conversation-app")
-        .style.setProperty(key, themeOptions[key])
+      this.setDialogCssProperty(key, themeOptions[key])
     );
+  }
+
+  setRenderPosition() {
+    if(this.top) {
+      this.setDialogCssProperty('top', this.top);
+    }
+    if(this.bottom) {
+      this.setDialogCssProperty('bottom', this.bottom);
+    }
+    if(this.left) {
+      this.setDialogCssProperty('left', this.left);
+    }
+    if(this.right) {
+      this.setDialogCssProperty('right', this.right);
+    }
+  }
+
+  setDialogCssProperty(key, value) {
+    document
+        .querySelector("conversation-app#dialog")
+        .style.setProperty(key, value)
   }
 }
 
