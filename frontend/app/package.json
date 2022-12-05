@@ -6,7 +6,7 @@
     "start": "NODE_ENV=local parcel index.html --host localhost",
     "start:prod": "NODE_ENV=production parcel index.html --host localhost",
     "build:local": "NODE_ENV=local && parcel build index.html --public-url ./ --no-source-maps ",
-    "build:prod": "NODE_ENV=production && parcel build index.html chat.scss --public-url ./ --no-source-maps --no-scope-hoist --no-content-hash --no-cache"
+    "build:prod": "NODE_ENV=production && parcel build index.html chat.js --public-url ./ --no-source-maps --no-scope-hoist --no-content-hash --no-cache"
   },
   "dependencies": {
     "@brainhubeu/react-carousel": "^1.19.26",
