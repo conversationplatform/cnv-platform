@@ -2,6 +2,6 @@
 .parcel-cache
 dist
 node_modules/
-
+output
 #yarn.lock
 #package-lock.json
