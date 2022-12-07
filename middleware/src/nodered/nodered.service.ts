@@ -53,7 +53,6 @@ export class NoderedService {
 
   // jobs
   private statusJob: CronJob;
-
   private authJob: CronJob;
 
   constructor(
