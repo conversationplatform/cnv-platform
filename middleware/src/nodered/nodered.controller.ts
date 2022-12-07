@@ -3,10 +3,12 @@ import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ConfigService } from 'src/config/config/config.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { NodeREDGuard } from './node-red.guard';
 import { NoderedService } from './nodered.service';
 
 @ApiTags('api/v1/nodered')
 @Controller('api/v1/nodered')
+@UseGuards(NodeREDGuard)
 export class NoderedController {
   constructor(
     private readonly noderedService: NoderedService,

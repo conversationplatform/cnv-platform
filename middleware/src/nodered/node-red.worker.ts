@@ -4,7 +4,6 @@ import {
 } from 'worker_threads';
 import { NodeREDWorkerIPC } from './node-red.worker.ipc';
 import { NodeRedWorkerSettings } from './nodered.settings.interface';
-import { Socket } from 'net';
 
 const express = require('express');
 const http = require('http');
@@ -82,28 +81,11 @@ parentPort.on('message', async (data) => {
       type: 'pong',
       payload: 'pong'
     }); break;
-    case 'isRunning': sendMessage({
-      type: 'isRunning',
-      payload: await isServiceRunning()
-    }); break;
 
     default: console.log(`data type not recognized '${message.type}'`)
   }
 })
 
-const isServiceRunning = (): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    const socket = new Socket();
-    socket.on('connect', (d) => resolve(d));
-    socket.on('timeout', () => reject(false));
-    socket.on('error', (e) => reject(e));
-    socket.connect(8080, '0.0.0.0')
-    socket.setTimeout(5e3, () => socket.destroy());
-  })
-  
-}
-
 const sendMessage = (message: NodeREDWorkerIPC): void => {
   parentPort.postMessage(JSON.stringify(message));
 }
-

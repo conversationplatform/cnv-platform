@@ -3,5 +3,8 @@ export enum NodeREDState {
     STOPPED = 'STOPPED',
     PENDING = 'PENDING',
     RUNNING = 'RUNNING',
-    ERROR = 'ERROR'
+    STOPPING = 'STOPPING',
+    RESTARTING = 'RESTARTING',
+    ERROR = 'ERROR',
+    UNRESPONSIVE = "UNRESPONSIVE"
 }
