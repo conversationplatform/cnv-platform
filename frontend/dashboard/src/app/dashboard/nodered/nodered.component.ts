@@ -13,7 +13,7 @@ export class NoderedComponent implements OnInit {
     private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-    const url = environment.production ? '/red/' : 'http://localhost:1880/red/';
+    const url = environment.production && location.host.indexOf('localhost') == -1 ? '/red/' : 'http://localhost:1880/red/';
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
