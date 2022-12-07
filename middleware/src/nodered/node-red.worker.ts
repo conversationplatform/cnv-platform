@@ -2,12 +2,14 @@ import {
   parentPort,
   workerData,
 } from 'worker_threads';
+import { NodeREDWorkerIPC } from './node-red.worker.ipc';
 import { NodeRedWorkerSettings } from './nodered.settings.interface';
 
 const express = require('express');
 const http = require('http');
 
 const RED = require("node-red");
+
 class NodeREDWorker {
   app = express();
   server;
@@ -52,14 +54,17 @@ class NodeREDWorker {
     RED.start();
 
 
-    this.server.listen(port, () => {
-      this.logger(`node-RED server started at port ${port}`)
+    this.server.listen(port, async () => {
+      this.logger(`node-RED server started at port ${port}`);
     })
 
   }
 
   logger(args) {
-    parentPort.postMessage(args);
+    sendMessage({
+      type: 'log',
+      payload: args
+    })
   }
 }
 
@@ -67,12 +72,20 @@ class NodeREDWorker {
 const workerSettings: NodeRedWorkerSettings = workerData;
 const worker = new NodeREDWorker(workerSettings.port, workerSettings.settings);
 
+parentPort.on('message', async (data) => {
+  const message: NodeREDWorkerIPC = JSON.parse(data);
 
-parentPort.on('message', (data) => {
-  if ('exit' == data) {
-    process.exit(0)
-  }
-  if ('ping' == data) {
-    parentPort.postMessage('pong');
+  switch(message.type) {
+    case 'exit': process.exit(1);
+    case 'ping': sendMessage({
+      type: 'pong',
+      payload: 'pong'
+    }); break;
+
+    default: console.log(`data type not recognized '${message.type}'`)
   }
 })
+
+const sendMessage = (message: NodeREDWorkerIPC): void => {
+  parentPort.postMessage(JSON.stringify(message));
+}

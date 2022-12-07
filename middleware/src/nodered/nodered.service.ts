@@ -1,21 +1,28 @@
-import { INestApplication, Injectable, Logger } from '@nestjs/common';
-import { NodeRedWorkerSettings } from './nodered.settings.interface';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { NodeRedOptions, NodeRedWorkerSettings } from './nodered.settings.interface';
 
 import { Worker } from 'worker_threads';
-import { setInterval } from 'timers';
 import { ConfigService } from '../config/config/config.service';
 import { HttpService } from '@nestjs/axios';
-import { AuthService } from 'src/auth/auth.service';
+
 const os = require('os');
 
 const path = require('path');
 
+import { Socket } from 'net';
+
 import * as fs from 'fs';
 import { IWidgetProviders } from 'src/interface/widgetProviders.interface';
+import { NODEREDOPTIONS } from './nodered.constants';
+import { BehaviorSubject } from 'rxjs';
+import { NodeREDState } from './node-red.worker.state';
+import { NodeREDWorkerIPC } from './node-red.worker.ipc';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { CronJob } from 'cron';
 
 const noderedWorker = path.resolve(__dirname, 'node-red.worker.js');
 
-const settings: NodeRedWorkerSettings = {
+const defaultSettings: NodeRedWorkerSettings = {
   port: 1880,
   settings: {
     httpAdminRoot: '/red',
@@ -30,124 +37,178 @@ const settings: NodeRedWorkerSettings = {
 @Injectable()
 export class NoderedService {
   private nodeRedWorker: Worker;
-  private healthcheckInterval;
-  private healthcheckIntervalTimeout;
-  private app;
+
   private accessToken;
-  private accessTokenInterval;
   private packageVersion;
 
+  nodeRedState: NodeREDState = NodeREDState.DISABLED;
+
+  private $nodeRedState: BehaviorSubject<NodeREDState> = new BehaviorSubject(NodeREDState.DISABLED);
+
   private readonly logger = new Logger(NoderedService.name);
+  private workerLogger = new Logger("NodeREDWorker");
+
+  private server_url = '';
+  private options: NodeRedOptions;
+
+  // jobs
+  private statusJob: CronJob;
+  private authJob: CronJob;
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly authService: AuthService,
     private httpService: HttpService,
+    @Inject(NODEREDOPTIONS) private nodeRedOptionsBehaviour: BehaviorSubject<NodeRedOptions>,
+    private readonly schedulerRegistry: SchedulerRegistry
+
   ) {
-    this.configService.events.subscribe(() => {
-      this.logger.warn(
-        'middleware custom properties changed. Nodered will be rebooted to apply the latest configurations',
-      );
-      this.nodeRedWorker?.terminate(); // nodered will be automaticaly rebooted
-    });
-    this.accessToken = null;
+    this.server_url = this.configService.get('NODERED_HTTP_CONNECTION');
 
     this.packageVersion = process.env.npm_package_version || '1.0.0';
+    this.nodeRedOptionsBehaviour.subscribe(options => this.setOptions(options));
+    this.$nodeRedState.subscribe(async (state) => {
+      if (state != this.nodeRedState) {
+        this.logger.debug(`NodeRED worker status changed ${this.nodeRedState} => ${state}`)
+        this.nodeRedState = state;
+        switch (this.nodeRedState) {
+          case NodeREDState.STOPPED: await this.start(); break;
+          case NodeREDState.RESTARTING:
+          case NodeREDState.STOPPING:
+            this.statusJob.stop();
+            this.authJob.stop();
+            await this.stop();
+
+            break;
+          case NodeREDState.PENDING:
+            this.statusJob.start();
+            this.authJob.start();
+            break;
+          case NodeREDState.ERROR: await this.stop(); break;
+          case NodeREDState.RUNNING: await this.authenticate(); break;
+        }
+      }
+    });
+
+    this.statusJob = new CronJob(`*/10 * * * * *`, async () => {
+      const isRunning = await this.checkPortStatus('0.0.0.0', 1880);
+      if (isRunning) {
+        if (this.nodeRedState != NodeREDState.RUNNING) {
+          this.$nodeRedState.next(NodeREDState.RUNNING)
+        }
+      } else {
+        if (this.nodeRedState == NodeREDState.RUNNING) {
+          this.$nodeRedState.next(NodeREDState.UNRESPONSIVE)
+        } else if (this.nodeRedState == NodeREDState.UNRESPONSIVE) {
+          this.$nodeRedState.next(NodeREDState.STOPPING)
+        }
+      }
+    })
+
+    this.schedulerRegistry.addCronJob('statusJob', this.statusJob);
+
+    this.authJob = new CronJob(`*/10 * * * *`, async () => await this.authenticate() );
+
+    this.schedulerRegistry.addCronJob('authJob', this.authJob);
 
   }
 
-  async init(app: INestApplication | any) {
-    if (this.configService.get('NODERED_HOME_DIR')) {
-      settings.settings.userDir = this.configService.get('NODERED_HOME_DIR');
+
+  async setOptions(options: NodeRedOptions) {
+    this.options = options;
+    if (options.home_dir) {
+      defaultSettings.settings.userDir = options.home_dir;
     }
 
-    settings.settings.editorTheme = {
+    defaultSettings.settings.editorTheme = {
       projects: {
-        enabled: JSON.parse(this.configService.get('NODERED_ENABLE_PROJECTS')),
+        enabled: options.enable_projects,
       },
       palette: {
-        editable: JSON.parse(this.configService.get('NODERED_ENABLE_PALLETE')),
+        editable: options.enable_pallete,
       },
     };
 
-    if (this.configService.get('NODERED_FLOW_FILE')) {
-      settings.settings.flowFile = this.configService.get('NODERED_FLOW_FILE');
+    if (options.flow_file) {
+      defaultSettings.settings.flowFile = options.flow_file;
     }
 
-    if (this.authService.useAuth) {
-      settings.settings.adminAuth = {
-        type: 'credentials',
-        users: [
-          {
-            username: this.configService.get('ADMIN_USER'),
-            password: this.authService.bcryptpassword,
-            permissions: '*',
-          },
-        ],
-      };
+    defaultSettings.settings.adminAuth = {
+      type: 'credentials',
+      users: [
+        {
+          username: options.admin_user,
+          password: options.admin_password_encrypted,
+          permissions: '*',
+        },
+      ],
     }
 
-    this.app = app;
+    if (this.nodeRedState != NodeREDState.DISABLED) {
+      this.$nodeRedState.next(NodeREDState.RESTARTING);
+    }
+  }
 
+  public enable(): void {
+    setTimeout(() => {
+      this.$nodeRedState.next(NodeREDState.STOPPED);
+    }, 1000)
+  }
+
+  private async start() {
+    if (this.nodeRedState != NodeREDState.STOPPED) {
+      this.logger.error("can't start another nodeRed since there is already a worker present.")
+    }
     this.nodeRedWorker = new Worker(noderedWorker, {
-      workerData: settings,
+      workerData: defaultSettings,
+
+    });
+    this.workerLogger = new Logger(`NodeREDWorker-${this.nodeRedWorker.threadId}`)
+    this.nodeRedWorker.on('message', async (msg) => {
+      const message: NodeREDWorkerIPC = JSON.parse(msg);
+
+      switch (message.type) {
+        case 'log': this.workerLogger.log(message.payload); break;
+        default: this.workerLogger.debug(message)
+      }
+
     });
 
-    this.nodeRedWorker.on('message', async (msg) => {
-      if ('pong' == msg) {
-        this.startHealthCheck();
-        if (!this.accessToken) {
-          this.logger.log('Running node-red auth');
-          const data = <any>await this.auth().catch(e => this.logger.error(e));
-          if (data) this.accessToken = data.access_token;
+    this.nodeRedWorker.on('error', (msg) => {
+      this.logger.error(msg);
+    });
+
+    this.nodeRedWorker.on('exit', async (code) => {
+      if (code !== 0) {
+        this.workerLogger.error(`Worker stopped with exit code ${code}`);
+        if (this.nodeRedState != NodeREDState.STOPPING) {
+          this.$nodeRedState.next(NodeREDState.ERROR);
         }
-      } else {
-        this.logger.debug(msg);
       }
     });
-    this.nodeRedWorker.on('error', (msg) => this.logger.error(msg));
-
-    this.nodeRedWorker.on('exit', (code) => {
-      if (code !== 0)
-        this.logger.error(new Error(`Worker stopped with exit code ${code}`));
-    });
-
-    this.healthcheckInterval = setInterval(() => {
-      this.nodeRedWorker.postMessage('ping');
-    }, 1000);
-
-
-    this.accessTokenInterval = setInterval(async () => {
-      this.logger.log('Running node-red auth');
-      const data = <any>await this.auth().catch(e => this.logger.error(e));
-      if (data) this.accessToken = data.access_token;
-    }, 600000);
+    this.$nodeRedState.next(NodeREDState.PENDING);
   }
 
-  startHealthCheck() {
-    clearTimeout(this.healthcheckIntervalTimeout);
-    this.healthcheckIntervalTimeout = setTimeout(() => {
-      this.nodeRedWorker.terminate();
-      this.stopHealthCheck();
-      this.logger.warn('NODERED ping timeout, rebooting in 3s');
-      setTimeout(() => {
-        this.init(this.app);
-      }, 3000);
-    }, 10000);
-  }
+  private async stop(): Promise<void> {
+    switch (this.nodeRedState) {
+      case NodeREDState.STOPPING:
+        await this.nodeRedWorker?.terminate();
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            this.$nodeRedState.next(NodeREDState.STOPPED);
+            resolve();
+          }, 1000);
+        })
 
-  stopHealthCheck() {
-    clearTimeout(this.healthcheckIntervalTimeout);
-    clearInterval(this.healthcheckInterval);
+      default: this.$nodeRedState.next(NodeREDState.STOPPING);
+    }
+
   }
 
   async getCurrentFlows(): Promise<string[]> {
-    const NODERED_HTTP_CONNECTION = this.configService.get(
-      'NODERED_HTTP_CONNECTION',
-    );
+
     return new Promise((resolve, reject) => {
       this.httpService
-        .get(`${NODERED_HTTP_CONNECTION}/red/current_flows`, {
+        .get(`${this.server_url}/red/current_flows`, {
           headers: {
             Authorization: `Bearer ${this.accessToken}`,
           },
@@ -165,13 +226,10 @@ export class NoderedService {
   }
 
   async getThemeByFlowId(flowId: string): Promise<any> {
-    const NODERED_HTTP_CONNECTION = this.configService.get(
-      'NODERED_HTTP_CONNECTION',
-    );
 
     return new Promise((resolve, reject) => {
       this.httpService
-        .get(`${NODERED_HTTP_CONNECTION}/red/getTheme?flowId=${flowId}`, {
+        .get(`${this.server_url}/red/getTheme?flowId=${flowId}`, {
           headers: {
             Authorization: `Bearer ${this.accessToken}`,
           },
@@ -181,7 +239,7 @@ export class NoderedService {
             resolve(res.data);
           },
           error: (err) => {
-            this.logger.error(err);
+            this.logger.error(`getThemeByFlowId:: ${err}`);
             reject(err);
           },
         });
@@ -189,14 +247,11 @@ export class NoderedService {
   }
 
   async getPrivacyPolicyByFlowId(flowId: string): Promise<any> {
-    const NODERED_HTTP_CONNECTION = this.configService.get(
-      'NODERED_HTTP_CONNECTION',
-    );
 
     return new Promise((resolve, reject) => {
       this.httpService
         .get(
-          `${NODERED_HTTP_CONNECTION}/red/getPrivacyPolicy?flowId=${flowId}`,
+          `${this.server_url}/red/getPrivacyPolicy?flowId=${flowId}`,
           {
             headers: {
               Authorization: `Bearer ${this.accessToken}`,
@@ -208,25 +263,34 @@ export class NoderedService {
             resolve(res.data);
           },
           error: (err) => {
-            this.logger.error(err);
+            this.logger.error(`getPrivacyPolicyByFlowId:: ${err}`);
             reject(err);
           },
         });
     });
   }
 
-  async auth(): Promise<string> {
-    const server_url = this.configService.get('NODERED_HTTP_CONNECTION');
-    const username = this.configService.get('ADMIN_USER');
-    const password = this.configService.get('ADMIN_PASSWORD');
+
+  public isAuthenticated() {
+    return this.accessToken != null;
+  }
+  
+  private async authenticate() {
+    this.logger.log('Running node-red auth');
+    const data = <any>await this.auth().catch(e => this.logger.error(e));
+    if (data) this.accessToken = data.access_token;
+  }
+
+  private async auth(): Promise<string> {
+
     return new Promise((resolve, reject) => {
       this.httpService
-        .post(`${server_url}/red/auth/token`, {
+        .post(`${this.server_url}/red/auth/token`, {
           client_id: 'node-red-admin',
           grant_type: 'password',
           scope: '*',
-          username,
-          password,
+          username: this.options.admin_user,
+          password: this.options.admin_password_plain,
         })
         .subscribe({
           next: (res) => {
@@ -265,14 +329,12 @@ export class NoderedService {
   }
 
   async getWidgetProvider(widget: string): Promise<any> {
-    const NODERED_HTTP_CONNECTION = this.configService.get(
-      'NODERED_HTTP_CONNECTION',
-    );
-    
-    const path = `${NODERED_HTTP_CONNECTION}/red/resources/${widget}/widgetProvider.js`;
+
+
+    const path = `${this.server_url}/red/resources/${widget}/widgetProvider.js`;
     const widgetProvider: any = await new Promise((resolve, reject) => {
       this.httpService.get(
-        `${NODERED_HTTP_CONNECTION}/red/resources/${widget}/widgetProvider.js`
+        `${this.server_url}/red/resources/${widget}/widgetProvider.js`
       ).subscribe({
         next: (res) => {
           resolve(res.data);
@@ -283,9 +345,24 @@ export class NoderedService {
       })
 
     })
-    
-    return widgetProvider;
 
-    
+    return widgetProvider;
   }
+
+  private sendIPCMessage(message: NodeREDWorkerIPC): void {
+    this.nodeRedWorker?.postMessage(JSON.stringify(message));
+  }
+
+  private checkPortStatus(host: string, port: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      const socket = new Socket();
+      socket.on('connect', () => resolve(true));
+      socket.on('timeout', () => resolve(false));
+      socket.on('error', (e) => resolve(false));
+      socket.connect(port, host)
+      socket.setTimeout(5e3, () => socket.destroy());
+    })
+
+  }
+
 }
