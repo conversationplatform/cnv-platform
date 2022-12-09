@@ -13,7 +13,7 @@
     </td>
   </ng-container>
   <ng-container *ngSwitchCase="'tid'">
-    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="tidOptions ? menu : null" (click)="$event.stopPropagation()">
       {{ column }}
       <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
     </button>
@@ -25,7 +25,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'flowId'">
-    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="flowIdOptions ? menu : null" (click)="$event.stopPropagation()">
       {{ column }}
       <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
     </button>
@@ -43,7 +43,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'origin'">
-    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="originOptions ? menu : null" (click)="$event.stopPropagation()">
       {{ column }}
       <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
     </button>
@@ -53,7 +53,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'nodeId'">
-    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="nodeIdOptions ? menu : null" (click)="$event.stopPropagation()">
       {{ column }}
       <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
     </button>
@@ -63,7 +63,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'type'">
-    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="typeOptions ? menu : null" (click)="$event.stopPropagation()">
       {{ column }}
       <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
     </button>
@@ -73,7 +73,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'name'">
-    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="nameOptions ? menu : null">
       {{ column }}
       <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
     </button>
@@ -102,7 +102,9 @@
 
       <ng-container *ngSwitchCase="'tid'">
         <div class="filters-container">
-          <dynamic-chips-filter placeholder="add filter" label="Track ID values" placeholder="add filter" [selection]="getFilters('tid')" [strictOptions]="false" (onOptionChange)="setFilter('tid', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <dynamic-chips-filter placeholder="add filter" label="Track ID values" placeholder="add filter"
+            *ngIf="tidOptions" [selection]="getFilters('tid')" [strictOptions]="true" [options]="tidOptions"
+            (onOptionChange)="setFilter('tid', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
 
           <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
             (click)="$event.stopPropagation(); clearFilters('tid');">Clear
@@ -111,7 +113,9 @@
       </ng-container>
       <ng-container *ngSwitchCase="'flowId'">
         <div class="filters-container">
-          <dynamic-chips-filter placeholder="add filter" label="Flow ID values" placeholder="add filter" [selection]="getFilters('flowId')" [strictOptions]="false" (onOptionChange)="setFilter('flowId', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <dynamic-chips-filter placeholder="add filter" label="Flow ID values" placeholder="add filter"
+            *ngIf="flowIdOptions" [selection]="getFilters('flowId')" [strictOptions]="true" [options]="flowIdOptions"
+            (onOptionChange)="setFilter('flowId', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
 
           <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
             (click)="$event.stopPropagation(); clearFilters('flowId');">Clear
@@ -145,7 +149,10 @@
       </ng-container>
       <ng-container *ngSwitchCase="'origin'">
         <div class="filters-container">
-          <dynamic-chips-filter placeholder="add filter" label="Origin value" placeholder="add filter" [selection]="getFilters('origin')" [strictOptions]="false" [unique]="true" (onOptionChange)="setFilter('origin', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <dynamic-chips-filter placeholder="add filter" label="Origin value" placeholder="add filter"
+            *ngIf="originOptions" [selection]="getFilters('origin')" [strictOptions]="true" [options]="originOptions"
+            [unique]="true" (onOptionChange)="setFilter('origin', $event)" (click)="$event.stopPropagation()">
+          </dynamic-chips-filter>
 
           <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
             (click)="$event.stopPropagation(); clearFilters('origin');">Clear
@@ -154,7 +161,9 @@
       </ng-container>
       <ng-container *ngSwitchCase="'nodeId'">
         <div class="filters-container">
-          <dynamic-chips-filter placeholder="add filter" label="Node ID values" placeholder="add filter" [selection]="getFilters('nodeId')" [strictOptions]="false" (onOptionChange)="setFilter('nodeId', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <dynamic-chips-filter placeholder="add filter" label="Node ID values" placeholder="add filter"
+            *ngIf="nodeIdOptions" [selection]="getFilters('nodeId')" [strictOptions]="true" [options]="nodeIdOptions"
+            (onOptionChange)="setFilter('nodeId', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
           <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
             (click)="$event.stopPropagation(); clearFilters('nodeId');">Clear
             filter</button>
@@ -162,7 +171,9 @@
       </ng-container>
       <ng-container *ngSwitchCase="'type'">
         <div class="filters-container">
-          <dynamic-chips-filter placeholder="add filter" label="Type values" placeholder="add filter" [selection]="getFilters('type')" [strictOptions]="false" (onOptionChange)="setFilter('type', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <dynamic-chips-filter placeholder="add filter" label="Type values" placeholder="add filter"
+            *ngIf="typeOptions" [selection]="getFilters('type')" [strictOptions]="false" [options]="typeOptions"
+            (onOptionChange)="setFilter('type', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
 
           <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
             (click)="$event.stopPropagation(); clearFilters('type');">Clear
@@ -171,7 +182,9 @@
       </ng-container>
       <ng-container *ngSwitchCase="'name'">
         <div class="filters-container">
-          <dynamic-chips-filter placeholder="add filter" label="Name values" placeholder="add filter" [selection]="getFilters('name')" [strictOptions]="false" (onOptionChange)="setFilter('name', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <dynamic-chips-filter placeholder="add filter" label="Name values" placeholder="add filter"
+            *ngIf="nameOptions" [selection]="getFilters('name')" [strictOptions]="false" [options]="nameOptions"
+            (onOptionChange)="setFilter('name', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
 
           <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
             (click)="$event.stopPropagation(); clearFilters('name');">Clear
@@ -180,7 +193,9 @@
       </ng-container>
       <ng-container *ngSwitchCase="'value'">
         <div class="filters-container">
-          <dynamic-chips-filter placeholder="add filter" label="Value" placeholder="add filter" [selection]="getFilters('value')" [strictOptions]="false" [unique]="true" (onOptionChange)="setFilter('value', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <dynamic-chips-filter placeholder="add filter" label="Value" placeholder="add filter"
+            [selection]="getFilters('value')" [strictOptions]="false" [unique]="true"
+            (onOptionChange)="setFilter('value', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
 
           <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
             (click)="$event.stopPropagation(); clearFilters('value');">Clear
@@ -208,5 +223,3 @@
   <mat-icon>file_download</mat-icon>
   Export as CSV
 </button>
-
-<dynamic-chips-filter placeholder="add filter" [strictOptions]="false" [options]="filterOptions" (onOptionChange)="change($event)"></dynamic-chips-filter>

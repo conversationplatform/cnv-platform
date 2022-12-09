@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { aql } from 'arangojs';
 import { DocumentCollection, EdgeCollection } from 'arangojs/collection';
 import { TrackService } from 'src/track/track.service';
@@ -8,7 +8,7 @@ const parser = require('json2csv');
 
 @Injectable()
 export class InteractionService {
-
+    private readonly logger: Logger = new Logger(InteractionService.name);
     constructor(
         private readonly arangoService: ArangoService,
         private readonly trackService: TrackService) {
@@ -53,9 +53,9 @@ export class InteractionService {
         nodeId?: string | string[], type?: string | string[], name?: string | string[], value?: string): Promise<Interaction[]> {
 
         const filters = [];
-        
+
         if (tid) {
-            if(Array.isArray(tid)) {
+            if (Array.isArray(tid)) {
                 filters.push(aql`
                     FILTER CONTAINS(${tid}, i.tid)
                 ` )
@@ -68,7 +68,7 @@ export class InteractionService {
         }
 
         if (flowId) {
-            if(Array.isArray(flowId)) {
+            if (Array.isArray(flowId)) {
                 filters.push(aql`
                     FILTER CONTAINS(${flowId}, i.flowId)
                 ` )
@@ -80,12 +80,12 @@ export class InteractionService {
             }
         }
 
-        if(startDate && endDate) {
+        if (startDate && endDate) {
             filters.push(aql`
                 FILTER i.timestamp >= ${new Date(startDate)} && i.timestamp <= ${new Date(endDate)}
             ` )
         }
-        
+
         if (sortBy && sortByType) {
             filters.push(aql`
                 SORT i.${sortBy} ${sortByType}
@@ -103,7 +103,7 @@ export class InteractionService {
         }
 
         if (nodeId) {
-            if(Array.isArray(nodeId)) {
+            if (Array.isArray(nodeId)) {
                 filters.push(aql`
                     FILTER CONTAINS(${nodeId}, i.data.nodeId)
                 ` )
@@ -116,7 +116,7 @@ export class InteractionService {
         }
 
         if (type) {
-            if(Array.isArray(type)) {
+            if (Array.isArray(type)) {
                 filters.push(aql`
                     FILTER CONTAINS(${type}, i.data.type)
                 ` )
@@ -129,7 +129,7 @@ export class InteractionService {
         }
 
         if (name) {
-            if(Array.isArray(name)) {
+            if (Array.isArray(name)) {
                 filters.push(aql`
                     FILTER CONTAINS(${name}, i.data.name) || CONTAINS(${name}, i.data.nodeName) || CONTAINS(${name}, i.data.type)
                 ` )
@@ -142,16 +142,16 @@ export class InteractionService {
         }
 
 
-        if(value) {
+        if (value) {
             filters.push(aql`
                 FILTER i.data.value == ${value}
             `);
         }
-       
+
         filters.push(aql`
             LIMIT ${+(page * take)}, ${+take}
             `);
-        
+
 
         const query = aql`
             FOR i in ${this.arangoService.collection}
@@ -175,7 +175,7 @@ export class InteractionService {
         const filters = [];
 
         if (tid) {
-            if(Array.isArray(tid)) {
+            if (Array.isArray(tid)) {
                 filters.push(aql`
                     FILTER CONTAINS(${tid}, i.tid)
                 ` )
@@ -188,7 +188,7 @@ export class InteractionService {
         }
 
         if (flowId) {
-            if(Array.isArray(flowId)) {
+            if (Array.isArray(flowId)) {
                 filters.push(aql`
                     FILTER CONTAINS(${flowId}, i.flowId)
                 ` )
@@ -200,12 +200,12 @@ export class InteractionService {
             }
         }
 
-        if(startDate && endDate) {
+        if (startDate && endDate) {
             filters.push(aql`
                 FILTER i.timestamp >= ${new Date(startDate)} && i.timestamp <= ${new Date(endDate)}
             ` )
         }
-        
+
         if (sortBy && sortByType) {
             filters.push(aql`
                 SORT i.${sortBy} ${sortByType}
@@ -223,7 +223,7 @@ export class InteractionService {
         }
 
         if (nodeId) {
-            if(Array.isArray(nodeId)) {
+            if (Array.isArray(nodeId)) {
                 filters.push(aql`
                     FILTER CONTAINS(${nodeId}, i.data.nodeId)
                 ` )
@@ -236,7 +236,7 @@ export class InteractionService {
         }
 
         if (type) {
-            if(Array.isArray(type)) {
+            if (Array.isArray(type)) {
                 filters.push(aql`
                     FILTER CONTAINS(${type}, i.data.type)
                 ` )
@@ -249,7 +249,7 @@ export class InteractionService {
         }
 
         if (name) {
-            if(Array.isArray(name)) {
+            if (Array.isArray(name)) {
                 filters.push(aql`
                     FILTER CONTAINS(${name}, i.data.name) || CONTAINS(${name}, i.data.nodeName) || CONTAINS(${name}, i.data.type)
                 ` )
@@ -262,7 +262,7 @@ export class InteractionService {
         }
 
 
-        if(value) {
+        if (value) {
             filters.push(aql`
                 FILTER i.data.value == ${value}
             `);
@@ -277,8 +277,8 @@ export class InteractionService {
 
         return this.arangoService.query<number>(query);
     }
-    
-    
+
+
 
     public async getInteractionCSV(page: number = 0, take: number = 5, flowId?: string | string[], tid?: string | string[],
         sortBy?: string, sortByType?: string, startDate?: Date, endDate?: Date, origin?: string,
@@ -306,11 +306,37 @@ export class InteractionService {
 
             }
         });
-        if(interactions.length == 0) {
+        if (interactions.length == 0) {
             return '';
         }
         const p = new parser.Parser();
         return p.parse(interactions);
+    }
+
+    public async getPropertyValues(name: string): Promise<string[]> {
+
+        let options = [];
+
+        switch (name) {
+            case 'tid': options.push(aql` RETURN DISTINCT i.tid `); break;
+            case 'flowId': options.push(aql` RETURN DISTINCT i.flowId `); break;
+            case 'origin': options.push(aql` RETURN DISTINCT i.origin `); break;
+            case 'nodeId': options.push(aql` RETURN DISTINCT i.data.nodeId `); break;
+            case 'type': options.push(aql` RETURN DISTINCT i.data.type `); break;
+            case 'name': options.push(aql` RETURN DISTINCT i.data.name || i.data.nodeName || i.data.type `); break;
+            
+            default: this.logger.error(`getPropertyValues of '${name}' not available`)
+        }
+        if (!options) {
+            return []
+        }
+
+        const query = aql`
+            FOR i in ${this.arangoService.collection}
+            ${aql.join(options)}
+        `;
+        
+        return this.arangoService.queryMany<string>(query);
     }
 
 }

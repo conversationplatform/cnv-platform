@@ -96,7 +96,6 @@ export class InteractionController {
         @Query("nodeId") nodeId: string | string[], @Query("type") type: string | string[], 
         @Query("name") name: string | string[], @Query("value") value: string,
         @Query("page") page: number = 0, @Query("take") take: number = 20): Promise<Interaction[]> {
-            console.log('tid',tid);
         return this.interactionService.getInteractions(page, take, flowId, tid, sortBy, sortByType, startDate, endDate, origin, nodeId, type, name, value);
     }
 
@@ -268,5 +267,17 @@ export class InteractionController {
         res.charset = 'UTF-8';
         res.write(await this.interactionService.getInteractionCSV(page, take, flowId, tid, sortBy, sortByType, startDate, endDate, origin, nodeId, type, name, value));
         res.end();
+    }
+
+    @ApiQuery({
+        name: 'propertyName',
+        required: true,
+        
+    })
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
+    @Get("getPropertyValues")
+    async getPropertyValues(@Query("propertyName") propertyName: string) {
+        return this.interactionService.getPropertyValues(propertyName);
     }
 }

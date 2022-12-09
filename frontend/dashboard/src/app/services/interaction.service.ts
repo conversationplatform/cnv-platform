@@ -80,6 +80,10 @@ export class InteractionService {
     })
   }
 
+  public getPropertyValues(propertyName: string): Promise<string[]> {
+    return this.getAsync(`${environment.apiUrl}/api/v1/interaction/getPropertyValues?propertyName=${propertyName}`);
+  }
+
   private filterToQueryString(filters?: IFilter[]): string {
     let query = '';
     filters?.forEach(filter => {

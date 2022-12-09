@@ -9,7 +9,6 @@ import { ISort } from 'src/app/interface/sort.interface';
 import { InteractionService } from 'src/app/services/interaction.service';
 import { InteractionRawComponent } from '../interaction-raw/interaction-raw.component';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-interaction-list',
@@ -56,11 +55,13 @@ export class InteractionListComponent implements OnInit, OnDestroy {
   @Input()
   hideSid: boolean = false;
 
-  filterOptions = ['Ferrari', 'Toyota', 'Zundapp', 'Porche', 'Volvo', 'Toyota']
+  tidOptions: string[];
+  flowIdOptions: string[];
+  originOptions: string[];
+  nodeIdOptions: string[];
+  typeOptions: string[];
+  nameOptions: string[];
 
-  change(val: any) {
-    console.log(val);
-  }
   constructor(
     private readonly interactionService: InteractionService,
     private router: Router,
@@ -79,6 +80,14 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     }
     if (extendedColumns.length > 0) {
       this.displayedColumns = [...extendedColumns, ...this.displayedColumns];
+    }
+    if(!this.hideTid) {
+      this.tidOptions = await this.interactionService.getPropertyValues('tid');
+      this.flowIdOptions = await this.interactionService.getPropertyValues('flowId');
+      this.originOptions = await this.interactionService.getPropertyValues('origin');
+      this.nodeIdOptions = await this.interactionService.getPropertyValues('nodeId');
+      this.typeOptions = await this.interactionService.getPropertyValues('type');
+      this.nameOptions = await this.interactionService.getPropertyValues('name');
     }
   }
 
@@ -174,21 +183,6 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     this.updateQueryParams()
   }
 
-  addFilterTid(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-
-    this.setFilter('tid', [value]);
-  }
-
-  addFilterFlowId(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-
-    this.setFilter('flowId', [value]);
-  }
 
   addFilterStartDate(): void {
     if (!this.range.value.start) {
@@ -212,31 +206,6 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     this.range.reset();
     this.getInteractions();
   }
-
-  addFilterOrigin(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-
-    this.setFilter('origin', [value]);
-  }
-
-  addFilterNodeId(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-
-    this.setFilter('nodeId', [value]);
-  }
-
-  addFilterType(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-
-    this.setFilter('type', [value]);
-  }
-
 
   public setFilter(name: string, values: string[], operator: string = '==') {
 

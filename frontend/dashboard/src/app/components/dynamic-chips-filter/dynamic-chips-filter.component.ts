@@ -32,7 +32,7 @@ export class DynamicChipsFilterComponent implements OnInit {
 
   constructor() {
     this.filteredOptions = this.formCtrl.valueChanges.pipe(
-      startWith(null),
+      startWith(''),
       map((option: string | null) => this._filter(option)),
     );
   }
@@ -72,12 +72,12 @@ export class DynamicChipsFilterComponent implements OnInit {
   }
 
   private _filter(value: string | null): string[] {
-    const availableOptions = this.options.filter(option => !this.selection.includes(option));
+    const availableOptions = this.options?.filter(option => !this.selection.includes(option));
     if(!value) {
       return availableOptions
     }
     const filterValue = value.toLowerCase();
-    return availableOptions.filter(option => option.toLowerCase().includes(filterValue));
+    return availableOptions.filter(option => option?.toLowerCase().includes(filterValue));
   }
 
 }
