@@ -1,0 +1,26 @@
+<mat-form-field class="chip-list">
+  <mat-label>{{ label || placeholder || 'add filters' }}</mat-label>
+  <mat-chip-list #list aria-label="Option selection">
+    <mat-chip
+      *ngFor="let option of selection"
+      (removed)="remove(option)">
+      {{option}}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+    <input
+      [placeholder]="placeholder || 'add filters'"
+      #input
+      [formControl]="formCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="list"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

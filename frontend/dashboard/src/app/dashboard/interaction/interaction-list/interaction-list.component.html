@@ -1,235 +1,225 @@
 <table mat-table [dataSource]="interactions" multiTemplateDataRows matSort (matSortChange)="handleSort($event)">
-    <caption>List of interactions</caption>
-    <ng-container *ngFor="let column of displayedColumns" matColumnDef="{{column}}">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
-        <ng-container [ngSwitch]="column">
-            <ng-container *ngSwitchCase="'tid'">
-                <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element">
-                    <a [routerLink]="['/dashboard/track', element[column] ]">
-                        {{element[column]}}
-                    </a>
-                </td>     
-            </ng-container>
+  <caption>List of interactions</caption>
+  <ng-container *ngFor="let column of displayedColumns" matColumnDef="{{column}}">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
+      <ng-container [ngSwitch]="column">
+        <ng-container *ngSwitchCase="'sid'">
+          {{ column }}
 
-            <ng-container *ngSwitchCase="'flowId'">
-                <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element">
-                    {{element[column]}}
-                </td>
-            </ng-container>
-            
-            <ng-container *ngSwitchCase="'timestamp'">
-                <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element"> {{element[column] | date:'medium'}} </td>
-            </ng-container>
+    <td mat-cell *matCellDef="let element">
+      <a [routerLink]="['/dashboard/session', element[column] ]">
+        {{element[column]}}
+      </a>
+    </td>
+  </ng-container>
+  <ng-container *ngSwitchCase="'tid'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="tidOptions ? menu : null" (click)="$event.stopPropagation()">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element">
+      <a [routerLink]="['/dashboard/track', element[column] ]">
+        {{element[column]}}
+      </a>
+    </td>
+  </ng-container>
 
-            <ng-container *ngSwitchCase="'origin'">
-                <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element">
-                    {{element[column]}}
-                </td>
-            </ng-container>
+  <ng-container *ngSwitchCase="'flowId'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="flowIdOptions ? menu : null" (click)="$event.stopPropagation()">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element">
+      {{element[column]}}
+    </td>
+  </ng-container>
 
-            <ng-container *ngSwitchCase="'nodeId'">
-                <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element">
-                    {{element['data'].nodeId}}
-                </td>
-            </ng-container>
+  <ng-container *ngSwitchCase="'timestamp'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element"> {{element[column] | date:'medium'}} </td>
+  </ng-container>
 
-            <ng-container *ngSwitchCase="'type'">
-                <button class="table-header-button" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element">
-                    {{ getType(element)}}
-                </td>
-            </ng-container>
+  <ng-container *ngSwitchCase="'origin'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="originOptions ? menu : null" (click)="$event.stopPropagation()">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element">
+      {{element[column]}}
+    </td>
+  </ng-container>
 
-            <ng-container *ngSwitchCase="'name'">
-                <button class="table-header-button" mat-button>
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element">
-                    {{ element['data'].name || element['data'].nodeName || element['data'].type}}
-                </td>
-            </ng-container>
+  <ng-container *ngSwitchCase="'nodeId'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="nodeIdOptions ? menu : null" (click)="$event.stopPropagation()">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element">
+      {{element['data'].nodeId}}
+    </td>
+  </ng-container>
 
-            <ng-container *ngSwitchCase="'value'">
-                <button class="table-header-button" mat-button>
-                    {{ column }}
-                    <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
-                </button>
-                <td mat-cell *matCellDef="let element">
-                    {{ element['data'].value}}
-                </td>
-            </ng-container>
-            
-            <ng-container *ngSwitchDefault>
-                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-            </ng-container>
-        </ng-container>
+  <ng-container *ngSwitchCase="'type'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="typeOptions ? menu : null" (click)="$event.stopPropagation()">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element">
+      {{ getType(element)}}
+    </td>
+  </ng-container>
 
-        <mat-menu class="table-menu" #menu="matMenu">
-            <ng-container [ngSwitch]="column">
-                <ng-container *ngSwitchCase="'tid'">
-                    <div class="filters-container">
-                        <mat-form-field class="chip-list" (click)="$event.stopPropagation()">
-                            <mat-label>ID value</mat-label>
-                            <mat-chip-list #chipList aria-label="Filter selection">
-                                <mat-chip *ngFor="let filter of getFilters('tid')">
-                                    {{filter.value}}
-                                </mat-chip>
-                                <input placeholder="New filter..." [matChipInputFor]="chipList"
-                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                    [matChipInputAddOnBlur]="addOnBlur"
-                                    (matChipInputTokenEnd)="addFilterId($event)" matInput
-                                    [formControl]="filterControl" [(ngModel)]="filterValue">
-                            </mat-chip-list>
-                        </mat-form-field>
-                        <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
-                            (click)="$event.stopPropagation(); clearFilters('tid');">Clear
-                            filter</button>
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchCase="'flowId'">
-                    <div class="filters-container">
-                        <mat-form-field class="chip-list" (click)="$event.stopPropagation()">
-                            <mat-label>Flow ID value</mat-label>
-                            <mat-chip-list #chipList aria-label="Filter selection">
-                                <mat-chip *ngFor="let filter of getFilters('flowId')">
-                                    {{filter.value}}
-                                </mat-chip>
-                                <input placeholder="New filter..." [matChipInputFor]="chipList"
-                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                    [matChipInputAddOnBlur]="addOnBlur"
-                                    (matChipInputTokenEnd)="addFilterFlowId($event)" matInput
-                                    [formControl]="filterControl" [(ngModel)]="filterValue">
-                            </mat-chip-list>
-                        </mat-form-field>
-                        <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
-                            (click)="$event.stopPropagation(); clearFilters('flowId');">Clear
-                            filter</button>
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchCase="'timestamp'">
-                    <div class="date-picker-container">
-                        <mat-form-field>
-                            <mat-label>Enter a date range</mat-label>
-                            <mat-date-range-input [formGroup]="range" [rangePicker]="picker"
-                                (click)="$event.stopPropagation()">
-                                <input matStartDate formControlName="start" placeholder="Start date"
-                                    (dateChange)="addFilterStartDate()">
-                                <input matEndDate formControlName="end" placeholder="End date"
-                                    (dateChange)="addFilterEndDate()">
-                            </mat-date-range-input>
-                            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-date-range-picker #picker></mat-date-range-picker>
+  <ng-container *ngSwitchCase="'name'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="nameOptions ? menu : null">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element">
+      {{ element['data'].name || element['data'].nodeName || element['data'].type}}
+    </td>
+  </ng-container>
 
-                            <mat-error *ngIf="range.controls['start'].hasError('matStartDateInvalid')">Invalid
-                                start
-                                date</mat-error>
-                            <mat-error *ngIf="range.controls['end'].hasError('matEndDateInvalid')">Invalid end
-                                date
-                            </mat-error>
-                        </mat-form-field>
-                        <button class="clear-filter-button"
-                            *ngIf="getFilters('startDate').length > 0 && getFilters('endDate').length > 0"
-                            (click)="$event.stopPropagation(); clearDateFilter()">Clear
-                            filter</button>
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchCase="'origin'">
-                    <div class="filters-container">
-                        <mat-form-field class="chip-list" (click)="$event.stopPropagation()">
-                            <mat-label>Origin value</mat-label>
-                            <mat-chip-list #chipList aria-label="Filter selection">
-                                <mat-chip *ngFor="let filter of getFilters('origin')">
-                                    {{filter.value}}
-                                </mat-chip>
-                                <input placeholder="New filter..." [matChipInputFor]="chipList"
-                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                    [matChipInputAddOnBlur]="addOnBlur"
-                                    (matChipInputTokenEnd)="addFilterOrigin($event)" matInput
-                                    [formControl]="filterControl" [(ngModel)]="filterValue">
-                            </mat-chip-list>
-                        </mat-form-field>
-                        <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
-                            (click)="$event.stopPropagation(); clearFilters('origin');">Clear
-                            filter</button>
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchCase="'nodeId'">
-                    <div class="filters-container">
-                        <mat-form-field class="chip-list" (click)="$event.stopPropagation()">
-                            <mat-label>Node ID value</mat-label>
-                            <mat-chip-list #chipList aria-label="Filter selection">
-                                <mat-chip *ngFor="let filter of getFilters('nodeId')">
-                                    {{filter.value}}
-                                </mat-chip>
-                                <input placeholder="New filter..." [matChipInputFor]="chipList"
-                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                    [matChipInputAddOnBlur]="addOnBlur"
-                                    (matChipInputTokenEnd)="addFilterNodeId($event)" matInput
-                                    [formControl]="filterControl" [(ngModel)]="filterValue">
-                            </mat-chip-list>
-                        </mat-form-field>
-                        <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
-                            (click)="$event.stopPropagation(); clearFilters('nodeId');">Clear
-                            filter</button>
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchCase="'type'">
-                    <div class="filters-container">
-                        <mat-form-field class="chip-list" (click)="$event.stopPropagation()">
-                            <mat-label>Type values</mat-label>
-                            <mat-chip-list #chipList aria-label="Filter selection">
-                                <mat-chip *ngFor="let filter of getFilters('type')">
-                                    {{filter.value}}
-                                </mat-chip>
-                                <input placeholder="New filter..." [matChipInputFor]="chipList"
-                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                    [matChipInputAddOnBlur]="addOnBlur"
-                                    (matChipInputTokenEnd)="addFilterType($event)" matInput
-                                    [formControl]="filterControl" [(ngModel)]="filterValue">
-                            </mat-chip-list>
-                        </mat-form-field>
-                        <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
-                            (click)="$event.stopPropagation(); clearFilters('type');">Clear
-                            filter</button>
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchDefault>No</ng-container>
-            </ng-container>
-        </mat-menu>
-    </th>
+  <ng-container *ngSwitchCase="'value'">
+    <button class="table-header-button" mat-button [matMenuTriggerFor]="menu">
+      {{ column }}
+      <div class="table-header-has-filters" *ngIf="getFilters(column).length > 0"></div>
+    </button>
+    <td mat-cell *matCellDef="let element">
+      {{ element['data'].value}}
+    </td>
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+  </ng-container>
+  </ng-container>
+
+  <mat-menu class="table-menu" #menu="matMenu">
+    <ng-container [ngSwitch]="column">
+
+      <ng-container *ngSwitchCase="'tid'">
+        <div class="filters-container">
+          <dynamic-chips-filter placeholder="add filter" label="Track ID values" placeholder="add filter"
+            *ngIf="tidOptions" [selection]="getFilters('tid')" [strictOptions]="true" [options]="tidOptions"
+            (onOptionChange)="setFilter('tid', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+
+          <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
+            (click)="$event.stopPropagation(); clearFilters('tid');">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'flowId'">
+        <div class="filters-container">
+          <dynamic-chips-filter placeholder="add filter" label="Flow ID values" placeholder="add filter"
+            *ngIf="flowIdOptions" [selection]="getFilters('flowId')" [strictOptions]="true" [options]="flowIdOptions"
+            (onOptionChange)="setFilter('flowId', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+
+          <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
+            (click)="$event.stopPropagation(); clearFilters('flowId');">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'timestamp'">
+        <div class="date-picker-container">
+          <mat-form-field>
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [formGroup]="range" [rangePicker]="picker" (click)="$event.stopPropagation()">
+              <input matStartDate formControlName="start" placeholder="Start date" (dateChange)="addFilterStartDate()">
+              <input matEndDate formControlName="end" placeholder="End date" (dateChange)="addFilterEndDate()">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+
+            <mat-error *ngIf="range.controls['start'].hasError('matStartDateInvalid')">Invalid
+              start
+              date</mat-error>
+            <mat-error *ngIf="range.controls['end'].hasError('matEndDateInvalid')">Invalid end
+              date
+            </mat-error>
+          </mat-form-field>
+          <button class="clear-filter-button"
+            *ngIf="getFilters('startDate').length > 0 && getFilters('endDate').length > 0"
+            (click)="$event.stopPropagation(); clearDateFilter()">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'origin'">
+        <div class="filters-container">
+          <dynamic-chips-filter placeholder="add filter" label="Origin value" placeholder="add filter"
+            *ngIf="originOptions" [selection]="getFilters('origin')" [strictOptions]="true" [options]="originOptions"
+            [unique]="true" (onOptionChange)="setFilter('origin', $event)" (click)="$event.stopPropagation()">
+          </dynamic-chips-filter>
+
+          <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
+            (click)="$event.stopPropagation(); clearFilters('origin');">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'nodeId'">
+        <div class="filters-container">
+          <dynamic-chips-filter placeholder="add filter" label="Node ID values" placeholder="add filter"
+            *ngIf="nodeIdOptions" [selection]="getFilters('nodeId')" [strictOptions]="true" [options]="nodeIdOptions"
+            (onOptionChange)="setFilter('nodeId', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+          <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
+            (click)="$event.stopPropagation(); clearFilters('nodeId');">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'type'">
+        <div class="filters-container">
+          <dynamic-chips-filter placeholder="add filter" label="Type values" placeholder="add filter"
+            *ngIf="typeOptions" [selection]="getFilters('type')" [strictOptions]="false" [options]="typeOptions"
+            (onOptionChange)="setFilter('type', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+
+          <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
+            (click)="$event.stopPropagation(); clearFilters('type');">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'name'">
+        <div class="filters-container">
+          <dynamic-chips-filter placeholder="add filter" label="Name values" placeholder="add filter"
+            *ngIf="nameOptions" [selection]="getFilters('name')" [strictOptions]="false" [options]="nameOptions"
+            (onOptionChange)="setFilter('name', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+
+          <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
+            (click)="$event.stopPropagation(); clearFilters('name');">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'value'">
+        <div class="filters-container">
+          <dynamic-chips-filter placeholder="add filter" label="Value" placeholder="add filter"
+            [selection]="getFilters('value')" [strictOptions]="false" [unique]="true"
+            (onOptionChange)="setFilter('value', $event)" (click)="$event.stopPropagation()"></dynamic-chips-filter>
+
+          <button class="clear-filter-button" *ngIf="getFilters(column).length > 0 "
+            (click)="$event.stopPropagation(); clearFilters('value');">Clear
+            filter</button>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchDefault>No</ng-container>
     </ng-container>
-    
+  </mat-menu>
+  </th>
+  </ng-container>
 
-    <tr class="table-head-wrapper" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="element-row" (click)="openRaw(element)"></tr>
+
+  <tr class="table-head-wrapper" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="element-row" (click)="openRaw(element)"></tr>
 </table>
 
 <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
 <mat-paginator [pageSizeOptions]="pageSizeOptions" [length]="length" [pageSize]="pageSize" [pageIndex]="page"
-    (page)="setPage($event)" showFirstLastButtons aria-label="Select page">
+  (page)="setPage($event)" showFirstLastButtons aria-label="Select page">
+
 </mat-paginator>
+
+<button mat-button class="export-csv" (click)="exportCSV()">
+  <mat-icon>file_download</mat-icon>
+  Export as CSV
+</button>

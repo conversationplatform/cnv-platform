@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { aql } from 'arangojs';
 import { DocumentCollection, EdgeCollection } from 'arangojs/collection';
+import { TrackService } from 'src/track/track.service';
 import { Interaction } from '../model/client.interaction';
 import { ArangoService } from '../persistence/arango/arango.service';
 const parser = require('json2csv');
 
 @Injectable()
 export class InteractionService {
-
+    private readonly logger: Logger = new Logger(InteractionService.name);
     constructor(
-        private readonly arangoService: ArangoService) {
+        private readonly arangoService: ArangoService,
+        private readonly trackService: TrackService) {
         this.arangoService.collection.ensureIndex({
             type: 'persistent',
             fields: ['sid', 'flowId', 'tid']
@@ -46,31 +48,44 @@ export class InteractionService {
     }
 
     async getInteractions(
-        page: number = 0, take: number = 5, flowId?: string, tid?: string,
+        page: number = 0, take: number = 5, flowId?: string | string[], tid?: string | string[],
         sortBy?: string, sortByType?: string, startDate?: Date, endDate?: Date, origin?: string,
-        nodeId?: string, type?: string, name?: string, value?: string): Promise<Interaction[]> {
+        nodeId?: string | string[], type?: string | string[], name?: string | string[], value?: string): Promise<Interaction[]> {
 
         const filters = [];
 
-        
         if (tid) {
-            filters.push(aql`
-                FILTER i.tid == ${tid}
-            ` )
+            if (Array.isArray(tid)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${tid}, i.tid)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.tid == ${tid}
+                ` )
+
+            }
         }
 
         if (flowId) {
-            filters.push(aql`
-                FILTER i.flowId == ${flowId}
-            `);
+            if (Array.isArray(flowId)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${flowId}, i.flowId)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.flowId == ${flowId}
+                ` )
+
+            }
         }
 
-        if(startDate && endDate) {
+        if (startDate && endDate) {
             filters.push(aql`
                 FILTER i.timestamp >= ${new Date(startDate)} && i.timestamp <= ${new Date(endDate)}
             ` )
         }
-        
+
         if (sortBy && sortByType) {
             filters.push(aql`
                 SORT i.${sortBy} ${sortByType}
@@ -88,63 +103,109 @@ export class InteractionService {
         }
 
         if (nodeId) {
-            filters.push(aql`
-                FILTER i.data.nodeId == ${nodeId}
-            `);
+            if (Array.isArray(nodeId)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${nodeId}, i.data.nodeId)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.data.nodeId == ${flowId}
+                ` )
+
+            }
         }
 
         if (type) {
-            if(type === 'flow'){
+            if (Array.isArray(type)) {
                 filters.push(aql`
-                    FILTER i.data.type != 'event' && i.data.type != 'question' && i.data.type != 'answer'
-                `); 
-            }
-            else{
+                    FILTER CONTAINS(${type}, i.data.type)
+                ` )
+            } else {
                 filters.push(aql`
                     FILTER i.data.type == ${type}
-                `);
+                ` )
+
             }
-            
+        }
+
+        if (name) {
+            if (Array.isArray(name)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${name}, i.data.name) || CONTAINS(${name}, i.data.nodeName) || CONTAINS(${name}, i.data.type)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.data.name == ${name} || i.data.nodeName == ${name} || i.data.type == ${name}
+                ` )
+
+            }
+        }
+
+
+        if (value) {
+            filters.push(aql`
+                FILTER i.data.value == ${value}
+            `);
         }
 
         filters.push(aql`
             LIMIT ${+(page * take)}, ${+take}
             `);
 
+
         const query = aql`
             FOR i in ${this.arangoService.collection}
+            LET sid = (
+                FOR t in ${this.trackService.getCollection()}
+                FILTER t.tid == i.tid
+                RETURN t.sid
+            )
             ${aql.join(filters)}
-            RETURN i
+            
+            RETURN MERGE(i, {sid: sid[0]})
         `;
-
         return this.arangoService.queryMany<Interaction>(query);
 
     }
 
-    async countInteractions(flowId?: string, tid?: string,
+    async countInteractions(flowId?: string | string[], tid?: string | string[],
         sortBy?: string, sortByType?: string, startDate?: Date, endDate?: Date, origin?: string,
-        nodeId?: string, type?: string, name?: string, value?: string): Promise<number> {
+        nodeId?: string | string[], type?: string | string[], name?: string | string[], value?: string): Promise<number> {
 
         const filters = [];
 
         if (tid) {
-            filters.push(aql`
-                FILTER i.tid == ${tid}
-            ` )
+            if (Array.isArray(tid)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${tid}, i.tid)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.tid == ${tid}
+                ` )
+
+            }
         }
 
         if (flowId) {
-            filters.push(aql`
-                FILTER i.flowId == ${flowId}
-            `);
+            if (Array.isArray(flowId)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${flowId}, i.flowId)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.flowId == ${flowId}
+                ` )
+
+            }
         }
 
-        if(startDate && endDate) {
+        if (startDate && endDate) {
             filters.push(aql`
                 FILTER i.timestamp >= ${new Date(startDate)} && i.timestamp <= ${new Date(endDate)}
             ` )
         }
-        
+
         if (sortBy && sortByType) {
             filters.push(aql`
                 SORT i.${sortBy} ${sortByType}
@@ -162,23 +223,49 @@ export class InteractionService {
         }
 
         if (nodeId) {
-            filters.push(aql`
-                FILTER i.data.nodeId == ${nodeId}
-            `);
+            if (Array.isArray(nodeId)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${nodeId}, i.data.nodeId)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.data.nodeId == ${flowId}
+                ` )
+
+            }
         }
 
         if (type) {
-            if(type === 'flow'){
+            if (Array.isArray(type)) {
                 filters.push(aql`
-                    FILTER i.data.type != 'event' && i.data.type != 'question' && i.data.type != 'answer'
-                `); 
-            }
-            else{
+                    FILTER CONTAINS(${type}, i.data.type)
+                ` )
+            } else {
                 filters.push(aql`
                     FILTER i.data.type == ${type}
-                `);
+                ` )
+
             }
-            
+        }
+
+        if (name) {
+            if (Array.isArray(name)) {
+                filters.push(aql`
+                    FILTER CONTAINS(${name}, i.data.name) || CONTAINS(${name}, i.data.nodeName) || CONTAINS(${name}, i.data.type)
+                ` )
+            } else {
+                filters.push(aql`
+                    FILTER i.data.name == ${name} || i.data.nodeName == ${name} || i.data.type == ${name}
+                ` )
+
+            }
+        }
+
+
+        if (value) {
+            filters.push(aql`
+                FILTER i.data.value == ${value}
+            `);
         }
 
         const query = aql`
@@ -190,11 +277,13 @@ export class InteractionService {
 
         return this.arangoService.query<number>(query);
     }
-    
 
-    public async getInteractionCSV(flowId: string, tid: string, startDate?: Date, endDate?: Date): Promise<string> {
-        const count = await this.countInteractions(flowId, tid, null, null, startDate, endDate);
-        let interactions = await this.getInteractions(0, count, flowId, tid, null, null, startDate, endDate);
+
+
+    public async getInteractionCSV(page: number = 0, take: number = 5, flowId?: string | string[], tid?: string | string[],
+        sortBy?: string, sortByType?: string, startDate?: Date, endDate?: Date, origin?: string,
+        nodeId?: string | string[], type?: string | string[], name?: string | string[], value?: string): Promise<string> {
+        let interactions = await this.getInteractions(page, take, flowId, tid, sortBy, sortByType, startDate, endDate, origin, nodeId, type, name, value);
         interactions = interactions.map(interaction => {
             let type = 'flow';
             switch (interaction.data.type) {
@@ -204,6 +293,7 @@ export class InteractionService {
 
             }
             return {
+                sid: interaction.sid,
                 tid: interaction.tid,
                 flowId: interaction.flowId,
                 timestamp: interaction.timestamp,
@@ -216,11 +306,37 @@ export class InteractionService {
 
             }
         });
-        if(interactions.length == 0) {
+        if (interactions.length == 0) {
             return '';
         }
         const p = new parser.Parser();
         return p.parse(interactions);
+    }
+
+    public async getPropertyValues(name: string): Promise<string[]> {
+
+        let options = [];
+
+        switch (name) {
+            case 'tid': options.push(aql` RETURN DISTINCT i.tid `); break;
+            case 'flowId': options.push(aql` RETURN DISTINCT i.flowId `); break;
+            case 'origin': options.push(aql` RETURN DISTINCT i.origin `); break;
+            case 'nodeId': options.push(aql` RETURN DISTINCT i.data.nodeId `); break;
+            case 'type': options.push(aql` RETURN DISTINCT i.data.type `); break;
+            case 'name': options.push(aql` RETURN DISTINCT i.data.name || i.data.nodeName || i.data.type `); break;
+            
+            default: this.logger.error(`getPropertyValues of '${name}' not available`)
+        }
+        if (!options) {
+            return []
+        }
+
+        const query = aql`
+            FOR i in ${this.arangoService.collection}
+            ${aql.join(options)}
+        `;
+        
+        return this.arangoService.queryMany<string>(query);
     }
 
 }

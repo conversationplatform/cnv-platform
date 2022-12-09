@@ -1,0 +1,16 @@
+:host {
+  margin-top: 10px;
+  display: block;
+  width: 300px;
+
+  .chip-list {
+    width: 100%;
+  }
+
+  ::ng-deep mat-form-field {
+    .mat-form-field-infix {
+      border: none;
+    }
+  }
+}
+

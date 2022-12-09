@@ -1,4 +1,4 @@
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { ConfigModule } from '../config/config/config.module';
 import { MetricsModule } from '../metrics/metrics.module';
@@ -10,7 +10,7 @@ import { HousekeeperService } from './housekeeper.service';
 @Module({
   imports: [
     ConfigModule,
-    TrackModule,
+    forwardRef(() => TrackModule),
     SessionModule,
     MetricsModule,
     PropertiesModule
