@@ -3,6 +3,9 @@ import { ApiProperty } from "@nestjs/swagger";
 export class Interaction {
 
     @ApiProperty()
+    sid?: string;
+
+    @ApiProperty()
     tid: string;
 
     @ApiProperty()
