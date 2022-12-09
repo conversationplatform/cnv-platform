@@ -29,8 +29,6 @@ import { SessionDetailsComponent } from './session/session-details/session-detai
 import { SessionListComponent } from './session/session-list/session-list.component';
 import { InteractionComponent } from './interaction/interaction.component';
 import { InteractionListComponent } from './interaction/interaction-list/interaction-list.component';
-import { InteractionDetailsComponent } from './interaction/interaction-details/interaction-details.component';
-import { InteractionDescriptionComponent } from './interaction/interaction-description/interaction-description.component';
 import { InteractionRawComponent } from './interaction/interaction-raw/interaction-raw.component';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -60,8 +58,6 @@ import { SettingsComponent } from './settings/settings.component';
     SessionListComponent,
     InteractionComponent,
     InteractionListComponent,
-    InteractionDetailsComponent,
-    InteractionDescriptionComponent,
     InteractionRawComponent,
     SettingsComponent
   ],
