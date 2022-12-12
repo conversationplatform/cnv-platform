@@ -31,17 +31,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     }
 }
 
-.mat-chip.mat-standard-chip .mat-chip-remove {
-    display: none;
-}
-
 .mat-form-field-appearance-legacy .mat-form-field-underline {
     display: none;
 }
 
-.mat-chip-list-wrapper .mat-standard-chip {
-    padding: 6px 12px !important;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 100%;
-}

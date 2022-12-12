@@ -9,8 +9,6 @@ import { ISort } from 'src/app/interface/sort.interface';
 import { InteractionService } from 'src/app/services/interaction.service';
 import { InteractionRawComponent } from '../interaction-raw/interaction-raw.component';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-interaction-list',
@@ -37,17 +35,10 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     end: new UntypedFormControl(),
   });
 
-  storeOperator: string;
-  storeValue: string | number;
-
-  interactionOperator: string;
-  interactionValue: string | number;
-  pageSizeOptions = [5, 10, 20, 50];
+  pageSizeOptions = [5, 10, 20, 50, Infinity];
   pageSize = 10;
   page = 0;
   take = 10;
-  addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   routeSub: Subscription;
 
@@ -61,6 +52,16 @@ export class InteractionListComponent implements OnInit, OnDestroy {
   @Input()
   hideTid: boolean = false;
 
+  @Input()
+  hideSid: boolean = false;
+
+  tidOptions: string[];
+  flowIdOptions: string[];
+  originOptions: string[];
+  nodeIdOptions: string[];
+  typeOptions: string[];
+  nameOptions: string[];
+
   constructor(
     private readonly interactionService: InteractionService,
     private router: Router,
@@ -70,8 +71,23 @@ export class InteractionListComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.routeSub = this.route.queryParams.subscribe((params) => this.load(params));
+    const extendedColumns = [];
+    if (!this.hideSid) {
+      extendedColumns.push('sid')
+    }
+    if (!this.hideTid) {
+      extendedColumns.push('tid')
+    }
+    if (extendedColumns.length > 0) {
+      this.displayedColumns = [...extendedColumns, ...this.displayedColumns];
+    }
     if(!this.hideTid) {
-      this.displayedColumns = ['tid', ...this.displayedColumns];
+      this.tidOptions = await this.interactionService.getPropertyValues('tid');
+      this.flowIdOptions = await this.interactionService.getPropertyValues('flowId');
+      this.originOptions = await this.interactionService.getPropertyValues('origin');
+      this.nodeIdOptions = await this.interactionService.getPropertyValues('nodeId');
+      this.typeOptions = await this.interactionService.getPropertyValues('type');
+      this.nameOptions = await this.interactionService.getPropertyValues('name');
     }
   }
 
@@ -105,11 +121,17 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
-  getFilters(name: string): IFilter[] {
-    if(name === "timestamp") {
-      return this.filters.filter((filter: IFilter) => (filter.name === "startDate" || filter.name === "endDate"));
+  getFilters(name: string): string[] {
+    let filters = [];
+    if (name === "timestamp") {
+      filters = this.filters.filter((filter: IFilter) => (filter.name === "startDate" || filter.name === "endDate"));
+    } else {
+      filters = this.filters.filter((filter: IFilter) => (filter.name === name));
     }
-    return this.filters.filter((filter: IFilter) => (filter.name === name));
+
+    filters = filters.map(f => f.value);
+
+    return filters
   }
 
   removeFilter(filter: IFilter): void {
@@ -126,22 +148,20 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     this.filterValue = filter.name;
   }
 
-  clearFilters(name: string = "all") {
+  clearFilters(name: string = "all", fetch: boolean = true) {
     if (name === "all") {
       this.filters = [];
       this.clearFilters('startDate');
       this.clearFilters('endDate');
       this.range.reset();
-      this.storeOperator=''; 
-      this.storeValue='';
-      this.interactionOperator=''; 
-      this.interactionValue='';
-      location.pathname ="/admin/dashboard/interactions"
+      location.pathname = "/admin/dashboard/interactions"
       return;
     }
     const newFilters = this.filters.filter((value: IFilter) => value.name !== name);
     this.filters = newFilters;
-    this.getInteractions();
+    if(fetch) {
+      this.getInteractions();
+    }
   }
 
   handleSort(event: any) {
@@ -163,36 +183,21 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     this.updateQueryParams()
   }
 
-  addFilterId(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-    
-    this.setFilter('tid', value);
-  }
-
-  addFilterFlowId(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-    
-    this.setFilter('flowId', value);
-  }
 
   addFilterStartDate(): void {
     if (!this.range.value.start) {
-      this.setFilter('startDate', '', '');
+      this.setFilter('startDate', [''], '');
       return;
     }
-    this.setFilter('startDate', this.formatDate(this.range.value.start));
+    this.setFilter('startDate', [this.formatDate(this.range.value.start)]);
   }
 
   addFilterEndDate(): void {
     if (!this.range.value.end) {
-      this.setFilter('endDate', '', '');
+      this.setFilter('endDate', [''], '');
       return;
     }
-    this.setFilter('endDate', this.formatDate(this.range.value.end));
+    this.setFilter('endDate', [this.formatDate(this.range.value.end)]);
   }
 
   clearDateFilter() {
@@ -202,50 +207,19 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     this.getInteractions();
   }
 
-  addFilterOrigin(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-    
-    this.setFilter('origin', value);
-  }
+  public setFilter(name: string, values: string[], operator: string = '==') {
 
-  addFilterNodeId(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-    
-    this.setFilter('nodeId', value);
-  }
+    if (!values) return;
+    this.clearFilters(name, false);
 
-  addFilterType(event: MatChipInputEvent): void {
-    this.filterValue = "";
-    const value = (event.value || '').trim();
-    if (value === "") return;
-    
-    this.setFilter('type', value);
-  }
+    values.forEach(v => {
+      this.filters.push({
+        name,
+        value: v,
+        operator
+      })
+    })
 
-
-  public setFilter(name: string, value: string | number, operator: string = '==') {
-    const filter = {
-      name,
-      value,
-      operator
-    };
-
-    if (!value) return;
-    if ((name === "_id" || name === "flowId") && operator != '') {
-      this.filters.push(filter);
-    } else {
-      const currentFilter = this.filters.find((f) => f?.name === name);
-      if (!currentFilter)
-        this.filters.push(filter); else {
-        currentFilter.name = filter.name;
-        currentFilter.value = filter.value;
-        currentFilter.operator = filter.operator;
-      }
-    }
     this.page = 0;
     this.getInteractions();
   }
@@ -278,6 +252,10 @@ export class InteractionListComponent implements OnInit, OnDestroy {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+  }
+
+  exportCSV() {
+    return this.interactionService.downloadAsCSV('interactions.csv', this.page, this.take, undefined, undefined, this.filters, this.sort);
   }
 
 }

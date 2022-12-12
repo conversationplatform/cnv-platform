@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { TrackController } from './track.controller';
 import { ArangoModule } from '../persistence/arango/arango.module';
@@ -11,7 +11,7 @@ import { InteractionModule } from '../interaction/interaction.module';
     ArangoModule.collection('track'),
     AuthModule,
     ConfigModule,
-    InteractionModule
+    forwardRef(() => InteractionModule)
   ],
   providers: [TrackService],
   controllers: [TrackController],

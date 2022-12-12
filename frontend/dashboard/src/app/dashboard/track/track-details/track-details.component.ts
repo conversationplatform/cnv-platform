@@ -13,7 +13,7 @@ import { TrackService } from 'src/app/services/track.service';
 })
 export class TrackDetailsComponent implements OnInit, OnDestroy {
   details: string;
-  
+
   track: IClientTrack;
 
   routeSub: Subscription;
@@ -51,11 +51,6 @@ export class TrackDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
-  }
-
-  downloadAsCSV() {
-    this.interactionService.downloadAsCSV(this.track.flowId, this.track.tid);
-    
   }
 
 }

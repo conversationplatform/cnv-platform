@@ -20,7 +20,7 @@ export class InteractionService {
     if(flowId) {
       query += `flowId=${flowId}`;
     }
-    
+
     if(tid) {
       query += `tid=${tid}`;
     }
@@ -39,7 +39,7 @@ export class InteractionService {
     if(flowId) {
       query += `flowId=${flowId}`;
     }
-    
+
     if(tid) {
       query += `tid=${tid}`;
     }
@@ -48,20 +48,40 @@ export class InteractionService {
 
     return this.getAsync(`${environment.apiUrl}/api/v1/interaction/count${ query ? '?' + query : ''}`)
   }
-  
 
-  public downloadAsCSV(flowId: string, tid: string) {
-    const url = `${environment.apiUrl}/api/v1/interaction/interactionsCSV?flowId=${flowId}&tid=${tid}`;
+
+  public downloadAsCSV(filename: string = 'archive.csv', page: number = 0, take: number = 5, flowId?: string, tid?: string, filters?: IFilter[], sort?: ISort | null) {
+    let query = "";
+    query += `page=${page}`;
+    query += `&take=${take}`;
+    if(flowId) {
+      query += `flowId=${flowId}`;
+    }
+
+    if(tid) {
+      query += `tid=${tid}`;
+    }
+
+    query += this.filterToQueryString(filters);
+
+    if(sort) {
+      query += `&sortBy=${sort.active}&sortByType=${sort.direction}`
+    }
+    const url = `${environment.apiUrl}/api/v1/interaction/interactionsCSV${ query ? '?' + query : ''}`;
     return this.http.get(url, {
       responseType: 'blob'
     }).subscribe(blob => {
       const a = document.createElement('a')
       const objectUrl = URL.createObjectURL(blob)
       a.href = objectUrl
-      a.download = 'archive.csv';
+      a.download = filename;
       a.click();
       URL.revokeObjectURL(objectUrl);
     })
+  }
+
+  public getPropertyValues(propertyName: string): Promise<string[]> {
+    return this.getAsync(`${environment.apiUrl}/api/v1/interaction/getPropertyValues?propertyName=${propertyName}`);
   }
 
   private filterToQueryString(filters?: IFilter[]): string {

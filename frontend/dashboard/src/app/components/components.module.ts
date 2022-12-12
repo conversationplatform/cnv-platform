@@ -7,28 +7,34 @@ import { LoadingComponent } from "./loading/loading.component";
 import { ObjectTreeComponent } from './object-tree/object-tree.component';
 import { TimelineComponent } from "./timeline/timeline.component";
 import { UserMenuComponent } from './user-menu/user-menu.component';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { DynamicChipsFilterComponent } from "./dynamic-chips-filter/dynamic-chips-filter.component";
 
 
 @NgModule({
-    imports: [
-        CommonModule,
-        MaterialModule,
-        RouterModule
-    ],
-    declarations: [
-        HeaderComponent,
-        LoadingComponent,
-        ObjectTreeComponent,
-        TimelineComponent,
-        UserMenuComponent
-    ],
-    exports: [
-        HeaderComponent,
-        LoadingComponent,
-        ObjectTreeComponent,
-        TimelineComponent,
-        UserMenuComponent
-    ],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    MaterialModule,
+    RouterModule
+  ],
+  declarations: [
+    HeaderComponent,
+    LoadingComponent,
+    ObjectTreeComponent,
+    TimelineComponent,
+    UserMenuComponent,
+    DynamicChipsFilterComponent
+  ],
+  exports: [
+    HeaderComponent,
+    LoadingComponent,
+    ObjectTreeComponent,
+    TimelineComponent,
+    UserMenuComponent,
+    DynamicChipsFilterComponent
+  ],
 })
 export class ComponentsModule { }
 

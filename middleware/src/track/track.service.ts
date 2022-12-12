@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { aql } from 'arangojs';
+import { DocumentCollection, EdgeCollection } from 'arangojs/collection';
 import { InteractionService } from '../interaction/interaction.service';
 import { AggregatedTrackByFlowId } from '../model/aggregatedTrackByFlowId';
 import { ClientTrack } from '../model/client.track';
@@ -12,6 +13,7 @@ export class TrackService {
 
     constructor(
         private readonly arangoService: ArangoService,
+        @Inject(forwardRef(() => InteractionService))
         private readonly interactionService: InteractionService) {
 
         this.arangoService.collection.ensureIndex({
@@ -34,6 +36,10 @@ export class TrackService {
                 fields: [index]
             })
         })
+    }
+
+    public getCollection(): DocumentCollection<any> & EdgeCollection<any> {
+        return this.arangoService.collection;
     }
 
     async createTrack(userSession: UserSession, flowId: string): Promise<ClientTrack> {

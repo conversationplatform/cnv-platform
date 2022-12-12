@@ -2,103 +2,104 @@
 @import "variables";
 
 :host {
-    td {
-        border: 0;
-    }
-    .mat-table {
-        width: 100%;
+  td {
+    border: 0;
+  }
 
-        caption {
-            display: none;
-        }
+  .mat-table {
+    width: 100%;
 
-        .table-head-wrapper {
-            position: relative;
-            height: 64px;
-
-            &::after {
-                position: absolute;
-                content: "";
-                border-top: 1px solid rgba(0, 0, 0, 0.12);
-                width: calc(100% + $app-global-margin * 2);
-                left: -$app-global-margin;
-                bottom: 0;
-                height: 0px;
-            }
-
-            .table-header {
-                border: none;
-            }
-        }
-        tr.element-row:hover {
-            background: $app-primary-color-light;
-            cursor: pointer;
-
-            & > :first-child {
-                border-top-left-radius: $app-global-border-radius;
-                border-bottom-left-radius: $app-global-border-radius;
-            }
-
-            & > :last-child {
-                border-top-right-radius: $app-global-border-radius;
-                border-bottom-right-radius: $app-global-border-radius;
-            }
-        }
+    caption {
+      display: none;
     }
 
-    mat-paginator {
-        position: relative;
+    .table-head-wrapper {
+      position: relative;
+      height: 64px;
 
-        &::after {
-            position: absolute;
-            content: "";
-            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-            width: calc(100% + $app-global-margin * 2);
-            left: -$app-global-margin;
-            top: 0;
-            height: 0px;
-        }
-    }
-
-    tr.element-row {
-        margin: 0px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        font-family: Roboto, sans-serif;
-        line-height: 1.75;
-        text-align: left;
-
-        & td {
-            color: $app-text-color-main;
-        }
-    }
-
-    .table-header-button {
-        position: relative;
-        background-color: $app-primary-color-light;
-        transition: all 0.3s;
-        padding: 0px $app-global-margin;
-      
-        &:hover {
-          color: white;
-          background-color: $app-primary-color-medium;
-        }
-
-        .table-header-has-filters {
-            width: 10px;
-            height: 10px;
-            background-color: #a81313;
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            border-radius: 100%;
-        }
-      
-        .filter-icon {
-          vertical-align: sub;
-          font-size: 16px;
-          margin-left: calc($app-global-margin / 2);
-          margin-right: calc(-1 * ($app-global-margin / 2));
-        }
+      &::after {
+        position: absolute;
+        content: "";
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+        width: calc(100% + $app-global-margin * 2);
+        left: -$app-global-margin;
+        bottom: 0;
+        height: 0px;
       }
+
+      .table-header {
+        border: none;
+      }
+    }
+
+    tr.element-row:hover {
+      background: $app-primary-color-light;
+      cursor: pointer;
+
+      &> :first-child {
+        border-top-left-radius: $app-global-border-radius;
+        border-bottom-left-radius: $app-global-border-radius;
+      }
+
+      &> :last-child {
+        border-top-right-radius: $app-global-border-radius;
+        border-bottom-right-radius: $app-global-border-radius;
+      }
+    }
+  }
+
+  mat-paginator {
+    position: relative;
+
+    &::after {
+      position: absolute;
+      content: "";
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      width: calc(100% + $app-global-margin * 2);
+      left: -$app-global-margin;
+      top: 0;
+      height: 0px;
+    }
+  }
+
+  tr.element-row {
+    margin: 0px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: Roboto, sans-serif;
+    line-height: 1.75;
+    text-align: left;
+
+    & td {
+      color: $app-text-color-main;
+    }
+  }
+
+  .table-header-button {
+    position: relative;
+    background-color: $app-primary-color-light;
+    transition: all 0.3s;
+    padding: 0px $app-global-margin;
+
+    &:hover {
+      color: white;
+      background-color: $app-primary-color-medium;
+    }
+
+    .table-header-has-filters {
+      width: 10px;
+      height: 10px;
+      background-color: #a81313;
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      border-radius: 100%;
+    }
+
+  }
+
+  .export-csv {
+    margin-top: -2.7rem;
+    position: absolute;
+  }
 }

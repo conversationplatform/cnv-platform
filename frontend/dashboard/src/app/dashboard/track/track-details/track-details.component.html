@@ -44,12 +44,8 @@
                 Interactions
             </mat-panel-title>
         </mat-expansion-panel-header>
-        
-        <button mat-button (click)="downloadAsCSV()">
-            <mat-icon>file_download</mat-icon>
-            Save as CSV
-        </button>
-        <app-interaction-list *ngIf="track != null" [filters]="filters" [hideTid]="true"></app-interaction-list>
+
+        <app-interaction-list *ngIf="track != null" [filters]="filters" [hideSid]="true" [hideTid]="true"></app-interaction-list>
         <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
     </mat-expansion-panel>
 
