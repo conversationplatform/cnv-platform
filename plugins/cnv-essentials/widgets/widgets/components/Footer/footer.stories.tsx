@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Footer, { FooterProps } from './Footer'
 import Text from '../Text'
 
-import '../../../storybook-styles/styles.scss'
+import '../../../../storybook-styles/styles.scss'
 
 const animation = require('../../../../animations/robot.json') || ''
 

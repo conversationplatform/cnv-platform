@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Glossary, { GlossaryProps } from './Glossary'
 import Ui from '../../../utils/ui'
 
-import '../../../storybook-styles/styles.scss'
+import '../../../../storybook-styles/styles.scss'
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

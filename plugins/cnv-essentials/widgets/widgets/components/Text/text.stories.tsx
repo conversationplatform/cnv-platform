@@ -2,7 +2,7 @@ import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import Text, { TextProps } from './Text'
-import '../../../storybook-styles/styles.scss'
+import '../../../../storybook-styles/styles.scss'
 
 const animation = require('../../../../animations/robot.json') || ''
 
