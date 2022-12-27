@@ -1,10 +1,11 @@
-import { Controller, Get, Header, Param, Query, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, HttpException, Param, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ConfigService } from 'src/config/config/config.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { NodeREDGuard } from './node-red.guard';
 import { NoderedService } from './nodered.service';
+import { NotFoundError } from 'rxjs';
 
 @ApiTags('api/v1/nodered')
 @Controller('api/v1/nodered')
@@ -33,7 +34,9 @@ export class NoderedController {
 
   @Get('privacypolicy/:flowId')
   getPrivacyPolicy(@Param('flowId') flowId: string): Promise<string[]> | null {
-    return this.noderedService.getPrivacyPolicyByFlowId(flowId);
+    return this.noderedService.getPrivacyPolicyByFlowId(flowId).catch(e => {
+      throw new HttpException(e.response.data, e.response.status);
+    });
   }
 
   @Get('widgetProviders')

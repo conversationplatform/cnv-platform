@@ -71,8 +71,19 @@ module.exports = function (RED) {
 
         RED.httpAdmin.get("/getPrivacyPolicy", RED.auth.needsPermission("flows.read"), async (req, res) => {
             const flowId = req.query.flowId;
-            const pp = globalContext.registry[flowId]?.pp || "";
-            res.json(pp);
+            const privacyPolicy = globalContext.registry[flowId]?.privacyPolicy;
+            if(privacyPolicy) {
+              const pp = RED.nodes.getNode(privacyPolicy);
+              if(pp) {
+                res.json({
+                  welcome: pp.welcome,
+                  privacyPolicy: pp.privacyPolicy
+                });
+                return;
+              }
+
+            }
+            res.send(404, 'not found')
         });
 
         var node = this;
@@ -86,8 +97,7 @@ module.exports = function (RED) {
             globalContext.server = startServer(node, globalContext.registry);
         }
         var wss = new WebSocket.Server({ noServer: true });
-
-        globalContext.registry[path] = { wss, theme: config.theme, pp: config.pp };
+        globalContext.registry[path] = { wss, theme: config.theme, privacyPolicy: config.privacyPolicy };
         websocketHandler(wss, node, RED, globalContext, config);
     }
 

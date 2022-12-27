@@ -84,8 +84,8 @@ class ConnectionHandler {
       {
         withCredentials: this.useCredentials,
       }
-    );
-    return privacypolicy.data;
+    ).catch(e => console.error(e));
+    return privacypolicy?.data;
   }
 
   async disableTracking() {

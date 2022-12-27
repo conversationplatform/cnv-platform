@@ -232,13 +232,14 @@ export default class ConversationApp extends HTMLElement {
     }
 
     const acceptedCookies = cookies.get(process.env.COOKIE_ACCEPTS_NAME);
-
-    if (acceptedCookies !== "true") {
+    const privacyPolicy = await this.connection.getPrivacyPolicy();
+    
+    if (privacyPolicy && acceptedCookies !== "true") {
       showOverlayComponent(true);
       renderOverlayComponent((props) => {
         return (
           <Cookie
-            {...props}
+            {...privacyPolicy}
             alreadyRejected={acceptedCookies === "false"}
             onAccept={async () => {
               cookies.set(process.env.COOKIE_ACCEPTS_NAME, true);

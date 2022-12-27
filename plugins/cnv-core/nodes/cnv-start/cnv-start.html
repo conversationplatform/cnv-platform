@@ -13,9 +13,10 @@
                 value: "",
                 type: "repo-theme-config",
             },
-            pp: {
+            privacyPolicy: {
                 value: "",
-                required: true,
+                required: false,
+                type: "repo-privacy-policy-config"
             },
         },
         inputs: 0,
@@ -23,9 +24,6 @@
         icon: "font-awesome/fa-play-circle",
         label: function () {
             return this.name;
-        },
-        oneditprepare: function () {
-            var simplemde = new SimpleMDE({ element: document.getElementById("node-input-pp"), forceSync: true });
         },
     });
 </script>
@@ -44,8 +42,8 @@
         <input type="repo-theme-config" id="node-input-theme" placeholder="theme" />
     </div>
     <div class="form-row">
-        <label for="node-input-path"><i class="fa fa-tag"></i> Privacy Policy</label>
-        <textarea type="text" id="node-input-pp" placeholder="Text"></textarea>
+        <label for="node-input-privacyPolicy"><i class="fa fa-tag"></i> Privacy Policy</label>
+        <input type="repo-privacy-policy-config" id="node-input-privacyPolicy" placeholder="Privacy Policy" />
     </div>
 </script>
 

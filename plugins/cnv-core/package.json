@@ -94,6 +94,7 @@
   },
   "node-red": {
     "nodes": {
+      "privacy-policy": "nodes/base/content-management/privacy-policy/privacy-policy.js",
       "repo-article": "nodes/base/content-management/repo-article/repo-article.js",
       "repo-article-helper": "nodes/base/content-management/repo-article-helper/repo-article-helper.js",
       "repo-glossary": "nodes/base/content-management/repo-glossary/repo-glossary.js",

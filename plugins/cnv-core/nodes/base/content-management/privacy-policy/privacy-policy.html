@@ -1,0 +1,72 @@
+
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/simplemde/simplemde.min.css">
+<script src="/red/resources/@cnv-platform/cnv-core/simplemde/simplemde.min.js"></script>
+<script src="/red/resources/@cnv-platform/cnv-core/shared/main.js"></script>
+<link rel="stylesheet" href="/red/resources/@cnv-platform/cnv-core/shared/main.css">
+
+
+<script type="text/javascript">
+
+    RED.nodes.registerType('repo-privacy-policy-config', {
+        category: 'config',
+        defaults: {
+            name: {
+                value:"",
+                required: true
+            },
+            welcome: {
+                value:"",
+                required: true
+            },
+            privacyPolicy: {
+                value: "",
+                required: true
+            },
+
+        },
+
+
+        label: function() {
+            return this.name || "Privacy Policy";
+        },
+
+        oneditprepare: function() {
+
+            var welcome = new SimpleMDE({element: document.getElementById("node-config-input-welcome"), forceSync: true });
+            var privacyPolicy = new SimpleMDE({element: document.getElementById("node-config-input-privacyPolicy"), forceSync: true });
+        }
+
+    });
+</script>
+
+<script type="text/html" data-template-name="repo-privacy-policy-config">
+    <div class="form-row">
+        <label for="node-config-input-name">
+            <i class="fa fa-tag"></i>
+            Name
+        </label>
+        <input type="text" id="node-config-input-name" placeholder="name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-welcome">
+            <i class="fa fa-tag"></i>
+            Welcome Message
+        </label>
+        <textarea type="text" id="node-config-input-welcome" placeholder=""></textarea>
+    </div>
+
+    <div class="form-row">
+      <label for="node-config-input-privacyPolicy">
+          <i class="fa fa-tag"></i>
+          Privacy Policy
+      </label>
+      <textarea type="text" id="node-config-input-privacyPolicy" placeholder=""></textarea>
+
+  </div>
+
+
+</script>
+
+<script type="text/html" data-help-name="repo-privacy-policy-config">
+    <p>Easy config to manage Privacy Policy content.</p>
+</script>
