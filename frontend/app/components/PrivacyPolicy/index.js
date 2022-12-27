@@ -12,6 +12,25 @@ const useStyles = makeStyles(() => ({
     position: "relative",
     backgroundColor: "var(--conversation-app-primary-color)",
     color: "var(--conversation-app-primary-text-color)",
+    "& h1, h2, h3, h4": {
+      color: "var(--conversation-app-primary-text-color)",
+      marginBottom: "12px",
+    },
+
+    "& h1": {
+      fontSize: "32px"
+    },
+    "& h2": {
+      fontSize: "24px"
+    },
+    "& h3": {
+      fontSize: "18.72px"
+    },
+
+    "& p": {
+      color: "var(--conversation-app-primary-text-color)",
+      fontSize: "16px"
+    },
   },
 
   wrapper: {

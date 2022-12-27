@@ -55,8 +55,19 @@ const useStyles = makeStyles(() => ({
       marginBottom: "12px",
     },
 
+    "& h1": {
+      fontSize: "32px"
+    },
+    "& h2": {
+      fontSize: "24px"
+    },
+    "& h3": {
+      fontSize: "18.72px"
+    },
+
     "& p": {
       color: "var(--conversation-app-primary-text-color)",
+      fontSize: "16px"
     },
 
     "& link": {

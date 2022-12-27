@@ -15,6 +15,20 @@ conversation-app {
     height: 100%;
     justify-content: end;
 
+    a, p {
+      font-size: 16px;
+    }
+
+    h1: {
+      font-size: "32px"
+    }
+    h2: {
+      font-size: "24px"
+    }
+    h3: {
+      font-size: "18.72px"
+    }
+
     a {
       text-decoration: none;
       border-bottom: var(--conversation-app-primary-text-color) 1px dotted;
