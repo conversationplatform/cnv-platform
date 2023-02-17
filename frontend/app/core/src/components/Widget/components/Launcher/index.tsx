@@ -28,11 +28,6 @@ function Launcher({ toggle, chatId, openLabel, closeLabel }: Props) {
   const toggleChat = () => {
     toggle();
     if (!showChat) dispatch(setBadgeCount(0));
-    var showcaseElement = document.querySelector("conversation-app");
-    if(!showcaseElement) {
-      return;
-    }
-    showcaseElement.style.pointerEvents = showChat ? "auto" : "none";
   }
 
   return (

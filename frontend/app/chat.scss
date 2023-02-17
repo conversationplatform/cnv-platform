@@ -3,11 +3,6 @@
 conversation-app {
   position: fixed;
 
-  .App {
-    height: 668px;
-    width: 375px;
-  }
-
   .rcw-widget-container {
     position: relative;
     max-width: 100%;
@@ -42,11 +37,11 @@ conversation-app {
     }
 
     .rcw-conversation-container {
-      width: 100%;
+      width: 375px;
+      height: 668px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: 100%;
 
       .rcw-header {
         padding: 10px;
