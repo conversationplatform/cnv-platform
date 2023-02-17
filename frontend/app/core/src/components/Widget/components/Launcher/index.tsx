@@ -28,7 +28,13 @@ function Launcher({ toggle, chatId, openLabel, closeLabel }: Props) {
   const toggleChat = () => {
     toggle();
     if (!showChat) dispatch(setBadgeCount(0));
-  
+    var showcaseElement = document.getElementById("showcase");
+
+    if (showcaseElement?.style.pointerEvents === "none") {
+      showcaseElement.style.pointerEvents = "auto";
+    } else if (showcaseElement) {
+      showcaseElement.style.pointerEvents = "none";
+    }
   }
 
   return (
