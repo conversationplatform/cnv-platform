@@ -29,12 +29,10 @@ function Launcher({ toggle, chatId, openLabel, closeLabel }: Props) {
     toggle();
     if (!showChat) dispatch(setBadgeCount(0));
     var showcaseElement = document.querySelector("conversation-app");
-
-    if (showcaseElement?.style.pointerEvents === "none") {
-      showcaseElement.style.pointerEvents = "auto";
-    } else if (showcaseElement) {
-      showcaseElement.style.pointerEvents = "none";
+    if(!showcaseElement) {
+      return;
     }
+    showcaseElement.style.pointerEvents = showChat ? "auto" : "none";
   }
 
   return (
