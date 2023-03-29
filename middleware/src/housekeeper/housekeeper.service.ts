@@ -30,8 +30,8 @@ export class HousekeeperService {
   async cleanExpiredTracks(): Promise<ClientTrack[]> {
 
     const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - this.TRACK_LIFETIME_MONTHS);
-    endDate.setHours(0, 0, 0, 0);
+    endDate.setUTCMonth(endDate.getUTCMonth() - this.TRACK_LIFETIME_MONTHS);
+    endDate.setUTCHours(0, 0, 0, 0);
 
     return this.trackService.deleteExpiredTracks(endDate);
 
@@ -40,16 +40,16 @@ export class HousekeeperService {
   async cleanExpiredSessions(): Promise<UserSession[]> {
 
     const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - this.TRACK_LIFETIME_MONTHS);
-    endDate.setHours(0, 0, 0, 0);
+    endDate.setUTCMonth(endDate.getUTCMonth() - this.TRACK_LIFETIME_MONTHS);
+    endDate.setUTCHours(0, 0, 0, 0);
 
     return this.sessionService.deleteExpiredSessions(endDate);
   }
 
   async cleanExpiredMetrics(): Promise<MetricFlowByHour[]> {
     const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - this.TRACK_LIFETIME_MONTHS);
-    endDate.setHours(0, 0, 0, 0);
+    endDate.setUTCMonth(endDate.getUTCMonth() - this.TRACK_LIFETIME_MONTHS);
+    endDate.setUTCHours(0, 0, 0, 0);
     return this.metricService.removeMetricsByDate(endDate);
   }
 
@@ -59,7 +59,7 @@ export class HousekeeperService {
 
     if (!state) {
       startDate = new Date();
-      startDate.setMonth(startDate.getMonth() - this.TRACK_LIFETIME_MONTHS)
+      startDate.setUTCMonth(startDate.getUTCMonth() - this.TRACK_LIFETIME_MONTHS)
       state = (await this.propertiesService.setProperty<MetricStateFlowProcessor>(this.METRIC_STATE_FLOW_PROCESSOR, new MetricStateFlowProcessor(startDate)))?.data;
     }
 

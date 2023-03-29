@@ -75,7 +75,7 @@ export class MetricsService {
                 dates.push(pair[0]);
 
             }
-            sDate.setDate(sDate.getDate() + 1);
+            sDate.setUTCDate(sDate.getUTCDate() + 1);
         }
 
         let normalizedData: NormalizedMetricsFlowByHour = {};

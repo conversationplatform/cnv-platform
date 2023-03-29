@@ -1,21 +1,17 @@
 export function getDayDateInterval(date: Date) {
-    let dateIntervals = [];
+    const dateIntervals = [];
 
     date.setHours(0, 0, 0, 0);
-    let nextDay: Date = new Date(date);
-    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDay: Date = new Date(date);
+    nextDay.setUTCDate(nextDay.getUTCDate() + 1);
 
     do {
-        let startDate: Date = new Date(date);
-        let endDate: Date = new Date(startDate);
-        endDate.setHours(date.getHours() + 1);
+        const startDate: Date = new Date(date);
+        const endDate: Date = new Date(startDate);
+        endDate.setUTCHours(date.getUTCHours() + 1);
         date = endDate;
+        dateIntervals.push([startDate, endDate]);
+    } while (date < nextDay);
 
-        dateIntervals.push([startDate, endDate])
-    } while (date < nextDay)
-
-
-    return dateIntervals
-
+    return dateIntervals;
 }
-
