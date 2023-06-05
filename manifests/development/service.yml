@@ -5,7 +5,7 @@ metadata:
   annotations:
     cloud.google.com/neg: '{"ingress": false}'
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 3000
       protocol: TCP
