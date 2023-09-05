@@ -2,7 +2,7 @@
   "name": "@cnv-platform/cnv-core",
   "version": "1.0.0",
   "description": "OpenSource TinyMe plugins",
-  "repository": "VisualVest-GmbH/cnv-essentials",
+  "repository": "conversionplatform/cnv-essentials",
   "scripts": {
     "build": "rollup -c"
   },

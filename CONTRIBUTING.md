@@ -1,6 +1,6 @@
 # Contribute with us
 
-TinyMe is available under [Apache license](https://github.com/VisualVest-GmbH/cnv-platform/blob/master/LICENSE). If you want to contribute code (features or bugfixes), you have to create a pull request and include valid license information. Contribute your code under Apache license.
+TinyMe is available under [Apache license](https://github.com/conversionplatform/cnv-platform/blob/master/LICENSE). If you want to contribute code (features or bugfixes), you have to create a pull request and include valid license information. Contribute your code under Apache license.
 
 ## Contributor License Agreement (CLA)
 

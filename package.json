@@ -36,12 +36,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VisualVest-GmbH/cnv-platform.git"
+    "url": "git+https://github.com/conversationplatform/cnv-platform.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/VisualVest-GmbH/cnv-platform/issues"
+    "url": "https://github.com/conversationplatform/cnv-platform/issues"
   },
-  "homepage": "https://github.com/VisualVest-GmbH/cnv-platform#readme"
+  "homepage": "https://github.com/conversationplatform/cnv-platform#readme"
 }
