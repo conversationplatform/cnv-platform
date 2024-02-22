@@ -72,7 +72,7 @@ function PrivacyPolicy(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.main}>
+    <div className={classes.main} id="privacyPolicy">
       <div className={classes.header}>
         <div className={classes.wrapper} onClick={props.onClickBack}>
           <h3 className={classes.icon}>➜</h3>
