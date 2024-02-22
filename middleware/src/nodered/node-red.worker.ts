@@ -31,12 +31,12 @@ class NodeREDWorker {
           return (msg) => {
             try {
               msg.msg.split('\n').forEach(m => {
-                this.logger(m)
+                this.logger(m);
 
               });
 
             } catch (e) {
-              this.logger(msg.msg)
+              this.logger(msg.msg.stack);
             }
           }
         }

@@ -126,7 +126,7 @@ function Cookie(props) {
   };
 
   return (
-    <div className={classes.main}>
+    <div className={classes.main} id="privacyPolicy">
       <div className={classes.contentWrapper}>
         {parse(markdown.render(welcome || ""), options)}
       </div>

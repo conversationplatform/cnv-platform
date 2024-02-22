@@ -48,6 +48,10 @@
                 value: '#fafafa'
             },
 
+            'conversation-app-custom-css': {
+              value: ''
+            },
+
             image: {
                 value:"",
                 required: true,
@@ -60,8 +64,6 @@
             return this.name || "Theme";
         },
         oneditprepare: function() {
-
-
             $('#node-config-image').select2(customImageSelect);
 
         }
@@ -173,6 +175,14 @@
         </div>
 
     </div>
+
+    <div class="form-row">
+      <label for="node-config-input-conversation-app-custom-css">
+          <i class="fa fa-tag"></i>
+          Custom CSS
+      </label>
+      <textarea type="text" rows="4" id="node-config-input-conversation-app-custom-css" placeholder="Custom CSS">
+  </div>
 </script>
 
 <script type="text/html" data-help-name="repo-theme-config">

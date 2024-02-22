@@ -22,7 +22,7 @@ let ui = {
   toggleWidget
 };
 
-import defalutBackground from "./img/bg.png";
+import defaultBackground from "./img/bg.png";
 
 import { scrollToBottom } from "./utils/scrollToBottom";
 
@@ -61,6 +61,7 @@ export default class ConversationApp extends HTMLElement {
   tasker;
   cookieSIDName;
   widgets = [];
+  customCSS;
 
   constructor() {
     super();
@@ -111,15 +112,8 @@ export default class ConversationApp extends HTMLElement {
           img.src = data.props.imgSrc;
         });
       return;
-    } else if (data.type === "themeOptions") {
-      if (data.default) {
-        data.props[
-          "--conversation-app-background-image"
-        ] = `url(${defalutBackground})`;
-      }
-      this.handleTheme(data.props);
-      return;
     }
+    
     this.tasker.scheduleTask(data);
   }
 
@@ -149,10 +143,11 @@ export default class ConversationApp extends HTMLElement {
       },
       true
     );
+
     this.connection
       .getTheme()
-      .then((theme) => {
-        this.handleTheme(theme);
+      .then((customCSS) => {
+        this.customCSS = customCSS;
       })
       .catch((error) => console.error(error));
 
@@ -181,10 +176,7 @@ export default class ConversationApp extends HTMLElement {
       },
       disableTrackService: ({ type, name, props }) => {
         connection.disableTracking();
-      },
-      themeOptions: ({ type, name, props }) => {
-        this.handleTheme(props);
-      },
+      }
     };
 
     this.tasker = new Tasker(this.connection, interactionType, (data) =>
@@ -294,6 +286,9 @@ export default class ConversationApp extends HTMLElement {
 
       return (
         <div className="App" onClick={interceptClickEvent}>
+          <style>
+            {props.customCSS}
+          </style>
           <ErrorBoundary>
             <Widget
               handleNewUserMessage={handleNewUserMessage}
@@ -310,16 +305,11 @@ export default class ConversationApp extends HTMLElement {
     }
 
     ReactDOM.render(
-      <App connection={this.connection} isOpen={this.isOpen} />,
+      <App connection={this.connection} isOpen={this.isOpen} customCSS={this.customCSS}/>,
       document.querySelector("conversation-app#dialog")
     );
   }
 
-  handleTheme(themeOptions) {
-    Object.keys(themeOptions).forEach((key) =>
-      this.setDialogCssProperty(key, themeOptions[key])
-    );
-  }
 
   setRenderPosition() {
     if(this.top) {
