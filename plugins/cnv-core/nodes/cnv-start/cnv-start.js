@@ -56,16 +56,13 @@ module.exports = function (RED) {
         RED.httpAdmin.get("/getTheme", RED.auth.needsPermission("flows.read"), async (req, res) => {
             const flowId = req.query.flowId;
             const theme = globalContext.registry[flowId]?.theme;
+            res.setHeader('Content-Type', 'text/css');
+
             if (flowId && theme) {
                 const theme = RED.nodes.getNode(globalContext.registry[flowId].theme);
-                let props = {};
-                Object.keys(theme)
-                    .filter((key) => key.indexOf("conversation-app") > -1)
-                    .forEach((key) => (props[`--${key}`] = theme[key]));
-
-                res.json(props);
+                res.send(theme.customCSS);
             } else {
-                res.json({});
+                res.send('');
             }
         });
 
