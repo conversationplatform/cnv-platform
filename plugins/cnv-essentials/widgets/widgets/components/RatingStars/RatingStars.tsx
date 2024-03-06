@@ -1,12 +1,11 @@
-import React from "react";
-import Empty from '../../../components/Empty'
+import React, { useState } from 'react'
+import { GiRoundStar } from 'react-icons/gi'
 import CustomButton from '../../../components/CustomButton'
 import CustomTextArea from '../../../components/CustomTextArea'
-import Ui from '../../../utils/ui'
+import Empty from '../../../components/Empty'
 import Connection from '../../../utils/connection'
+import Ui from '../../../utils/ui'
 import './RatingStars.scss'
-
-
 
 export interface RatingProps {
   store: string
@@ -14,69 +13,92 @@ export interface RatingProps {
   feedbackCheckbox: boolean
   textLabel: string
   connection: Connection
-  nodeId: string 
+  nodeId: string
   widgetName: string
   ui: Ui
 }
 
-function RatingStars({ store, feedbackCheckbox, buttonLabel, textLabel, connection, nodeId, widgetName, ui }: RatingProps) {
-  const values = {}
+function RatingStars({
+  feedbackCheckbox,
+  buttonLabel,
+  textLabel,
+  connection,
+  nodeId,
+  widgetName,
+  ui
+}: RatingProps) {
+  const [rating, setRating] = useState(-1)
+  const [hoverRating, setHoverRating] = useState(-1)
+  const [feedback, setFeedback] = useState('')
 
-  const handleOnChange = (key: string, value: string) => {
-    values[key] = value
+  const stars = [0, 1, 2, 3, 4]
+
+  const isActive = (idx) => {
+    if (hoverRating > -1) {
+      return hoverRating >= idx
+    } else {
+      return rating >= idx
+    }
   }
-
-  
-
-  const handleOnRatingChange = (e) => {
-    let value = e.target.value;
-    values["rating"] = value;
-  }
-  
 
   return (
-
     <div className='interact-wrapper'>
+      <div className='rating' onMouseLeave={() => setHoverRating(-1)}>
+        {stars.map((star) => {
+          return (
+            <GiRoundStar
+              className={isActive(star) ? 'active' : ''}
+              onClick={() => setRating(star)}
+              onMouseEnter={() => setHoverRating(star)}
+            />
+          )
+        })}
+      </div>
 
-    <div className="rating">
-        <input type="radio" id="star1" name="rating" value="5" onChange={handleOnRatingChange}/><label className = "full" htmlFor="star1"></label>
-        <input type="radio" id="star2" name="rating" value="4" onChange={handleOnRatingChange}/><label className = "full" htmlFor="star2"></label>
-        <input type="radio" id="star3" name="rating" value="3" onChange={handleOnRatingChange}/><label className = "full" htmlFor="star3"></label>
-        <input type="radio" id="star4" name="rating" value="2" onChange={handleOnRatingChange}/><label className = "full" htmlFor="star4"></label>
-        <input type="radio" id="star5" name="rating" value="1" onChange={handleOnRatingChange}/><label className = "full" htmlFor="star5"></label>
-    </div>
-    {feedbackCheckbox && <div className='inputs-wrapper'>
+      {feedbackCheckbox && (
+        <div className='inputs-wrapper'>
           <div className='input-wrapper'>
-          <CustomTextArea 
+            <CustomTextArea
               keyValue={textLabel}
               label={textLabel}
-              onChange={handleOnChange}
-                />
-          </div>
-      </div>}
-      <div className='buttons-wrapper'>
-          <div className='button-wrapper'>
-            <CustomButton
-              text={buttonLabel}
-              buttonType={"PRIMARY"}
-              sendValueOnClick={() => {
-                ui.renderInteractionComponent(Empty, {})
-                connection.sendEvent(nodeId, widgetName, `user sent rating with value ${values["rating"]}`);
-                if(feedbackCheckbox){
-                  connection.sendEvent(nodeId, widgetName, `user sent feedback with text ${values[textLabel]}`);
-                }
-                connection.sendEvent(nodeId, widgetName, "pressed button to continue flow");
-                connection.send(
-                  JSON.stringify({
-                    store,
-                    values
-                  })
-                )
-              }}
+              onChange={(_, value) => setFeedback(value)}
             />
           </div>
-          
-        
+        </div>
+      )}
+      <div className='buttons-wrapper'>
+        <div className='button-wrapper'>
+          <CustomButton
+            text={buttonLabel}
+            buttonType={'PRIMARY'}
+            sendValueOnClick={() => {
+              ui.renderInteractionComponent(Empty, {})
+              connection.sendEvent(
+                nodeId,
+                widgetName,
+                `user sent rating with value ${rating}`
+              )
+              if (feedbackCheckbox) {
+                connection.sendEvent(
+                  nodeId,
+                  widgetName,
+                  `user sent feedback with text ${feedback}`
+                )
+              }
+              connection.sendEvent(
+                nodeId,
+                widgetName,
+                'pressed button to continue flow'
+              )
+              connection.send(
+                JSON.stringify({
+                  feedback,
+                  rating
+                })
+              )
+            }}
+          />
+        </div>
       </div>
     </div>
   )
