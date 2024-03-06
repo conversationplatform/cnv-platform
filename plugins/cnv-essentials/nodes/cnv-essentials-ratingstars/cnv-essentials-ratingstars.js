@@ -7,21 +7,23 @@ module.exports = function (RED) {
           feedbackCheckbox,
           buttonLabel,
           textLabel,
-          store,
           delay: parseInt(delay, 10)
         };
 
         msg.websocket.setInteraction("cnv-essentials-ratingstars", props, this.id);
         msg.websocket.readText().then(function (answer) {
-          var parsed = JSON.parse(answer);
-          const values = parsed.values;
+          const { rating, feedback } = JSON.parse(answer);
 
-          msg.store[store] = values;
+          msg.store[store] = {
+            rating,
+            feedback
+          };
           msg.websocket.saveStore(msg.store)
 
-          msg.websocket.sendUserMessage("Rating: " + values.rating, this.id);
-          if(values[textLabel]){
-            msg.websocket.sendUserMessage(textLabel + ": " + values[textLabel], this.id);
+          msg.websocket.sendUserMessage("Rating: " + rating, this.id);
+
+          if(feedback){
+            msg.websocket.sendUserMessage(textLabel + ": " + feedback, this.id);
           }
 
           send(msg);
