@@ -27,14 +27,14 @@ function RatingStars({
   widgetName,
   ui
 }: RatingProps) {
-  const [rating, setRating] = useState(-1)
-  const [hoverRating, setHoverRating] = useState(-1)
+  const [rating, setRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0)
   const [feedback, setFeedback] = useState('')
 
-  const stars = [0, 1, 2, 3, 4]
+  const stars = [1, 2, 3, 4, 5]
 
   const isActive = (idx) => {
-    if (hoverRating > -1) {
+    if (hoverRating > 0) {
       return hoverRating >= idx
     } else {
       return rating >= idx
