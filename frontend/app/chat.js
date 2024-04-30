@@ -52,7 +52,8 @@ export default class ConversationApp extends HTMLElement {
   host;
   flowId;
   widthThreshold;
-  isOpen = true;
+  isOpen = false;
+  openFirstVisit = false;
   top;
   bottom;
   left;
@@ -80,8 +81,9 @@ export default class ConversationApp extends HTMLElement {
     this.left = this.getAttribute("left");
     this.right = this.getAttribute("right");
 
-    this.isOpen = this.getAttribute("isOpen") ? this.getAttribute("isOpen") == 'true' : true;
-
+    this.isOpen = this.getAttribute("is-open") ? this.getAttribute("is-open") == 'true' : true;
+    this.openFirstVisit = this.getAttribute("open-first-visit") ? this.getAttribute("open-first-visit") == 'true' : true;
+    
     if (
       this.host &&
       this.host.length > 0 &&
@@ -129,10 +131,15 @@ export default class ConversationApp extends HTMLElement {
     return widget;
   }
 
-  async start(host = this.host, flowId = this.flowId, isOpen = this.isOpen, widthThreshold = this.widthThreshold ) {
-    if(this.widthThreshold && window.innerWidth < this.widthThreshold) {
-      this.isOpen = false;
-    }
+  async start(host = this.host, flowId = this.flowId, isOpen = this.isOpen, openFirstVisit = this.openFirstVisit, widthThreshold = this.widthThreshold ) {
+    this.host = host;
+    this.flowId = flowId;
+    this.isOpen = isOpen;
+    this.openFirstVisit = openFirstVisit;
+    this.widthThreshold = widthThreshold;
+    
+    this.handleOpenStatus();
+
     this.setRenderPosition();
 
     this.connection = new ConnectionHandler(
@@ -310,6 +317,18 @@ export default class ConversationApp extends HTMLElement {
     );
   }
 
+  handleOpenStatus() {
+    const sessionCnvOpen = sessionStorage.getItem('cnv-open') == 'true';
+    
+    if(!this.isOpen && this.openFirstVisit && !sessionCnvOpen) {
+      this.isOpen = true;
+      sessionStorage.setItem('cnv-open', 'true');
+    }
+
+    if(this.widthThreshold && window.innerWidth < this.widthThreshold) {
+      this.isOpen = false;
+    }
+  }
 
   setRenderPosition() {
     if(this.top) {
